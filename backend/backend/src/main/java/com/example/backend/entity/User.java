@@ -1,14 +1,14 @@
 package com.example.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.Data;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
-import java.util.List;
 
 
-@Node
+
+@Entity
 @Data
 public class User {
 
@@ -19,21 +19,8 @@ public class User {
     private String email;
     private Role role;
 
-    @Relationship(type = "HAS_SKILL")
-    private List<SkillProperty> skills;
+    @JsonIgnore
+    private String password;
 
-    @Relationship(type = "HAS_CERTIFICATE")
-    private List<Certificate> certificates;
 
-    @Relationship(type = "SPEAKS")
-    private List<Language> languages;
-
-    @Relationship(type = "INTERESTED_IN")
-    private List<Interest> interests;
-
-    @Relationship(type = "AVAILABLE_AT")
-    private List<Availability> availability;
-
-    @Relationship(type = "WORKED_ON")
-    private List<ProjectRoleHistory> projectHistory;
 }

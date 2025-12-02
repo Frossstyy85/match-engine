@@ -1,27 +1,21 @@
 package com.example.backend.entity;
 
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.List;
 
-@Node
 @Data
+@Entity
 public class Team {
 
     @Id
-    @GeneratedValue
     private Long id;
 
-    private String name;
+    @OneToMany
+    private List<User> users;
 
-    @Relationship(type = "HAS_MEMBER")
-    private List<User> members;
 
-    @Relationship(type = "NEEDS_SKILL")
-    private List<SkillProperty> missingSkills;
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import Layout from "../components/Layout"; // justera path vid behov
+import "./Anvandare.css"; // CSS för tabellen
 
 export default function Anvandare() {
     const [users, setUsers] = useState([]);
@@ -13,24 +14,27 @@ export default function Anvandare() {
     }, []);
 
     return (
-        <div className="p-4">
-            <h2>👥 Användare</h2>
-            <table className="table table-striped mt-3">
-                <thead>
-                <tr>
-                    <th>Namn</th>
-                    <th>Email</th>
-                </tr>
-                </thead>
-                <tbody>
-                {users.map(user => (
-                    <tr key={user.id}>
-                        <td>{user.name}</td>
-                        <td>{user.email}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
+        <Layout>
+            <div className="anvandare-container">
+                <h2>👥 Användare</h2>
+
+                <table className="anvandare-table">
+                    <thead>
+                        <tr>
+                            <th>Namn</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map(user => (
+                            <tr key={user.id}>
+                                <td>{user.name}</td>
+                                <td>{user.email}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </Layout>
     );
 }

@@ -1,0 +1,95 @@
+/* Container centrerad på skärmen */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f9fafb; /* ljus bakgrund */
+    font-family: "Inter", sans-serif;
+}
+
+/* Själva kortet */
+.auth-box {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Rubrik */
+.auth-box h2 {
+    margin-bottom: 25px;
+    color: #111827;
+    font-size: 24px;
+}
+
+/* Felmeddelande */
+.auth-error {
+    color: #dc2626; /* röd */
+    margin-bottom: 15px;
+}
+
+/* Formulärfält */
+.auth-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.auth-box label {
+    font-weight: 500;
+    color: #374151;
+}
+
+.auth-box input {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.auth-box input:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Submit-knapp */
+.auth-box button {
+    padding: 12px;
+    background: #2563eb;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 10px;
+}
+
+.auth-box button:hover {
+    background: #1e40af;
+}
+
+/* Länkar */
+.auth-box p {
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.auth-box a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-box a:hover {
+    text-decoration: underline;
+}

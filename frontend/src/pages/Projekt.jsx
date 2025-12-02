@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import Layout from "../components/Layout";
+import "./Projekt.css";
 
 export default function Projekt() {
     const [projects, setProjects] = useState([]);
@@ -12,24 +13,27 @@ export default function Projekt() {
     }, []);
 
     return (
-        <div className="p-4">
-            <h2>📁 Projekt</h2>
-            <table className="table table-striped mt-3">
-                <thead>
-                <tr>
-                    <th>Projekt</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                {projects.map(project => (
-                    <tr key={project.id}>
-                        <td>{project.name}</td>
-                        <td>{project.status}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
+        <Layout>
+            <div className="projekt-container">
+                <h2>📁 Projekt</h2>
+
+                <table className="projekt-table">
+                    <thead>
+                        <tr>
+                            <th>Projekt</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {projects.map(project => (
+                            <tr key={project.id}>
+                                <td>{project.name}</td>
+                                <td>{project.status}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </Layout>
     );
 }

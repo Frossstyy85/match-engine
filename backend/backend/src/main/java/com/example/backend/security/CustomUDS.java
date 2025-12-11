@@ -1,7 +1,7 @@
 package com.example.backend.security;
 
+import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,12 +20,9 @@ public class CustomUDS implements UserDetailsService {
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        com.example.backend.entity.User user = repo.findByEmail(email)
+        User user = repo.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Not found"));
 
-        return User.withUsername(user.getEmail())
-                .password(user.getPassword())
-                .roles(user.getRole().name())
-                .build();
+        return new CustomUserDetail(user);
     }
 }

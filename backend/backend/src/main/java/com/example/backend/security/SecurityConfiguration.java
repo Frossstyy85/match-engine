@@ -27,10 +27,10 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/logout", "/auth/login", "/auth/me").permitAll()
+                        .requestMatchers("/auth/logout", "/auth/login", "/auth/session").permitAll()
                         .anyRequest().authenticated()
                 ).build();
     }
@@ -53,13 +53,6 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-
-    @Bean
-    public PasswordEncoder argon2Encoder(){
-        return Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
-    }
-
 
 
 }

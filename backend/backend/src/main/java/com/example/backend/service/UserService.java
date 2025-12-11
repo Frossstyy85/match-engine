@@ -20,7 +20,7 @@ public class UserService {
 
     public void registerUser(RegisterRequest request){
         userRepository.save(
-                new User(request.getName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), Role.EMPLOYEE)
+                User.defaultUser(request.getName(), request.getEmail(), request.getPassword())
         );
 
     }

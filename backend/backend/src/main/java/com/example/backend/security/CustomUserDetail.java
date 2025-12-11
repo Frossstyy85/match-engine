@@ -1,8 +1,6 @@
 package com.example.backend.security;
 
 import com.example.backend.entity.User;
-import lombok.Builder;
-import lombok.Getter;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,9 +14,15 @@ import java.util.List;
 public class CustomUserDetail implements UserDetails {
 
 
-    @Getter
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     private final Long id;
-    @Getter
     private final String name;
     private final String password;
     private final String email;

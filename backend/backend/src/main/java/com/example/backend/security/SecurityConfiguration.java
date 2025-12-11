@@ -30,7 +30,7 @@ public class SecurityConfiguration {
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/logout", "/auth/login", "/auth/session").permitAll()
+                        .requestMatchers("/auth/logout", "/auth/login", "/auth/session", "/auth/register").permitAll()
                         .anyRequest().authenticated()
                 ).build();
     }

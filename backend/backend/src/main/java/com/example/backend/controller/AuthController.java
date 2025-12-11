@@ -57,6 +57,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+
         try {
             userService.registerUser(request);
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -86,4 +87,6 @@ public class AuthController {
                 "roles", auth.getAuthorities()
         ));
     }
+
+
 }

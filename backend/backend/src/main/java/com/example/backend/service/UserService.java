@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.controller.RegisterRequest;
+import com.example.backend.entity.Role;
 import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,13 +18,9 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(RegisterRequest request){
-        return userRepository.save(
-                User.builder()
-                        .email(request.getEmail())
-                        .name(request.getName())
-                        .password(passwordEncoder.encode(request.getPassword()))
-                        .build()
+    public void registerUser(RegisterRequest request){
+        userRepository.save(
+                new User(request.getName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), Role.EMPLOYEE)
         );
 
     }

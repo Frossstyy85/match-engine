@@ -1,48 +1,22 @@
 package com.example.backend.security;
 
-import com.example.backend.entity.User;
-import org.jspecify.annotations.Nullable;
+import com.example.backend.entity.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
-
-public class CustomUserDetail implements UserDetails {
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    private final Long id;
-    private final String name;
-    private final String password;
-    private final String email;
-    private final Collection<? extends GrantedAuthority> authorities;
-
-    public CustomUserDetail(User user) {
-        this.name = user.getName();
-        this.password = user.getPassword();
-        this.email = user.getEmail();
-        this.authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()));
-        this.id = user.getId();
-    }
+public record CustomUserDetail(String password, Role role, String email, Long id) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return Collections.singleton(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
-    public @Nullable String getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -51,6 +25,25 @@ public class CustomUserDetail implements UserDetails {
         return email;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 
 }

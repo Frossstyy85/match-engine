@@ -23,6 +23,7 @@ public class CustomUDS implements UserDetailsService {
         User user = repo.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Not found"));
 
-        return new CustomUserDetail(user);
+        return new CustomUserDetail(user.getPassword(), user.getRole(), user.getEmail(), user.getId());
     }
+
 }

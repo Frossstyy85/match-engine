@@ -23,12 +23,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    public User() {}
-
-    public static User defaultUser(String name, String email, String password) {
-        User user = new User(name, email, password);
-        user.setRole(Role.EMPLOYEE);
-        return user;
+    public User() {
     }
 
     private User(String name, String email, String password) {
@@ -37,8 +32,10 @@ public class User {
         this.password = password;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public static User defaultUser(String name, String email, String password) {
+        User user = new User(name, email, password);
+        user.setRole(Role.EMPLOYEE);
+        return user;
     }
 
     public Long getId() {
@@ -59,6 +56,10 @@ public class User {
 
     public Role getRole() {
         return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getEmail() {

@@ -27,8 +27,7 @@ public class AuthController {
     private final UserService userService;
     private final SecurityContextRepository securityContextRepository;
 
-    public AuthController(AuthenticationManager authenticationManager, UserService userService,
-                          SecurityContextRepository securityContextRepository) {
+    public AuthController(AuthenticationManager authenticationManager, UserService userService, SecurityContextRepository securityContextRepository) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.securityContextRepository = securityContextRepository;
@@ -41,14 +40,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request,
-                                   HttpServletRequest httpRequest,
-                                   HttpServletResponse httpResponse,
-                                   HttpSession session) {
-
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.email(), request.password())
-        );
+    public ResponseEntity<ApiResponse<User>> login(@Valid @RequestBody LoginRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(auth);
@@ -61,19 +54,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody RegisterRequest request,
-                                                      HttpServletRequest httpRequest) {
+    public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody RegisterRequest request, HttpServletRequest httpRequest) {
         userService.registerUser(request);
         return ResponseFactory.created("User registered", httpRequest);
     }
 
     @GetMapping("/session")
-    public ResponseEntity<ApiResponse<User>> currentSession(@AuthenticationPrincipal CustomUserDetail userDetail,
-                                                            HttpServletRequest httpRequest) {
-
-        if (userDetail == null) {
-            return ResponseFactory.ok(null, httpRequest);
-        }
+    public ResponseEntity<ApiResponse<User>> currentSession(@AuthenticationPrincipal CustomUserDetail userDetail, HttpServletRequest httpRequest) {
+        if (userDetail == null) return ResponseFactory.ok(null, httpRequest);
 
         User user = userService.findUser(userDetail.id());
         return ResponseFactory.ok(user, httpRequest);

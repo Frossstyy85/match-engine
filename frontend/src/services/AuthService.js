@@ -1,27 +1,29 @@
+import http from "./http";
+
 const AuthService = {
-    login(email, password) {
-        // MOCK DEMO
-        if (email === "test@test.se" && password === "123") {
-            localStorage.setItem("user", JSON.stringify({ email }));
-            return Promise.resolve({ success: true });
-        }
-        return Promise.resolve({
-            success: false,
-            message: "Fel email eller lösenord"
-        });
-    },
+  async login(email, password) {
+    const res = await http.post("/auth/login", { email, password });
+    return res.data; // user object
+  },
 
-    register(name, email, password) {
-        // MOCK DEMO – i framtiden API-anrop
-        return Promise.resolve({
-            success: true,
-            message: "Konto skapat!"
-        });
-    },
+  async register(name, email, password) {
+    const res = await http.post("/auth/register", { name, email, password });
+    return { message: res.message };
+  },
 
-    logout() {
-        localStorage.removeItem("user");
-    }
+  async session() {
+    const res = await http.get("/auth/session");
+    return res.data; // user or null
+  },
+
+  async logout() {
+    await http.post("/auth/logout");
+  },
+
+  async updateProfile(partial) {
+    const res = await http.patch("/user/update", partial);
+    return res.data; // updated user
+  },
 };
 
 export default AuthService;

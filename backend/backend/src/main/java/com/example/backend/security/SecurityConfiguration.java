@@ -14,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -21,12 +23,14 @@ public class SecurityConfiguration {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider,
+                                                   SecurityContextRepository securityContextRepository) {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authenticationProvider(authenticationProvider)
+                .securityContext(sc -> sc.securityContextRepository(securityContextRepository))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/logout", "/auth/login", "/auth/session", "/auth/register").permitAll()
                         .anyRequest().authenticated()
@@ -50,6 +54,11 @@ public class SecurityConfiguration {
     @Primary
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityContextRepository securityContextRepository() {
+        return new HttpSessionSecurityContextRepository();
     }
 
 

@@ -3,7 +3,8 @@ package com.example.backend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-@Entity(name = "app_user")
+@Table(name = "app_user")
+@Entity
 public class User {
 
     @Id
@@ -25,6 +26,7 @@ public class User {
 
     public User() {
     }
+
 
     private User(String name, String email, String password) {
         this.name = name;

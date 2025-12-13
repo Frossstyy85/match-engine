@@ -1,11 +1,10 @@
 package com.example.backend.security;
 
+import com.example.backend.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,14 +22,11 @@ public class SecurityConfiguration {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider,
-                                                   SecurityContextRepository securityContextRepository) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .authenticationProvider(authenticationProvider)
-                .securityContext(sc -> sc.securityContextRepository(securityContextRepository))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/logout", "/auth/login", "/auth/session", "/auth/register").permitAll()
                         .anyRequest().authenticated()
@@ -38,20 +34,11 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(CustomUDS customUserDetailService, PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customUserDetailService);
-        provider.setPasswordEncoder(passwordEncoder);
-        return provider;
-    }
-
-
-    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    @Primary
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -61,5 +48,9 @@ public class SecurityConfiguration {
         return new HttpSessionSecurityContextRepository();
     }
 
+    @Bean
+    public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder, UserService userService) {
+        return new UserAuthenticationProvider(passwordEncoder, userService);
+    }
 
 }

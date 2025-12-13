@@ -18,13 +18,14 @@ public class DataSeeder {
         this.passwordEncoder = passwordEncoder;
     }
 
+
     @PostConstruct
     public void seed() {
         User user = new User();
         user.setRole(Role.ADMIN);
         user.setName("jake");
         user.setEmail("jake@gmail.com");
-        user.setPassword(passwordEncoder.encode("strongpassword"));
+        user.setPassword(passwordEncoder.encode("password"));
         userRepository.save(user);
     }
 

@@ -1,13 +1,13 @@
-package com.example.backend.service.user;
+package com.example.backend.service;
 
 import com.example.backend.controller.security.RegisterRequest;
 import com.example.backend.controller.user.UserUpdateDto;
 import com.example.backend.entity.User;
 import com.example.backend.exception.NotFoundException;
 import com.example.backend.repository.UserRepository;
+import com.example.backend.security.AuthenticatedUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Consumer;
 
@@ -16,10 +16,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticatedUser authenticatedUser;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticatedUser authenticatedUser) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticatedUser = authenticatedUser;
     }
 
     private static <T> void applyIfNonNull(T value, Consumer<T> setter) {
@@ -29,18 +31,26 @@ public class UserService {
     }
 
     public void registerUser(RegisterRequest request) {
-        userRepository.save(
+        save(
                 User.defaultUser(request.name(), request.email(), passwordEncoder.encode(request.password()))
         );
     }
 
-    public User findUser(Long id) {
+    private User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    @Transactional
-    public User updateUser(UserUpdateDto userDto, Long id) {
-        User currentUser = findUser(id);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private User save(User user) {
+        return userRepository.save(user);
+    }
+
+
+    public User updateUser(UserUpdateDto userDto) {
+        User currentUser = authenticatedUser.get();
 
         applyIfNonNull(userDto.name(), currentUser::setName);
         applyIfNonNull(userDto.email(), currentUser::setEmail);
@@ -48,7 +58,10 @@ public class UserService {
             currentUser.setPassword(passwordEncoder.encode(userDto.password()));
         }
 
-        return userRepository.save(currentUser);
+        save(currentUser);
+
+
+        return currentUser;
     }
 
 

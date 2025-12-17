@@ -24,12 +24,6 @@ public class UserService {
         this.authenticatedUser = authenticatedUser;
     }
 
-    private static <T> void applyIfNonNull(T value, Consumer<T> setter) {
-        if (value != null) {
-            setter.accept(value);
-        }
-    }
-
     public void registerUser(RegisterRequest request) {
         save(
                 User.defaultUser(request.name(), request.email(), passwordEncoder.encode(request.password()))
@@ -52,8 +46,9 @@ public class UserService {
     public User updateUser(UserUpdateDto userDto) {
         User currentUser = authenticatedUser.get();
 
-        applyIfNonNull(userDto.name(), currentUser::setName);
-        applyIfNonNull(userDto.email(), currentUser::setEmail);
+        if (userDto.email() != null) currentUser.setEmail(userDto.email());
+        if (userDto.name() != null) currentUser.setName(userDto.name());
+        
         if (userDto.password() != null && !userDto.password().isBlank()) {
             currentUser.setPassword(passwordEncoder.encode(userDto.password()));
         }

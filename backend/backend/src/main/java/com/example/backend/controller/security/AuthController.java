@@ -2,6 +2,7 @@ package com.example.backend.controller.security;
 
 import com.example.backend.controller.GenericResponse;
 import com.example.backend.entity.User;
+import com.example.backend.repository.UserRepository;
 import com.example.backend.security.AuthenticatedUser;
 import com.example.backend.service.AuthService;
 import com.example.backend.service.UserService;
@@ -49,10 +50,8 @@ public class AuthController {
     }
 
     @GetMapping("/session")
-    public ResponseEntity<?> currentSession(@AuthenticationPrincipal User principal) {
-        if (principal == null) return ResponseEntity.ok(Map.of("Authenticated", false));
-
-        User user = authenticatedUser.get();
+    public ResponseEntity<?> currentSession(@AuthenticationPrincipal User user) {
+        if (user == null) return ResponseEntity.ok(Map.of("Authenticated", false));
         return ResponseEntity.ok(new GenericResponse<>(user));
     }
 }

@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: mydb
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  # ignore
+
+  # app:
+  #   build: .
+  #   container_name: app
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     NODE_ENV: production
+  #     DATABASE_URL: postgres://postgres:secret@postgres:5432/mydb
+  #     REDIS_URL: redis://redis:6379
+  #   depends_on:
+  #     - postgres
+  #     - redis

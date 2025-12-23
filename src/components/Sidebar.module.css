@@ -1,0 +1,76 @@
+.sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: #121212;
+    color: #fff;
+    padding: 20px;
+    border-right: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.navLink {
+    color: #bbb;
+    padding: 10px 5px;
+    border-radius: 8px;
+    transition: 0.2s;
+    font-size: 1.1rem;
+    text-decoration: none;
+}
+
+.navLink:hover {
+    background: #1e1e1e;
+    color: #fff;
+}
+
+.navLinkActive {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+.userInfo {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.footer {
+    margin-top: auto;
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.footerContent {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.logoutButton {
+    background: #3a3a3a;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.logoutButton:hover {
+    background: #555;
+}
+
+.loginButton {
+    composes: logoutButton;
+}

@@ -2,7 +2,7 @@ import {NextRequest, NextResponse} from "next/server";
 import { createSession } from "@/lib/session";
 import { User } from "@/lib/types";
 import bcrypt from "bcrypt"
-import {createUser, getUserByEmail} from "@/repositories/users";
+import { createUser, getUserByEmail} from "@/repositories/users";
 
 
 interface RequestBody {
@@ -14,34 +14,47 @@ interface RequestBody {
 export async function POST(request: NextRequest){
 
     try {
+
         const body: RequestBody = (await request.json()) as RequestBody;
 
-        const {email, password} = body;
-
+        const { email, password } = body;
 
         const user = await getUserByEmail(email);
 
-        console.log(user)
+        if (user) {
 
-        const isValid: boolean = await bcrypt.compare(password, user.password);
+            const isValid: boolean = await bcrypt.compare(password, user.password);
 
-        console.log(isValid)
 
-        if (isValid){
-            const currentUser: User = {
-                name: user.name,
-                email: user.email,
+            if (isValid) {
+
+                const currentUser: User = {
+                 id: user.id,
+                 name: user.name,
+                 email: user.email,
+                 role: user.role
+                 }
+
+               /** const currentUser: User = {
+                    id: 1,
+                    name: "alice",
+                    email:"alice@gmail.com",
+                    role: "project_lead"
+                } **/
+
+                const sessionId = await createSession(currentUser)
+                const response: NextResponse<{ user: User }> = NextResponse.json({user: currentUser})
+                response.cookies.set("sessionId", sessionId, {
+                    httpOnly: true,
+                    path: "/"
+                })
+
+
+                return response;
             }
 
-            const sessionId = await createSession(currentUser)
-            const response = NextResponse.json({ ok: true, user: currentUser })
-            response.cookies.set("sessionId", sessionId, {
-                httpOnly: true,
-                path: "/"
-            })
-
-            return response;
         }
+
         return NextResponse.json({ error: "Invalid request" }, { status: 400 })
 
     } catch (e) {

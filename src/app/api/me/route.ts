@@ -1,28 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/session";
+import { getSession, Session } from "@/lib/session";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse<{ session: Session | null}>> {
     try {
-        const sessionId = request.cookies.get("sessionId")?.value;
+        const sessionId: string | undefined = request.cookies.get("sessionId")?.value;
 
         if (!sessionId) {
-            return NextResponse.json({ user: null });
+            return NextResponse.json({ session: null });
         }
 
-        const user = await Promise.race([
-            getSession(sessionId),
-            new Promise<null>((resolve) => 
-                setTimeout(() => resolve(null), 3000)
-            )
-        ]);
-        
-        if (!user) {
-            return NextResponse.json({ user: null });
-        }
-        
-        return NextResponse.json({ user });
+        const session: Session | null = await getSession(sessionId);
+
+        return NextResponse.json({ session: session ?? null })
     } catch (error) {
-        console.error("Error in /api/me:", error);
-        return NextResponse.json({ user: null });
+        return NextResponse.json({ session: null });
     }
 }

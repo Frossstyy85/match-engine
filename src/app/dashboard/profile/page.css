@@ -1,0 +1,25 @@
+.profilePage {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 12px 6px 32px 6px;
+}
+
+.profileHeader {
+    margin-bottom: 18px;
+    padding: 14px 14px;
+    background: transparent;
+}
+
+.profileTitle {
+    margin: 0;
+}
+
+.profileSubtitle {
+    margin: 6px 0 0 0;
+}
+
+.cardWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}

@@ -1,0 +1,75 @@
+.card {
+    width: 100%;
+    background: transparent;
+    overflow: hidden;
+}
+
+.cardInner {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.cardHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.cardTitle {
+    margin: 0;
+}
+
+.cardDesc {
+    margin: 6px 0 0 0;
+}
+
+.cardBody {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fieldGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 2px solid transparent;
+    transition: border 150ms;
+}
+
+
+
+.fieldLabel {
+}
+
+.fieldInput {
+    width: 100%;
+}
+
+.cardActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 2px;
+}
+
+.btnPrimary {
+}
+
+.btnPrimary:hover {
+}
+
+.btnGhost {
+}
+
+.btnGhost:hover {
+}

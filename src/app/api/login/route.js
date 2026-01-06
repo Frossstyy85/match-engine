@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import userService from "@/services/userService";
+import userService from "@/lib/services/userService";
 import { AUTH_COOKIE_NAME, AUTH_TOKEN_MAX_AGE_SECONDS, sessionCookieOptions } from "@/lib/authCookies";
 import { signAuthToken } from "@/lib/jwt";
 

@@ -1,7 +1,7 @@
 import {cookies} from "next/headers";
 import {AUTH_COOKIE_NAME} from "@/lib/authCookies";
 import {verifyAuthToken} from "@/lib/jwt";
-import userService from "@/services/userService";
+import userService from "@/lib/services/userService";
 
 interface Authentication {
   id: number,

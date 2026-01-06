@@ -37,8 +37,8 @@ export default function RegisterForm({ onSwitch } ) {
 
     try {
 
-        await axios.post("/api/register", { email, name, password })
-        await axios.post("/api/login", { email, password })
+        await axios.post("/api/register", { email, name, password });
+        await axios.post("/api/login", { email, password });
 
         router.push("/dashboard");
 

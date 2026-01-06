@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import userService from "@/services/userService";
+import userService from "@/lib/services/userService";
 import { isValidEmail } from "@/components/auth/authUtils";
 
 export async function POST(req) {

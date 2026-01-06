@@ -1,7 +1,7 @@
-import {getAuthentication, getSessionUser} from "@/lib/auth";
+import { getAuthentication } from "@/lib/auth";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
-import userService from "@/services/userService";
+import userService from "@/lib/services/userService";
 
 export async function PATCH(req) {
   const { currentPassword, newPassword } = await req.json();

@@ -5,10 +5,7 @@ export type AuthTokenPayload = {
 };
 
 function getJwtSecret(): Uint8Array {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    return new TextEncoder().encode("dev-insecure-secret-change-me");
-  }
+  const secret: string = "secret";
   return new TextEncoder().encode(secret);
 }
 

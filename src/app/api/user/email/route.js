@@ -1,4 +1,4 @@
-import { isValidEmail } from "@/components/auth/authUtils";
+import { isValidEmail } from "@/lib/authUtils";
 import {NextResponse} from "next/server";
 
 export default async function PATCH(req){

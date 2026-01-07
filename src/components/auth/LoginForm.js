@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -10,15 +10,8 @@ export default function LoginForm({ onSwitch }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [disabled, setDisabled] = useState(false);
-  const [clear, setClear] = useState(false);
 
-    useEffect(() => {
-        const hasInput = !!(email || password);
-        setClear(hasInput);
-        setDisabled(!email || !password);
-    }, [email, password]);
-
+  const isPristine = email === "" && password === "";
 
     const clearFields = () => {
         setError(null);
@@ -79,8 +72,8 @@ export default function LoginForm({ onSwitch }) {
                     </div>
                 </div>
                 <div>
-                    {clear && <button type={"button"} onClick={clearFields}>clear</button>}
-                    <button type={"submit"} disabled={disabled}>
+                    {!isPristine && <button type={"button"} onClick={clearFields}>clear</button>}
+                    <button type={"submit"} disabled={!email || !password}>
                         Login
                     </button>
                 </div>

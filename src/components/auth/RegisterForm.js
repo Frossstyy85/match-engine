@@ -1,11 +1,9 @@
 "use client";
 
 
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
-
 
 export default function RegisterForm({ onSwitch } ) {
   const router = useRouter();
@@ -14,14 +12,8 @@ export default function RegisterForm({ onSwitch } ) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [disabled, setDisabled] = useState(true);
-  const [clear, setClear] = useState(false);
 
-    useEffect(() => {
-        const hasInput = !!(name || email || password);
-        setClear(hasInput);
-        setDisabled(!name || !email || !password);
-    }, [name, email, password]);
+  const isPristine = name === "" && email === "" && password === "";
 
 
   const clearFields = () => {
@@ -96,8 +88,8 @@ export default function RegisterForm({ onSwitch } ) {
                   </div>
               </div>
           <div>
-              {clear && <button type={"button"} onClick={clearFields}>clear</button>}
-              <button type={"submit"} disabled={disabled}>
+              {!isPristine && <button type={"button"} onClick={clearFields}>clear</button>}
+              <button type={"submit"} disabled={!name || !email || !password}>
                   Register
               </button>
           </div>

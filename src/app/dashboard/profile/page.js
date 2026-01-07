@@ -1,21 +1,18 @@
 
-import { EmailCard, NameCard, PasswordCard } from "@/app/dashboard/profile/CardComponents";
-import "./page.css"
-import {getCurrentUser} from "@/lib/auth";
+import { PasswordCard } from "@/app/dashboard/profile/CardComponents";
+import {getUserProfile} from "@/lib/auth";
 
 export default async function Profile() {
 
-    const user = await getCurrentUser();
+    const user = await getUserProfile();
 
   return (
-    <div className="profilePage">
-      <div className="profileHeader">
-        <h1 className="profileTitle">Profile</h1>
-        <p className="profileSubtitle">Manage your account settings.</p>
+    <div>
+      <div>
+        <h1>Profile</h1>
+        <p>Manage your account settings.</p>
       </div>
-      <div className="cardWrapper">
-        <NameCard userName={user.name} />
-        <EmailCard userEmail={user.email} />
+      <div>
         <PasswordCard />
       </div>
     </div>

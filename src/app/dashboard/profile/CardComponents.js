@@ -1,198 +1,99 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { updatePassword } from "@/lib/api/userClient";
-import { isValidEmail } from "@/components/auth/authUtils";
-import "./cards.css";
-
-export function Card({ children }) {
-  return <section className="card">{children}</section>;
-}
-
-function CardShell({ title, description, children, actions }) {
-  return (
-    <Card>
-      <div className="cardInner">
-        <div className="cardHeader">
-          <div>
-            <h2 className="cardTitle">{title}</h2>
-            <p className="cardDesc">{description}</p>
-          </div>
-        </div>
-        <div className="cardBody">{children}</div>
-        <div className="cardActions">{actions}</div>
-      </div>
-    </Card>
-  );
-}
-
-function CardActions({ isPristine, onCancel, onSave }) {
-  return (
-    <>
-      {!isPristine && (
-        <button className="btnGhost" onClick={onCancel}>
-          Cancel
-        </button>
-      )}
-      <button className="btnPrimary" onClick={onSave} disabled={isPristine}>
-        Save changes
-      </button>
-    </>
-  );
-}
-
-export function NameCard({ userName }) {
-  const [name, setName] = useState("");
-  const isPristine = useMemo(() => name === "", [name]);
-
-  const clearFields = () => setName("");
-
-  return (
-    <CardShell
-      title="Name"
-      description="This will be shown across your account."
-      actions={
-        <CardActions isPristine={isPristine} onCancel={clearFields} onSave={undefined} />
-      }
-    >
-      <InputBox
-        field="Name"
-        placeholder={userName}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        type="text"
-      />
-    </CardShell>
-  );
-}
-
-export function EmailCard({ userEmail }) {
-  const [email, setEmail] = useState("");
-  const [isPristine, setIsPristine] = useState(true);
-  const [emailError, setEmailError] = useState(null);
-
-  useEffect(() => {
-    const error = !email ? null : isValidEmail(email) ? null : "Email Address is invalid";
-    setEmailError(error);
-    setIsPristine(!email || !!error);
-  }, [email]);
-
-  const clearFields = () => setEmail("");
-
-  return (
-    <CardShell
-      title="Email"
-      description="Used for sign-in and notifications."
-      actions={
-        <CardActions isPristine={isPristine} onCancel={clearFields} onSave={undefined} />
-      }
-    >
-      <InputBox
-        field="Email"
-        placeholder={userEmail}
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        type="text"
-      />
-      {emailError && <p>{emailError}</p>}
-    </CardShell>
-  );
-}
+import axios from "axios";
+import { useRef, useState } from "react";
 
 export function PasswordCard() {
-  const [error, setError] = useState(null);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const isPristine = useMemo(
-    () => !currentPassword && !newPassword && !confirmPassword,
-    [currentPassword, newPassword, confirmPassword]
-  );
 
-  const clearFields = () => {
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-  };
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
-  const handleSubmit = async () => {
-    setError(null);
-    try {
-      const res = await updatePassword({ currentPassword, newPassword });
-      const data = await res.json();
-      if (data?.error) {
-        setError(data.error);
-        return;
-      }
-      clearFields();
-    } catch (e) {
-      console.error("Error updating password", e);
+    const clearFields = () => {
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
     }
-  };
 
-  return (
-    <CardShell
-      title="Password"
-      description="Choose a strong password you don’t reuse elsewhere."
-      actions={
-        <CardActions isPristine={isPristine} onCancel={clearFields} onSave={handleSubmit} />
-      }
-    >
-      {error && <p>{error}</p>}
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+        setSuccess(null);
 
-      <div className="fieldGrid">
-        <InputBox
-          field="Current password"
-          placeholder="Enter current password"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          type="password"
-        />
-        <InputBox
-          field="New password"
-          placeholder="Create a new password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          type="password"
-        />
-        <InputBox
-          field="Confirm password"
-          placeholder="Re-enter new password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          type="password"
-        />
-      </div>
-    </CardShell>
-  );
+        if (newPassword !== confirmPassword){
+            setError("password dont match");
+            return;
+        }
+        try {
+            await axios.patch("/api/user/password", {currentPassword: currentPassword, newPassword: newPassword});
+            setSuccess("password updated");
+            clearFields();
+        } catch (err) {
+            setError(err.response?.data?.message || err.message);
+        }
+    }
+
+    const isPristine =
+        currentPassword === "" &&
+        newPassword === "" &&
+        confirmPassword === "";
+
+    return (
+        <div>
+            <h2>Reset password</h2>
+            <form onSubmit={onSubmit}>
+                {error && <p>{error}</p>}
+                {success && <p>{success}</p>}
+                <div>
+                    <InputField
+                        label={"CURRENT PASSWORD"}
+                        placeholder={"CURRENT PASSWORD"}
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        type={"password"}
+                    />
+                    <InputField
+                        label={"NEW PASSWORD"}
+                        placeholder={"NEW PASSWORD"}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        type={"password"}
+                    />
+                    <InputField
+                        label={"CONFIRM NEW PASSWORD"}
+                        placeholder={"CONFIRM NEW PASSWORD"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        type={"password"}
+                    />
+                </div>
+                {!isPristine && <button onClick={clearFields} type="button">clear</button>}
+                <button type="submit">save</button>
+            </form>
+        </div>
+    );
 }
 
-export function InputBox({ field, placeholder, value, onChange, type }) {
-  const inputRef = useRef(null);
+function InputField({ label, placeholder, value, onChange, type }) {
+    const inputRef = useRef(null);
 
-  const handleClick = () => {
-    inputRef.current.focus();
-    inputRef.current.readOnly = false;
-  };
+    const focusInput = () => {
+        inputRef.current.focus();
+    };
 
-  return (
-    <div onClick={handleClick} className="field">
-      <div className="fieldLabel">{field}</div>
-      <input
-        className="fieldInput"
-        placeholder={placeholder}
-        ref={inputRef}
-        value={value}
-        onChange={onChange}
-        type={type}
-        autoComplete="off"
-        readOnly
-      />
-    </div>
-  );
+    return (
+        <div onClick={focusInput}>
+            <span>{label}</span>
+            <input
+                type={type}
+                ref={inputRef}
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
+            />
+        </div>
+    );
 }
-
-
-
-

@@ -1,5 +1,10 @@
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
 .main-content {
-    margin-left: 250px;
+    flex: 1;
     min-height: 100vh;
     padding: 22px;
 }

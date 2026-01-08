@@ -1,4 +1,4 @@
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/sidebar/Sidebar";
 import "./layout.css";
 import {redirect} from "next/navigation";
 
@@ -11,10 +11,8 @@ export default async function DashboardLayout({ children }) {
     if (!auth) {
         redirect("/authenticate?redirect-uri=/dashboard");
     }
-
-
   return (
-    <div>
+    <div className="dashboard-layout">
         <Sidebar/>
       <main className={"main-content"}>{children}</main>
     </div>

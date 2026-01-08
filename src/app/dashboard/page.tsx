@@ -6,6 +6,7 @@
 
 import { getAuthentication } from "@/lib/auth";
 import { JwtUser } from "@/lib/jwt";
+import "./dashboard.css"
 
 /**
  * DashboardPage is a Server Component.

@@ -23,6 +23,8 @@ INSERT INTO teams (name) VALUES
                              ('Team Alpha'),
                              ('Team Beta');
 
+
+
 INSERT INTO users (name, email, password_hash, role) VALUES
-                                                         ('Alice', 'alice@gmail.com', '$2b$10$uWlZ9KX2G.k0Y9Y6a9H8kOWoHb8g3cqXf5pXq8F5f1c/7dY4R5c9K', 'ADMIN'),
-                                                         ('Jake', 'jake@gmail.com', '$2b$10$uWlZ9KX2G.k0Y9Y6a9H8kOWoHb8g3cqXf5pXq8F5f1c/7dY4R5c9K', 'USER');
+                                                         ('Alice', 'alice@gmail.com', '$2a$14$FgBK1IXswfemEaj2DV/MtuX4PkuNHpqEXTvaCDhDqH6ODYQvigw2q', 'ADMIN'),
+                                                         ('Jake', 'jake@gmail.com', '$2a$14$FgBK1IXswfemEaj2DV/MtuX4PkuNHpqEXTvaCDhDqH6ODYQvigw2q', 'USER');

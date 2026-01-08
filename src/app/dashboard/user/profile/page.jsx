@@ -1,10 +1,7 @@
 
-import { PasswordCard } from "@/app/dashboard/profile/CardComponents";
-import {getUserProfile} from "@/lib/auth";
+import { PasswordCard } from "@/app/dashboard/user/profile/CardComponents";
 
 export default async function Profile() {
-
-    const user = await getUserProfile();
 
   return (
     <div>

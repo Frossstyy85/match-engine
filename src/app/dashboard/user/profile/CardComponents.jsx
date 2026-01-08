@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useRef, useState } from "react";
+import InputField from "@/components/InputField";
 
 export function PasswordCard() {
 
@@ -77,23 +78,4 @@ export function PasswordCard() {
     );
 }
 
-function InputField({ label, placeholder, value, onChange, type }) {
-    const inputRef = useRef(null);
 
-    const focusInput = () => {
-        inputRef.current.focus();
-    };
-
-    return (
-        <div onClick={focusInput}>
-            <span>{label}</span>
-            <input
-                type={type}
-                ref={inputRef}
-                placeholder={placeholder}
-                value={value}
-                onChange={onChange}
-            />
-        </div>
-    );
-}

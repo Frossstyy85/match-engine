@@ -5,31 +5,21 @@ import LogoutButton from "@/components/auth/LogoutButton";
 
 export default function Sidebar(){
 
-
     const NAV_LINKS = [
         { id: 1, label: "Home", href: "/dashboard" },
-        { id: 2, label: "profile", href: "/dashboard/profile" },
-        { id: 3, label: "teams", href: "/dashboard/teams" },
-        { id: 4, label: "projects", href: "/dashboard/projects"}
+        { id: 2, label: "profile", href: "/dashboard/user/profile" },
     ];
-
-
 
     return (
             <nav className={styles.sidebar}>
-                <ul>
+                <ul className={styles.list}>
                     {NAV_LINKS.map((link) => (
                         <li className={styles.link} key={link.id}>
-                            <Link href={link.href}>{link.label}</Link>
+                            <Link className={styles.linkText} href={link.href}>{link.label}</Link>
                         </li>
                     ))}
                 </ul>
                 <LogoutButton/>
             </nav>
     )
-
-
-
-
-
 }

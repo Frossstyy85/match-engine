@@ -4,8 +4,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import InputField from "@/components/InputField";
+import styles from "./AuthModal.module.css"
 
-export default function RegisterForm({ onSwitch } ) {
+export default function RegisterForm({ onSwitch, redirectUri } ) {
   const router = useRouter();
   const [error, setError] = useState(null);
   const [name, setName] = useState("");
@@ -32,7 +34,7 @@ export default function RegisterForm({ onSwitch } ) {
         await axios.post("/api/register", { email, name, password });
         await axios.post("/api/login", { email, password });
 
-        router.push("/dashboard");
+        router.push(redirectUri);
 
     } catch (err) {
         setError(err.response?.data?.message || err.message || "Something went wrong")
@@ -46,46 +48,34 @@ export default function RegisterForm({ onSwitch } ) {
           {loading && <p>Loading...</p>}
           {error && <p>{error}</p>}
           <form onSubmit={handleSubmit}>
-              <div>
-                  <div>
-                      <span>Email</span>
-                      <input
+              <div className={styles.inputArea}>
+                      <InputField
+                          label={"EMAIL"}
                           value={email}
+                          type={"email"}
                           onChange={(e) => {
                               setError(null);
-                              setEmail(e.target.value);
+                              setEmail(e.target.value)
                           }}
-                          placeholder="name@company.com"
-                          type="text"
-                          autoComplete="email"
                       />
-                  </div>
-                  <div>
-                      <span>Name</span>
-                      <input
+                      <InputField
+                          label={"NAME"}
                           value={name}
+                          type={"text"}
                           onChange={(e) => {
                               setError(null);
-                              setName(e.target.value);
+                              setName(e.target.value)
                           }}
-                          placeholder="Your name"
-                          type="text"
-                          autoComplete="name"
                       />
-                  </div>
-                  <div>
-                      <span>Password</span>
-                      <input
+                      <InputField
+                          label={"PASSWORD"}
                           value={password}
+                          type={"password"}
                           onChange={(e) => {
                               setError(null);
-                              setPassword(e.target.value);
+                              setPassword(e.target.value)
                           }}
-                          placeholder="Create a password"
-                          type="password"
-                          autoComplete="new-password"
                       />
-                  </div>
               </div>
           <div>
               {!isPristine && <button type={"button"} onClick={clearFields}>clear</button>}

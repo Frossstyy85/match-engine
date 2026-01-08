@@ -1,3 +1,4 @@
+"use server"
 import {cookies} from "next/headers";
 import {AUTH_COOKIE_NAME} from "@/lib/authCookies";
 import {JwtUser, verifyAuthToken} from "@/lib/jwt";

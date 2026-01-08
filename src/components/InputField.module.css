@@ -1,0 +1,25 @@
+.field {
+    width: 100%;
+    border-radius: 3px;
+    background-color: rgba(245,245,245,1);
+    padding: 10px;
+    border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
+    transition: border 150ms;
+}
+
+.field:hover {
+    background-color: rgba(230,230,230,1)
+}
+
+.field:focus-within {
+    border: 2px solid black;
+}
+
+.field input {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    width: 100%;
+}

@@ -1,10 +1,12 @@
+"use server"
+
 import { SignJWT, jwtVerify } from "jose";
-import { Role } from "@/lib/types";
+import { UserRole } from "@/db/schema";
 import { AUTH_TOKEN_MAX_AGE_SECONDS } from "@/lib/authCookies";
 
 export type JwtUser = {
   sub: string;
-  role: Role
+  role: UserRole
 };
 
 function getJwtSecret(): Uint8Array {
@@ -12,7 +14,7 @@ function getJwtSecret(): Uint8Array {
   return new TextEncoder().encode(secret);
 }
 
-export async function signAuthToken(userId: string, role: Role = "user"): Promise<string> {
+export async function signAuthToken(userId: string, role: UserRole = "USER"): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
 
   return new SignJWT({ role })
@@ -21,7 +23,7 @@ export async function signAuthToken(userId: string, role: Role = "user"): Promis
     .setIssuedAt(now)
     .setExpirationTime(now + AUTH_TOKEN_MAX_AGE_SECONDS)
     .sign(getJwtSecret());
-};
+}
 
 export async function verifyAuthToken(token: string): Promise<JwtUser | null> {
   try {
@@ -29,7 +31,7 @@ export async function verifyAuthToken(token: string): Promise<JwtUser | null> {
     if (!payload.sub || !payload.role) return null;
     return {
       sub: payload.sub,
-      role: payload.role as Role,
+      role: payload.role as UserRole
     };
   } catch {
     return null;

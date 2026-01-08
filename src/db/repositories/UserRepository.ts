@@ -1,11 +1,15 @@
+import "server-only";
 import { usersTable } from "@/db/schema";
 import db from "@/db/client";
 import { eq } from "drizzle-orm";
 import * as bcrypt from "bcrypt";
 
+const hashPassword: (raw: string) => Promise<string> =
+    async (rawPassword) => bcrypt.hash(rawPassword, 14);
+
 export async function createUser({ email, name, password }) {
 
-    const password_hash = await bcrypt.hash(password, 12);
+    const password_hash = await hashPassword(password);
 
     const [inserted] = await db
         .insert(usersTable)
@@ -30,7 +34,7 @@ export async function findUser(id: number) {
 
 export async function updatePassword(id: number, password: string) {
 
-    const password_hash = await bcrypt.hash(password, 12);
+    const password_hash = await hashPassword(password);
 
     await db
         .update(usersTable)

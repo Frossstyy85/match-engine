@@ -1,5 +1,4 @@
-
-import { PasswordCard } from "@/app/dashboard/user/profile/CardComponents";
+import { PasswordCard } from "@/app/dashboard/profile/CardComponents";
 
 export default async function Profile() {
 

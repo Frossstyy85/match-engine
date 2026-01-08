@@ -7,7 +7,7 @@ import axios from "axios";
 import InputField from "@/components/InputField";
 import styles from "./AuthModal.module.css"
 
-export default function RegisterForm({ onSwitch, redirectUri } ) {
+const RegisterForm = ({ onSwitch, redirectUri } ) => {
   const router = useRouter();
   const [error, setError] = useState(null);
   const [name, setName] = useState("");
@@ -45,6 +45,7 @@ export default function RegisterForm({ onSwitch, redirectUri } ) {
 
   return (
       <div>
+          <h2>Register</h2>
           {loading && <p>Loading...</p>}
           {error && <p>{error}</p>}
           <form onSubmit={handleSubmit}>
@@ -92,4 +93,6 @@ export default function RegisterForm({ onSwitch, redirectUri } ) {
       </div>
   );
 }
+
+export default RegisterForm;
 

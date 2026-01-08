@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import * as bcrypt from "bcrypt";
 
 const hashPassword: (raw: string) => Promise<string> =
-    async (rawPassword) => bcrypt.hash(rawPassword, 14);
+    async (rawPassword) => bcrypt.hash(rawPassword, 12);
 
 export async function createUser({ email, name, password }) {
 

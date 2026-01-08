@@ -7,7 +7,7 @@ export default function Sidebar(){
 
     const NAV_LINKS = [
         { id: 1, label: "Home", href: "/dashboard" },
-        { id: 2, label: "profile", href: "/dashboard/user/profile" },
+        { id: 2, label: "profile", href: "/dashboard/profile" },
     ];
 
     return (

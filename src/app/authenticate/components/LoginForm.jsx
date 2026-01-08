@@ -6,7 +6,8 @@ import axios from "axios";
 import InputField from "@/components/InputField";
 import styles from "./AuthModal.module.css"
 
-export default function LoginForm({ onSwitch, redirectUri }) {
+const LoginForm =  ({ onSwitch, redirectUri }) => {
+
   const router = useRouter();
   const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
@@ -42,6 +43,7 @@ export default function LoginForm({ onSwitch, redirectUri }) {
 
     return (
         <div>
+            <h2>Login</h2>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
             <form onSubmit={handleSubmit}>
@@ -84,5 +86,7 @@ export default function LoginForm({ onSwitch, redirectUri }) {
         </div>
     )
 }
+
+export default LoginForm;
 
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import LoginForm from "@/app/authenticate/LoginForm";
-import RegisterForm from "@/app/authenticate/RegisterForm";
+import LoginForm from "@/app/authenticate/components/LoginForm";
+import RegisterForm from "@/app/authenticate/components/RegisterForm";
 import styles from "./AuthModal.module.css";
 
 export default function AuthModal({ redirectUri }) {

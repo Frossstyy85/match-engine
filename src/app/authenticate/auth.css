@@ -1,0 +1,9 @@
+.auth-layout {
+    min-height: 200vh;
+    background-image: url("/auth-bg.png");
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover ;
+    background-attachment:  fixed;
+}

@@ -5,7 +5,6 @@
 // import component from "@/app/dashboard/components/component
 
 import { getAuthentication } from "@/lib/auth";
-import { JwtUser } from "@/lib/jwt";
 import "./dashboard.css"
 
 /**
@@ -18,17 +17,16 @@ export default async function DashboardPage() {
     // 1️⃣ Get authenticated user
     // -------------------------------
     // This calls your auth library and returns user info decoded from JWT
-    const auth: JwtUser = await getAuthentication();
+    const auth = await getAuthentication();
 
     // -------------------------------
     // 2️⃣ Extract the role from the authenticated user
     // -------------------------------
-    const userRole = auth.role;
 
     // -------------------------------
     // 3️⃣ Conditional rendering by role
     // -------------------------------
-    if (userRole === "ADMIN") {
+    if (auth.roles.includes("ADMIN")) {
         // ✅ If the user is an admin, show admin dashboard
         // You can add more components here for admin-specific views
         return (
@@ -46,7 +44,7 @@ export default async function DashboardPage() {
     // 4️⃣ USER view
     // -------------------------------
     // You can render a simpler view for normal users
-    if (userRole === "USER") {
+    if (auth.roles.includes("USER")) {
         return (
             <div className="dashboard-container">
                 <h2>User Dashboard</h2>

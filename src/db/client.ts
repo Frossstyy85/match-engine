@@ -11,6 +11,6 @@ const pool = new Pool({
     max: 5,
 });
 
-const db = drizzle({ client: pool });
+export const db =  drizzle({ client: pool });
 
-export default db;
+

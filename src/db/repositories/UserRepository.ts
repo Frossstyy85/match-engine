@@ -1,6 +1,6 @@
 import "server-only";
-import { usersTable } from "@/db/schema";
-import db from "@/db/client";
+import {rolesTable, userRolesTable, usersTable} from "@/db/schema";
+import { db } from "@/db/client";
 import { eq } from "drizzle-orm";
 import * as bcrypt from "bcrypt";
 
@@ -11,15 +11,26 @@ export async function createUser({ email, name, password }) {
 
     const password_hash = await hashPassword(password);
 
-    const [inserted] = await db
-        .insert(usersTable)
-        .values({ email, name, password_hash })
-        .returning({ id: usersTable.id });
+    const userId: number = await db.transaction(async (tx) => {
+        const [row] = await tx
+            .insert(usersTable)
+            .values({ email, name, password_hash })
+            .returning({ id: usersTable.id });
 
-    return inserted;
+
+        const roleIds = [1];
+
+        await tx.insert(userRolesTable).values(
+            roleIds.map(roleId => ({ roleId: roleId, userId: row.id}))
+        );
+        return row.id;
+    })
+
+    return userId;
+
 }
 
-export async function findUser(id: number) {
+export async function findUserById(id: number) {
     const [user] = await db
         .select({
             id: usersTable.id,
@@ -55,8 +66,9 @@ export async function getPasswordHashById(id: number) {
     return row;
 }
 
-export async function getPasswordHashByEmail(email: string) {
-    const [row] = await db
+export async function getUserAuthByEmail(email: string) {
+
+    const [user] = await db
         .select({
             id: usersTable.id,
             password_hash: usersTable.password_hash,
@@ -64,10 +76,26 @@ export async function getPasswordHashByEmail(email: string) {
         .from(usersTable)
         .where(eq(usersTable.email, email));
 
-    return row;
+    if (!user) return null
+
+    const roles = await getUserRoles(user.id);
+
+    return {
+        ...user,
+        roles: roles.map(role => role.name),
+    };
 }
 
-export async function emailExists(email: string) {
+async function getUserRoles(userId: number): Promise<{ name: string}[]>{
+    return db
+        .select({ name: rolesTable.name })
+        .from(userRolesTable)
+        .innerJoin(rolesTable, eq(rolesTable.id, userRolesTable.roleId))
+        .where(eq(userRolesTable.userId, userId));
+}
+
+
+export async function emailExists(email: string): Promise<boolean> {
     const rows = await db
         .select({ id: usersTable.id })
         .from(usersTable)
@@ -77,6 +105,7 @@ export async function emailExists(email: string) {
     return rows.length > 0;
 }
 
-export async function getUsers(){
+export async function getAllUsers(){
     return db.select().from(usersTable);
 }
+

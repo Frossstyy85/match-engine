@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { AUTH_COOKIE_NAME, AUTH_TOKEN_MAX_AGE_SECONDS, sessionCookieOptions } from "@/lib/authCookies";
 import { signAuthToken } from "@/lib/jwt";
-import {getPasswordHashByEmail} from "@/db/repositories/UserRepository";
+import {getUserAuthByEmail} from "@/db/repositories/UserRepository";
 
 
 
@@ -14,21 +14,21 @@ export async function POST(req) {
       return NextResponse.json({ message: "missing fields" }, { status: 400 });
     }
 
-    const credentials = await getPasswordHashByEmail(email);
+    const userAuth = await getUserAuthByEmail(email);
 
-    console.log(credentials)
+    console.log(userAuth)
 
-    if (!credentials) {
+    if (!userAuth) {
       return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
     }
 
-    const isValid = await bcrypt.compare(password, credentials.password_hash);
+    const isValid = await bcrypt.compare(password, userAuth.password_hash);
 
     if (!isValid) {
       return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
     }
 
-    const token = await signAuthToken(credentials.id);
+    const token = await signAuthToken(userAuth.id, userAuth.roles);
 
     const res = NextResponse.json({ message: "Login successful" }, { status: 200 });
 

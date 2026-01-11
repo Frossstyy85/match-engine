@@ -4,9 +4,8 @@ import { AUTH_COOKIE_NAME, AUTH_TOKEN_MAX_AGE_SECONDS, sessionCookieOptions } fr
 import { signAuthToken } from "@/lib/jwt";
 import {getUserAuthByEmail} from "@/db/repositories/UserRepository";
 
-
-
 export async function POST(req) {
+
   try {
     const { email, password } = await req.json();
 

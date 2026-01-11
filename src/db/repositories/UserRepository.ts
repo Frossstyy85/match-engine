@@ -3,12 +3,18 @@ import * as bcrypt from "bcrypt";
 import pool from "@/db/client"
 import { runTransaction } from "@/db/helper";
 
-const hashPassword: (raw: string) => Promise<string> =
-    async (rawPassword) => bcrypt.hash(rawPassword, 12);
+const hashPassword: (raw: string) => Promise<string> = async (rawPassword) => bcrypt.hash(rawPassword, 12);
 
-
-
-export async function createUser({ email, name, password }) {
+export async function createUser(
+    {
+        email,
+        name,
+        password }:
+    {
+        email: string,
+        name: string,
+        password: string
+    }) {
 
     const password_hash = await hashPassword(password);
 
@@ -89,7 +95,6 @@ async function getUserRoles(userId: number): Promise<{ name: string }[]> {
     return rows;
 }
 
-
 export async function emailExists(email: string): Promise<boolean> {
     const sql = `SELECT
      EXISTS( SELECT 1 FROM users WHERE email = $1)
@@ -104,4 +109,9 @@ export async function getAllUsers() {
     return rows;
 }
 
-
+export async function deleteTeam(userId: number){
+    const { rowCount } = await pool.query(`
+    DELETE FROM users where id = $1
+    `, [userId]);
+    return rowCount > 0;
+}

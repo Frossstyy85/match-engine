@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import InputField from "@/components/InputField";
 import styles from "./AuthModal.module.css"
 
@@ -17,7 +16,6 @@ const RegisterForm = ({ onSwitch, redirectUri } ) => {
 
   const isPristine = name === "" && email === "" && password === "";
 
-
   const clearFields = () => {
       setName("");
       setEmail("");
@@ -25,19 +23,46 @@ const RegisterForm = ({ onSwitch, redirectUri } ) => {
   }
 
   const handleSubmit = async (e) => {
+
     setLoading(true);
     setError(null);
     e.preventDefault();
 
     try {
 
-        await axios.post("/api/register", { email, name, password });
-        await axios.post("/api/login", { email, password });
+        const res1 = await fetch("/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, name, password }),
+            credentials: "include"
+        });
+
+        if (!res1.ok) {
+            const data = await res1.json();
+            throw new Error(data?.message);
+        }
+
+        const res2 = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password }),
+            credentials: "include"
+        });
+
+        if (!res2.ok){
+            const data = await res2.json();
+            throw new Error(data?.message);
+        }
+
 
         router.push(redirectUri);
 
     } catch (err) {
-        setError(err.response?.data?.message || err.message || "Something went wrong")
+        setError(err.message || "Network error")
     } finally {
         setLoading(false);
     }

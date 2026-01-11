@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import InputField from "@/components/InputField";
 import styles from "./AuthModal.module.css"
 
@@ -23,22 +22,34 @@ const LoginForm =  ({ onSwitch, redirectUri }) => {
     }
 
     const handleSubmit = async (e) => {
-      setLoading(true);
-      setError(null);
-      e.preventDefault();
+        setLoading(true);
+        setError(null);
+        e.preventDefault();
 
-      try {
+        try {
 
-          await axios.post("/api/login", { email: email, password: password });
-          router.push(redirectUri);
+            const res1 = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email, password }),
+                credentials: "include"
+            });
 
-      } catch (err) {
-          setError(err?.response?.data.message || err.message || "Login failed");
-      } finally {
-          setLoading(false);
-      }
+            if (!res1.ok) {
+                const data = await res1.json();
+                throw new Error(data?.message);
+            }
 
-    }
+            router.push(redirectUri);
+
+        } catch (err) {
+            setError(err.message || "Network error")
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
     return (

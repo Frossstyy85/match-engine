@@ -14,6 +14,7 @@ export const runTransaction = async (
         const res = await operation(client);
 
         await client.query("COMMIT");
+
         return res;
     } catch (err) {
         await client.query("ROLLBACK");

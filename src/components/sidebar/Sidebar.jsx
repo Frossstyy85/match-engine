@@ -1,9 +1,6 @@
-// app/components/Sidebar.tsx
 import Link from "next/link";
 import LogoutButton from "./LogoutButton"
-import { getAuthentication } from "@/lib/auth";
-import { JwtUser } from "@/lib/jwt";
-import "./Sidebar.css"; // normal CSS import
+import "./Sidebar.css";
 
 export default async function Sidebar() {
 

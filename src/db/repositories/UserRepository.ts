@@ -1,111 +1,107 @@
 import "server-only";
-import {rolesTable, userRolesTable, usersTable} from "@/db/schema";
-import { db } from "@/db/client";
-import { eq } from "drizzle-orm";
 import * as bcrypt from "bcrypt";
+import pool from "@/db/client"
+import { runTransaction } from "@/db/helper";
 
 const hashPassword: (raw: string) => Promise<string> =
     async (rawPassword) => bcrypt.hash(rawPassword, 12);
+
+
 
 export async function createUser({ email, name, password }) {
 
     const password_hash = await hashPassword(password);
 
-    const userId: number = await db.transaction(async (tx) => {
-        const [row] = await tx
-            .insert(usersTable)
-            .values({ email, name, password_hash })
-            .returning({ id: usersTable.id });
+    const newId = await runTransaction(pool, async (tx) => {
 
-
-        const roleIds = [1];
-
-        await tx.insert(userRolesTable).values(
-            roleIds.map(roleId => ({ roleId: roleId, userId: row.id}))
+        const userResult = await tx.query(
+            `INSERT INTO users
+             (email, name, password_hash)
+             VALUES ($1, $2, $3)
+             RETURNING id;`,
+            [email, name, password_hash]
         );
-        return row.id;
-    })
+        const userId = userResult.rows[0]?.id;
+        if (!userId) throw new Error("User insert failed");
 
-    return userId;
+        const roleResult = await tx.query(
+            `SELECT id FROM roles WHERE name = 'ADMIN';`
+        );
+        const roleId = roleResult.rows[0]?.id;
+        if (!roleId) throw new Error("Role not found");
 
+        const roleInsert = await tx.query(
+            `INSERT INTO user_roles
+             (role_id, user_id)
+             VALUES ($1, $2);`,
+            [roleId, userId]
+        );
+        if (roleInsert.rowCount === 0) throw new Error("Failed to assign role");
+        return userId;
+    });
+
+
+    return newId ?? null;
 }
 
-export async function findUserById(id: number) {
-    const [user] = await db
-        .select({
-            id: usersTable.id,
-            name: usersTable.name,
-            email: usersTable.email,
-        })
-        .from(usersTable)
-        .where(eq(usersTable.id, id));
 
-    return user;
+export async function findUserById(id: number) {
+    const sql = `SELECT email, name FROM users WHERE id = $1;`;
+    return pool.query(sql, [id]);
 }
 
 export async function updatePassword(id: number, password: string) {
-
     const password_hash = await hashPassword(password);
-
-    await db
-        .update(usersTable)
-        .set({ password_hash })
-        .where(eq(usersTable.id, id));
-
+    const sql = `UPDATE users SET password_hash = $1 WHERE id = $2;`;
+    const { rowCount } =  await pool.query(sql, [password_hash, id]);
+    return rowCount > 0;
 }
 
 export async function getPasswordHashById(id: number) {
-    const [row] = await db
-        .select({
-            id: usersTable.id,
-            password_hash: usersTable.password_hash,
-        })
-        .from(usersTable)
-        .where(eq(usersTable.id, id));
-
-    return row;
+    const sql = `SELECT password_hash FROM users WHERE id = $1;`;
+    const { rows } = await pool.query(sql, [id])
+    return rows[0] ?? null;
 }
 
 export async function getUserAuthByEmail(email: string) {
+    const sql = `SELECT id, email, password_hash FROM users WHERE email = $1;`;
+    const { rows } = await pool.query(sql, [email]);
 
-    const [user] = await db
-        .select({
-            id: usersTable.id,
-            password_hash: usersTable.password_hash,
-        })
-        .from(usersTable)
-        .where(eq(usersTable.email, email));
+    const userRow = rows[0];
+    if (!userRow) return null;
 
-    if (!user) return null
-
-    const roles = await getUserRoles(user.id);
+    const roles = await getUserRoles(userRow?.id);
 
     return {
-        ...user,
-        roles: roles.map(role => role.name),
-    };
+        ...userRow,
+        roles: roles.map(r => r.name)
+    }
 }
 
-async function getUserRoles(userId: number): Promise<{ name: string}[]>{
-    return db
-        .select({ name: rolesTable.name })
-        .from(userRolesTable)
-        .innerJoin(rolesTable, eq(rolesTable.id, userRolesTable.roleId))
-        .where(eq(userRolesTable.userId, userId));
+async function getUserRoles(userId: number): Promise<{ name: string }[]> {
+    const sql = `
+    SELECT r.name
+    FROM user_roles ur 
+    JOIN roles r ON ur.role_id = r.id
+    WHERE ur.user_id = $1;
+    `;
+    const { rows } = await pool.query(sql, [userId]);
+    return rows;
 }
 
 
 export async function emailExists(email: string): Promise<boolean> {
-    const rows = await db
-        .select({ id: usersTable.id })
-        .from(usersTable)
-        .where(eq(usersTable.email, email))
-        .limit(1);
-
-    return rows.length > 0;
+    const sql = `SELECT
+     EXISTS( SELECT 1 FROM users WHERE email = $1)
+      AS email_exists;`
+    const { rows } = await pool.query(sql, [email]);
+    return rows[0]?.email_exists ?? false;
 }
 
-export async function getAllUsers(){
-    return db.select().from(usersTable);
+export async function getAllUsers() {
+    const sql = `SELECT name, email   FROM users;`;
+    const { rows } = await pool.query(sql);
+    return rows;
 }
+
 

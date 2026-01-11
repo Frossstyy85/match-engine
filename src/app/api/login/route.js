@@ -16,7 +16,6 @@ export async function POST(req) {
 
     const userAuth = await getUserAuthByEmail(email);
 
-    console.log(userAuth)
 
     if (!userAuth) {
       return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });

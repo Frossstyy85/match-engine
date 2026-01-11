@@ -1,8 +1,7 @@
 import "server-only";
 import { Pool } from "pg";
-import { drizzle } from "drizzle-orm/node-postgres";
 
-const pool = new Pool({
+ const pool = new Pool({
     user: "app_user",
     database: "app_db",
     host: "localhost",
@@ -11,6 +10,9 @@ const pool = new Pool({
     max: 5,
 });
 
-export const db =  drizzle({ client: pool });
+ export default pool;
+
+
+
 
 

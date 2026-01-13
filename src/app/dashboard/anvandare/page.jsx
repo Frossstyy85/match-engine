@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
+import "./page.css";
 
 export default function Anvandare() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        // Exempeldata – byt till API-anrop senare
         setUsers([
             { id: 1, name: "Caroline", email: "caroline@test.se" },
             { id: 2, name: "Anders", email: "anders@test.se" },
@@ -15,25 +14,24 @@ export default function Anvandare() {
     }, []);
 
     return (
-            <div className="anvandare-container">
-                <h2>👥 Användare</h2>
-
-                <table className="anvandare-table">
-                    <thead>
-                    <tr>
-                        <th>Namn</th>
-                        <th>Email</th>
+        <div className="projekt-container">
+            <h2>👥 Användare</h2>
+            <table className="projekt-table">
+                <thead>
+                <tr>
+                    <th>Namn</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                {users.map(user => (
+                    <tr key={user.id}>
+                        <td>{user.name}</td>
+                        <td>{user.email}</td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {users.map(user => (
-                        <tr key={user.id}>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
+                ))}
+                </tbody>
+            </table>
+        </div>
     );
 }

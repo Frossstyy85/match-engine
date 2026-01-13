@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import "./page.css"
+import "./page.css";
 
 export default function Team() {
     const [teams, setTeams] = useState([]);
@@ -14,9 +14,9 @@ export default function Team() {
     }, []);
 
     return (
-        <div className="p-4">
+        <div className="projekt-container">
             <h2>💼 Team</h2>
-            <table className="table table-striped mt-3">
+            <table className="projekt-table">
                 <thead>
                 <tr>
                     <th>Team</th>

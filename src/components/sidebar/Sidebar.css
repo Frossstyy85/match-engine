@@ -1,32 +1,136 @@
+
 .sidebar {
-    width: 260px;
+    width: 300px;               /* bredare sidebar */
     min-height: 100vh;
-    background: #121212;
+    background: #1f2937;        /* mörkgrå bakgrund */
     color: #fff;
-    padding: 20px;
-    border-right: 1px solid #222;
+    padding: 25px;              /* mer luft runt innehållet */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 6px rgba(0,0,0,0.1);
+    transition: width 0.3s ease;
 }
 
+/* ===============================
+   Sidebar Header / Logo
+=============================== */
 .sidebar h3 {
-    font-size: 1.5rem;
-    margin-bottom: 30px;
-    font-weight: 600;
+    font-size: 1.4rem;          /* större text */
+    font-weight: 700;
+    color: #f3f4f6;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding-left: 12px;         /* lite inre padding */
+    position: relative;
 }
 
+/* Blå linje till vänster på header */
+.sidebar h3::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;                 /* lite tjockare linje */
+    background-color: #2563eb;
+    border-radius: 2px;
+}
+
+/* ===============================
+   Inloggad användare
+=============================== */
+.sidebar-user {
+    font-size: 1rem;
+    margin-bottom: 12px;       /* nära profil-länken */
+    color: #d1d5db;
+}
+
+.sidebar-user strong {
+    color: #fff;
+}
+
+/* ===============================
+   Navigation List
+=============================== */
+.sidebar ul {
+    list-style: none;           /* tar bort punkter */
+    padding-left: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+/* ===============================
+   Navigation Links
+=============================== */
 .nav-link {
-    color: #bbb !important;
-    padding: 10px 5px;
+    display: block;
+    text-decoration: none;
+    color: #d1d5db;
+    padding: 10px 14px;        /* mer padding för bredare sidebar */
     border-radius: 8px;
-    transition: 0.2s;
-    font-size: 1.1rem;
+    font-size: 1.1rem;         /* större text */
+    transition: all 0.2s ease;
 }
 
 .nav-link:hover {
-    background: #1e1e1e;
+    background-color: #2563eb;
     color: #fff !important;
+    transform: translateX(2px);
 }
 
 .nav-link.active {
-    background: #3a3a3a;
+    background-color: #3b82f6;
     color: #fff !important;
+    font-weight: 600;
+}
+
+/* ===============================
+   Sidebar Footer (Logga ut)
+=============================== */
+.sidebar-footer {
+    margin-top: auto;  /* längst ner */
+    padding-top: 15px;
+    border-top: 1px solid #374151;
+}
+
+.sidebar-footer a {
+    display: block;
+    text-decoration: none;
+    color: #f87171;  /* röd logga ut */
+    padding: 10px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.sidebar-footer a:hover {
+    background: #7f1d1d;
+    color: #fff;
+}
+
+/* ===============================
+   Responsiv Sidebar
+=============================== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 80px;           /* kompakt version på mobil */
+        padding: 10px;
+    }
+
+    .sidebar h3 {
+        display: none;
+    }
+
+    .sidebar-user {
+        display: none;
+    }
+
+    .nav-link {
+        padding: 8px;
+        text-align: center;
+        font-size: 0.95rem;
+    }
 }

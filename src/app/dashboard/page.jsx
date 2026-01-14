@@ -11,7 +11,7 @@ export default async function DashboardPage() {
 
     // ADMIN | USER | HR | PROJECT_LEAD
     let roles = []
-    roles.push("ADMIN");
+    roles.push("USER");
     
     if (roles.includes("ADMIN")) {
         const { default: AdminDashboard } = await import("./components/AdminDashboard");

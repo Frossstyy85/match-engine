@@ -31,6 +31,30 @@ export async function addUser(userId: number, teamId: number){
     return rowCount > 0;
 }
 
+export async function createTeam(name: string) {
+    const sql = `INSERT INTO teams (name) VALUES ($1) RETURNING id, name, created_at;`;
+    const { rows } = await pool.query(sql, [name]);
+    return rows[0] ?? null;
+}
+
+export async function getTeamById(teamId: number) {
+    const sql = `SELECT id, name, created_at FROM teams WHERE id = $1;`;
+    const { rows } = await pool.query(sql, [teamId]);
+    return rows[0] ?? null;
+}
+
+export async function updateTeam(teamId: number, fields: { name?: string }) {
+    if (fields.name === undefined) return null;
+    const sql = `
+        UPDATE teams
+        SET name = $1
+        WHERE id = $2
+        RETURNING id, name, created_at;
+    `;
+    const { rows } = await pool.query(sql, [fields.name, teamId]);
+    return rows[0] ?? null;
+}
+
 export async function deleteTeam(teamId: number){
     const { rowCount } = await pool.query(`
     DELETE FROM teams where id = $1
@@ -40,7 +64,7 @@ export async function deleteTeam(teamId: number){
 
 export async function getTeams(){
     const { rows } = await pool.query(`
-    SELECT id, name FROM teams
+    SELECT id, name, created_at FROM teams ORDER BY id ASC
     `);
     return rows;
 }

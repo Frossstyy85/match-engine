@@ -1,0 +1,23 @@
+type Query {
+    projects: [Project!]!
+    teams: [Team!]!
+    users: [User!]!
+}
+
+type Project {
+    id: ID
+    name: String
+    teams: [Team!]!
+}
+type Team {
+    id: ID
+    name: String
+    users: [User!]!
+}
+type User {
+    id: ID
+    name: String
+    email: String
+    projects: [Project!]!
+    teams: [Team!]!
+}

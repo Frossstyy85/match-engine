@@ -1,9 +1,6 @@
 import AuthModal from "@/app/authenticate/components/AuthModal";
 import Head from "next/head";
 
-export const metadata = {
-    title: "authenticate"
-}
 
 
 export default async function AuthenticatePage({ searchParams }) {

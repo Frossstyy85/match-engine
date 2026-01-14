@@ -3,6 +3,7 @@ import "./layout.css";
 import {redirect} from "next/navigation";
 
 import { getAuthentication } from "@/lib/auth";
+import ApolloWrapper from "@/components/ApolloWrapper";
 
 export default async function DashboardLayout({ children }) {
 
@@ -12,10 +13,12 @@ export default async function DashboardLayout({ children }) {
         redirect("/authenticate?redirect-uri=/dashboard");
     }
   return (
-    <div className="dashboard-layout">
-        <Sidebar/>
-      <main className={"main-content"}>{children}</main>
-    </div>
+    <ApolloWrapper>
+      <div className="dashboard-layout">
+          <Sidebar/>
+        <main className={"main-content"}>{children}</main>
+      </div>
+    </ApolloWrapper>
   );
 }
 

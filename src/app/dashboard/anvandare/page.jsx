@@ -2,16 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import "./page.css";
+import {useQuery} from "@apollo/client/react";
+import {gql} from "graphql-tag";
 
 export default function Anvandare() {
-    const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        setUsers([
-            { id: 1, name: "Caroline", email: "caroline@test.se" },
-            { id: 2, name: "Anders", email: "anders@test.se" },
-        ]);
-    }, []);
+
+    const { data, loading, error } = useQuery(gql` query {users { id  name email } }`)
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+
+    const { users } = data;
+
 
     return (
         <div className="projekt-container">

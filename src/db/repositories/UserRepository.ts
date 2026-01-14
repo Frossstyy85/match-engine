@@ -52,8 +52,9 @@ export async function createUser(
 
 
 export async function findUserById(id: number) {
-    const sql = `SELECT email, name FROM users WHERE id = $1;`;
-    return pool.query(sql, [id]);
+    const sql = `SELECT id, email, name, created_at FROM users WHERE id = $1;`;
+    const { rows } = await pool.query(sql, [id]);
+    return rows[0] ?? null;
 }
 
 export async function updatePassword(id: number, password: string) {
@@ -104,14 +105,58 @@ export async function emailExists(email: string): Promise<boolean> {
 }
 
 export async function getAllUsers() {
-    const sql = `SELECT name, email   FROM users;`;
+    const sql = `SELECT id, name, email, created_at FROM users ORDER BY id ASC;`;
     const { rows } = await pool.query(sql);
     return rows;
 }
 
-export async function deleteTeam(userId: number){
+export async function updateUser(
+    userId: number,
+    fields: { name?: string; email?: string }
+) {
+    const sets: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    if (fields.name !== undefined) {
+        sets.push(`name = $${idx++}`);
+        values.push(fields.name);
+    }
+    if (fields.email !== undefined) {
+        sets.push(`email = $${idx++}`);
+        values.push(fields.email);
+    }
+
+    if (sets.length === 0) return null;
+
+    values.push(userId);
+    const sql = `
+        UPDATE users
+        SET ${sets.join(", ")}
+        WHERE id = $${idx}
+        RETURNING id, name, email, created_at;
+    `;
+    const { rows } = await pool.query(sql, values);
+    return rows[0] ?? null;
+}
+
+export async function deleteUser(userId: number) {
     const { rowCount } = await pool.query(`
     DELETE FROM users where id = $1
     `, [userId]);
     return rowCount > 0;
+}
+
+export async function deleteTeam(userId: number) {
+    return deleteUser(userId);
+}
+
+export async function getTeamUsers(teamId: number){
+    const sql = `
+    SELECT id, name, email FROM users u
+    JOIN team_users tu ON tu.user_id = u.id
+    WHERE tu.team_id = $1
+    `;
+    const { rows } = await pool.query(sql, [teamId]);
+    return rows;
 }

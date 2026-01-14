@@ -10,6 +10,9 @@ services:
       POSTGRES_USER: app_user
       POSTGRES_PASSWORD: app_password
     volumes:
+      # Postgres 18+ expects a single mount at /var/lib/postgresql and will manage
+      # the major-version-specific subdirectory layout itself.
       - postgres_data:/var/lib/postgresql
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
 volumes:
   postgres_data:

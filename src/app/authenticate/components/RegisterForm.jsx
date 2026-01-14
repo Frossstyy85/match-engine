@@ -30,7 +30,7 @@ const RegisterForm = ({ onSwitch, redirectUri } ) => {
 
     try {
 
-        const res1 = await fetch("/api/register", {
+        const res1 = await fetch("/api/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -44,7 +44,7 @@ const RegisterForm = ({ onSwitch, redirectUri } ) => {
             throw new Error(data?.message);
         }
 
-        const res2 = await fetch("/api/login", {
+        const res2 = await fetch("/api/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -28,7 +28,7 @@ const LoginForm =  ({ onSwitch, redirectUri }) => {
 
         try {
 
-            const res1 = await fetch("/api/login", {
+            const res1 = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

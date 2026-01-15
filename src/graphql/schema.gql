@@ -1,23 +1,42 @@
 type Query {
+
+    me: User
     projects: [Project!]!
     teams: [Team!]!
     users: [User!]!
+    skills: [Skill!]!
 }
 
-type Project {
-    id: ID
-    name: String
-    teams: [Team!]!
+interface Node {
+    id: ID!
 }
-type Team {
-    id: ID
-    name: String
+
+type Project implements Node {
+    id: ID!
+    name: String!
+    teams: [Team!]!
+    status: ProjectStatus!
+}
+
+type Skill implements Node { #ongoing
+    id: ID!
+    name: String!
+}
+type Team implements Node {
+    id: ID!
+    name: String!
     users: [User!]!
 }
-type User {
-    id: ID
-    name: String
-    email: String
+type User implements Node {
+    id: ID!
+    name: String!
+    email: String!
     projects: [Project!]!
     teams: [Team!]!
+    skills: [Skill!]!
+}
+
+enum ProjectStatus {
+    IN_PROGRESS
+    COMPLETED
 }

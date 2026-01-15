@@ -1,10 +1,9 @@
-.dashboard-layout {
-    display: flex;
-    min-height: 100vh;
-}
+    .dashboard-layout {
+        min-height: 100vh;
+    }
 
-.main-content {
-    flex: 1;
-    min-height: 100vh;
-    padding: 22px;
-}
+    .main-content {
+        min-height: 100vh;
+        padding-top: 10px;
+        margin-left: 300px; /* keep content visible next to fixed sidebar */
+    }

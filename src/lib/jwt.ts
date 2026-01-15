@@ -6,6 +6,8 @@ import { AUTH_TOKEN_MAX_AGE_SECONDS } from "@/lib/authCookies";
 export type Principal = {
   sub: string;
   roles: string[]
+  name?: String
+  email?: String
 };
 
 function getJwtSecret(): Uint8Array {

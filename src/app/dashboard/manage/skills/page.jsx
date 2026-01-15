@@ -11,8 +11,6 @@ export default function SkillMenu(){
         });
     }
 
-
-
     return (
         <div>
 

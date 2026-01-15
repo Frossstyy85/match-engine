@@ -2,16 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import "./page.css";
+import {useQuery} from "@apollo/client/react";
+import {gql} from "graphql-tag";
 
 export default function Team() {
-    const [teams, setTeams] = useState([]);
 
-    useEffect(() => {
-        setTeams([
-            { id: 1, name: "Team 1", members: 3 },
-            { id: 2, name: "Team 2", members: 4 },
-        ]);
-    }, []);
+
+    const { data, error, loading } = useQuery(gql`query { teams { name id users { id }  } }`)
+
+    if (loading) return <div>Loading...</div>
+    if (error) return <div>{error.message}</div>
+
+    const teams = data.teams;
 
     return (
         <div className="projekt-container">
@@ -27,7 +29,7 @@ export default function Team() {
                 {teams.map(team => (
                     <tr key={team.id}>
                         <td>{team.name}</td>
-                        <td>{team.members}</td>
+                        <td>{team.users.length}</td>
                     </tr>
                 ))}
                 </tbody>

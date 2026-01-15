@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 
 export default function UserDashboard() {
+
     // ===== DATA =====
     const [skills, setSkills] = useState([]);
     const [certificates, setCertificates] = useState([]);

@@ -1,5 +1,5 @@
-import pool from "@/db/client";
-
+import db from "@/db/client";
+import {deleteUser} from "@/db/repositories/UserRepository";
 
 export async function getUserTeams(userId: number){
     const sql = `
@@ -8,8 +8,18 @@ export async function getUserTeams(userId: number){
     WHERE tu.user_id = $1
     ORDER BY t.name ASC
     `;
-    const { rows: teams } = await pool.query(sql, [userId]);
+    const { rows: teams } = await db.query(sql, [userId]);
     return teams;
+}
+
+export async function getTeamUsers(teamId: number){
+    const sql = `
+    SELECT id, name, email FROM users u
+    JOIN team_users tu ON tu.user_id = u.id
+    WHERE tu.team_id = $1
+    `;
+    const { rows } = await db.query(sql, [teamId]);
+    return rows;
 }
 
 export async function getProjectTeams(projectId: number){
@@ -19,12 +29,12 @@ export async function getProjectTeams(projectId: number){
     WHERE pt.project_id = $1
     ORDER BY t.name ASC 
     `;
-    const { rows: teams } = await pool.query(sql, [projectId]);
+    const { rows: teams } = await db.query(sql, [projectId]);
     return teams;
 }
 
-export async function addUser(userId: number, teamId: number){
-    const { rowCount } = await pool.query(`
+export async function addUserToTeam(userId: number, teamId: number){
+    const { rowCount } = await db.query(`
     INSERT INTO team_users (user_id, team_id) VALUES ($1, $2)
     ON CONFLICT DO NOTHING
     `, [userId, teamId])
@@ -33,13 +43,13 @@ export async function addUser(userId: number, teamId: number){
 
 export async function createTeam(name: string) {
     const sql = `INSERT INTO teams (name) VALUES ($1) RETURNING id, name, created_at;`;
-    const { rows } = await pool.query(sql, [name]);
+    const { rows } = await db.query(sql, [name]);
     return rows[0] ?? null;
 }
 
 export async function getTeamById(teamId: number) {
     const sql = `SELECT id, name, created_at FROM teams WHERE id = $1;`;
-    const { rows } = await pool.query(sql, [teamId]);
+    const { rows } = await db.query(sql, [teamId]);
     return rows[0] ?? null;
 }
 
@@ -51,19 +61,19 @@ export async function updateTeam(teamId: number, fields: { name?: string }) {
         WHERE id = $2
         RETURNING id, name, created_at;
     `;
-    const { rows } = await pool.query(sql, [fields.name, teamId]);
+    const { rows } = await db.query(sql, [fields.name, teamId]);
     return rows[0] ?? null;
 }
 
 export async function deleteTeam(teamId: number){
-    const { rowCount } = await pool.query(`
+    const { rowCount } = await db.query(`
     DELETE FROM teams where id = $1
     `, [teamId]);
     return rowCount > 0;
 }
 
 export async function getTeams(){
-    const { rows } = await pool.query(`
+    const { rows } = await db.query(`
     SELECT id, name, created_at FROM teams ORDER BY id ASC
     `);
     return rows;

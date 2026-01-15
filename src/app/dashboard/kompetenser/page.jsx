@@ -2,17 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import "./page.css";
+import {useQuery} from "@apollo/client/react";
+import {gql} from "graphql-tag";
 
 export default function Kompetenser() {
-    const [skills, setSkills] = useState([]);
 
-    useEffect(() => {
-        // Exempeldata – byt ut mot API-anrop senare
-        setSkills([
-            { id: 1, name: "React", level: "Intermediate" },
-            { id: 2, name: "Java", level: "Advanced" },
-        ]);
-    }, []);
+
+    const { data, error, loading } = useQuery(gql(`query { skills { name id } }`))
+
+
+    if (loading) return <div>Loading...</div>
+    if (error) return <div>{error.message}</div>
+
+    const skills = data.skills;
 
     return (
             <div className="kompetenser-container">

@@ -1,16 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import "./page.css"
+import {useQuery} from "@apollo/client/react";
+import {gql} from "graphql-tag";
 
 export default function Projekt() {
-    const [projects, setProjects] = useState([]);
 
-    useEffect(() => {
-        setProjects([
-            { id: 1, name: "Projekt A", status: "Pågående" },
-            { id: 2, name: "Projekt B", status: "Planeras" },
-        ]);
-    }, []);
+
+    const { loading, data, error } = useQuery(
+        gql`query { projects { id name status } }`
+    );
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+
+    const projects = data.projects;
 
     return (
             <div className="projekt-container">

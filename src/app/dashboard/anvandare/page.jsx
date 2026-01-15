@@ -17,9 +17,9 @@ export default function Anvandare() {
 
 
     return (
-        <div className="projekt-container">
+        <div className="anvandare-container">
             <h2>👥 Användare</h2>
-            <table className="projekt-table">
+            <table className="anvandare-table">
                 <thead>
                 <tr>
                     <th>Namn</th>

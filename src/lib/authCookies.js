@@ -13,9 +13,11 @@ export const clearedSessionCookie = {
   name: AUTH_COOKIE_NAME,
   value: "",
   httpOnly: true,
-  sameSite: "strict",
   path: "/",
-  maxAge: -1,
+  sameSite: "strict",
+  secure: process.env.NODE_ENV === "production",
+  maxAge: 0,
+  expires: new Date(0),
 };
 
 

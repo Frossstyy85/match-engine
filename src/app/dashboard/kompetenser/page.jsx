@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import "./page.css";
+import "@/components/table/table.css";
 import {useGraph} from "@/lib/hooks";
 
 export default function Kompetenser() {
@@ -16,10 +16,10 @@ export default function Kompetenser() {
     const skills = data.skills;
 
     return (
-            <div className="kompetenser-container">
-                <h2>🧠 Kompetenser</h2>
+            <div>
+                <h2>Kompetenser</h2>
 
-                <table className="kompetenser-table">
+                <table className="table">
                     <thead>
                     <tr>
                         <th>Kompetens</th>

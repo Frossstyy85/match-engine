@@ -58,3 +58,73 @@ CREATE TABLE project_teams (
 CREATE INDEX idx_team_users_user_team ON team_users(user_id, team_id);
 CREATE INDEX idx_project_teams_team_project ON project_teams(team_id, project_id);
 
+INSERT INTO roles (name) VALUES
+                             ('ADMIN'),
+                             ('USER'),
+                             ('HR'),
+                             ('PROJECT_LEAD');
+
+INSERT INTO users (name, email, password_hash, role_id) VALUES
+                                                            ('Alice', 'alice@example.com', '$2a$12$z11cIR0hQX.FobMjPzF0le2JsBWNI7S4wg3iFIPYKbvWHB1GvJaLG', 1),
+                                                            ('Bob', 'bob@example.com', '$2a$12$z11cIR0hQX.FobMjPzF0le2JsBWNI7S4wg3iFIPYKbvWHB1GvJaLG', 2),
+                                                            ('Carol', 'carol@example.com', '$2a$12$z11cIR0hQX.FobMjPzF0le2JsBWNI7S4wg3iFIPYKbvWHB1GvJaLG', 3),
+                                                            ('Dave', 'dave@example.com', '$2a$12$z11cIR0hQX.FobMjPzF0le2JsBWNI7S4wg3iFIPYKbvWHB1GvJaLG', 4),
+                                                            ('Eve', 'eve@example.com', '$2a$12$z11cIR0hQX.FobMjPzF0le2JsBWNI7S4wg3iFIPYKbvWHB1GvJaLG', 2),
+                                                            ('Frank', 'frank@example.com', '$2a$12$z11cIR0hQX.FobMjPzF0le2JsBWNI7S4wg3iFIPYKbvWHB1GvJaLG', 2),
+                                                            ('Grace', 'grace@example.com', '$2a$12$z11cIR0hQX.FobMjPzF0le2JsBWNI7S4wg3iFIPYKbvWHB1GvJaLG', 3);
+
+INSERT INTO teams (name) VALUES
+                             ('Team Alpha'),
+                             ('Team Beta'),
+                             ('Team Gamma');
+
+INSERT INTO skills (name) VALUES
+                              ('JavaScript'),
+                              ('Python'),
+                              ('SQL'),
+                              ('React'),
+                              ('Node.js'),
+                              ('CSS'),
+                              ('HTML'),
+                              ('Docker'),
+                              ('AWS'),
+                              ('GraphQL');
+
+INSERT INTO user_skills (user_id, skill_id, skill_level) VALUES
+                                                             (2, 1, 2),
+                                                             (2, 2, 1),
+                                                             (2, 4, 2),
+                                                             (2, 5, 1),
+                                                             (3, 1, 2),
+                                                             (3, 2, 2),
+                                                             (3, 6, 3),
+                                                             (4, 3, 3),
+                                                             (4, 8, 2),
+                                                             (5, 1, 1),
+                                                             (5, 3, 2),
+                                                             (5, 7, 2),
+                                                             (6, 2, 3),
+                                                             (6, 9, 2),
+                                                             (7, 3, 1),
+                                                             (7, 10, 2);
+
+INSERT INTO projects (name, project_status) VALUES
+                                                ('Project X', 'IN_PROGRESS'),
+                                                ('Project Y', 'IN_PROGRESS'),
+                                                ('Project Z', 'IN_PROGRESS');
+
+INSERT INTO team_users (team_id, user_id) VALUES
+                                              (1, 1),
+                                              (1, 2),
+                                              (2, 4),
+                                              (2, 3),
+                                              (3, 5),
+                                              (3, 6),
+                                              (3, 7);
+
+INSERT INTO project_teams (project_id, team_id) VALUES
+                                                    (1, 1),
+                                                    (2, 2),
+                                                    (3, 3);
+
+

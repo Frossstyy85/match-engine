@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import "./page.css";
+import "@/components/table/table.css";
 import {useGraph} from "@/lib/hooks";
 
 export default function Anvandare() {
@@ -17,9 +17,9 @@ export default function Anvandare() {
 
 
     return (
-        <div className="anvandare-container">
-            <h2>👥 Användare</h2>
-            <table className="anvandare-table">
+        <div>
+            <h2>Användare</h2>
+            <table className="table">
                 <thead>
                 <tr>
                     <th>Namn</th>

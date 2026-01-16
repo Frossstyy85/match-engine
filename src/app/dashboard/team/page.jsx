@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import "./page.css";
-
+import "@/components/table/table.css";
 import {useGraph} from "@/lib/hooks";
 
 export default function Team() {
 
 
-    const { data, error, loading } = useGraph('query { teams { id name users { id } } }')
+    const { data, error, loading } = useGraph("query { teams { id name users { id } }  }")
 
     if (loading) return <div>Loading...</div>
     if (error) return <div>{error.message}</div>
@@ -16,9 +15,9 @@ export default function Team() {
     const teams = data.teams;
 
     return (
-        <div className="projekt-container">
-            <h2>💼 Team</h2>
-            <table className="projekt-table">
+        <div>
+            <h2>Team</h2>
+            <table className="table">
                 <thead>
                 <tr>
                     <th>Team</th>

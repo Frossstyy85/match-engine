@@ -1,33 +1,36 @@
+"use client"
 import "./dashboard.css";
+import AdminDashboard from "@/app/dashboard/components/AdminDashboard";
+import ProjectLeadDashboard from "@/app/dashboard/components/ProjectLeadDashboard";
+import HrDashboard from "@/app/dashboard/components/HrDashboard";
+import UserDashboard from "@/app/dashboard/components/UserDashboard";
+import {useState} from "react";
 
-export default async function DashboardPage() {
+export default  function DashboardPage() {
 
-    let role = "ADMIN";
+    const roles = ["ADMIN", "USER", "HR", "PROJECT_LEAD"];
+
+    const [counter, setCounter] = useState(0)
+
+
+    const changeRole = () => {
+        setCounter((prev) => (prev + 1) % roles.length)
+    }
+
+    const role = roles[counter];
+
+    return(
+        <>
+            <button onClick={changeRole}>Dev | Change role</button>
+
+            {role === "ADMIN" && <AdminDashboard/>}
+            {role === "USER" && <UserDashboard/>}
+            {role === "HR" && <HrDashboard/>}
+            {role === "PROJECT_LEAD" && <ProjectLeadDashboard/>}
+        </>
+    )
     
-    if (role === "ADMIN") {
-        const { default: AdminDashboard } = await import("./components/AdminDashboard");
-        return <AdminDashboard />;
-    }
 
-    if (role === "USER") {
-        const { default: UserDashboard } = await import("./components/UserDashboard");
-        return <UserDashboard />;
-    }
 
-    if (role === "HR") {
-        const { default: HrDashboard } = await import("./components/HrDashboard");
-        return <HrDashboard />;
-    }
 
-    if (role === "PROJECT_LEAD") {
-        const { default: ProjectLeadDashboard } = await import("./components/ProjectLeadDashboard");
-        return <ProjectLeadDashboard />;
-    }
-
-    return (
-        <div className="dashboard-container">
-            <h2>Access Denied</h2>
-            <p>You do not have permission to view this page.</p>
-        </div>
-    );
 }

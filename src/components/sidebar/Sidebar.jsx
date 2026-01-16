@@ -6,15 +6,15 @@ import {useAuth} from "@/lib/hooks";
 export default async function Sidebar() {
 
 
-    let auth =null;
+    let auth = null;
 
     const NAV_LINKS = [
-        { id: 1, label: "🏠 Översikt", href: "/dashboard" },
-        { id: 2, label: "👥 Användare", href: "/dashboard/anvandare" },
-        { id: 3, label: "🧠 Kompetenser", href: "/dashboard/kompetenser" },
-        { id: 4, label: "📁 Projekt", href: "/dashboard/projekt" },
-        { id: 5, label: "💼 Team", href: "/dashboard/team" },
-        { id: 6, label: "👤 Profil", href: "/dashboard/profile" },
+        { id: 1, label: "Översikt", href: "/dashboard" },
+        { id: 2, label: "Användare", href: "/dashboard/anvandare" },
+        { id: 3, label: "Kompetenser", href: "/dashboard/kompetenser" },
+        { id: 4, label: "Projekt", href: "/dashboard/projekt" },
+        { id: 5, label: "Team", href: "/dashboard/team" },
+        { id: 6, label: "Profil", href: "/dashboard/profile" },
     ];
 
     return (

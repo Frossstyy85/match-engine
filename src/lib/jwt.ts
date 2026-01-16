@@ -1,42 +1,28 @@
 import { SignJWT, jwtVerify } from "jose";
 import { AUTH_TOKEN_MAX_AGE_SECONDS } from "@/lib/authCookies";
 
-export type Principal = {
-  sub: string;
-  role: String
-  name?: String
-  email?: String
-};
+
 
 function getJwtSecret(): Uint8Array {
   const secret: string = "secret";
   return new TextEncoder().encode(secret);
 }
 
-export async function signAuthToken(userId: string, role: String): Promise<string> {
+export function signToken(userId: number, userRole: string){
   const now = Math.floor(Date.now() / 1000);
 
   return new SignJWT({
-    role
+    role: userRole
   })
-    .setProtectedHeader({ alg: "HS256" })
-    .setSubject(String(userId))
-    .setIssuedAt(now)
-    .setExpirationTime(now + AUTH_TOKEN_MAX_AGE_SECONDS)
-    .sign(getJwtSecret());
+      .setProtectedHeader({ alg: "HS256"})
+      .setSubject(userId.toString())
+      .setIssuer("frosty")
+      .setIssuedAt(now)
+      .setExpirationTime(now + AUTH_TOKEN_MAX_AGE_SECONDS)
+      .sign(getJwtSecret())
 }
 
-export async function verifyAuthToken(token: string): Promise<Principal | null> {
-  try {
-    const { payload } = await jwtVerify(token, getJwtSecret());
-    if (!payload.sub || !payload.role) return null;
-    return {
-      sub: payload.sub,
-      role: payload.role as String
-    };
-  } catch {
-    return null;
-  }
+export async function verifyToken(token: string){
+  const { payload } = await jwtVerify(token, getJwtSecret);
+  return payload;
 }
-
-

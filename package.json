@@ -5,9 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "seed": "node scripts/seed-db.cjs",
-    "seed:reset": "node scripts/seed-db.cjs --reset"
+    "start": "next start"
   },
   "dependencies": {
     "@apollo/client": "^4.0.13",

@@ -5,5 +5,5 @@
     .main-content {
         min-height: 100vh;
         padding-top: 10px;
-        margin-left: 300px; /* keep content visible next to fixed sidebar */
+        margin-left: 300px;
     }

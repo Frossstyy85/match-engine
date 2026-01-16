@@ -1,13 +1,16 @@
 import Link from "next/link";
 import LogoutButton from "./LogoutButton"
 import "./Sidebar.css";
+import {useAuth} from "@/lib/auth";
 
 export default async function Sidebar() {
 
-    const user = {
-        name: "fakeName",
-        email: "fake@Email.com"
-    }
+
+    const auth = useAuth();
+
+
+
+
 
 
     const NAV_LINKS = [
@@ -32,10 +35,10 @@ export default async function Sidebar() {
                 ))}
             </ul>
             <div className="sidebar-footer">
-                {user && (
+                {auth && (
                     <div className="user-info">
                         Inloggad som<br />
-                        {user.name} ({user.email})
+                        {auth.name} ({auth.email})
                     </div>
                 )}
                 <LogoutButton />

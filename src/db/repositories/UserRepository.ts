@@ -17,6 +17,11 @@ interface createUserRequest {
     password: string
 }
 
+export async function getUserNameAndEmail(id: number): Promise<User | undefined> {
+    const sql = `SELECT name, email FROM users WHERE id = $1`;
+    return db.query(sql, [id]).then(({ rows }) => rows?.[0]);
+}
+
 export async function createUser(request: createUserRequest): Promise<number | undefined> {
 
     const password_hash = await hashPassword(request.password);

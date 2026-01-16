@@ -2,7 +2,6 @@ import "./dashboard.css";
 
 export default async function DashboardPage() {
 
-
     let role = "ADMIN";
     
     if (role === "ADMIN") {

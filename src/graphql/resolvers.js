@@ -6,6 +6,7 @@ import { getSkills } from "@/db/repositories/SkillRepository";
 export const resolvers = {
 
     Query: {
+        me: async () => (null),
         projects: async () => await getProjects(),
         teams: async () => await getTeams(),
         users: async () => await getAllUsers(),

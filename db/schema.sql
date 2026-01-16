@@ -1,8 +1,14 @@
+CREATE TABLE roles (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(20) NOT NULL UNIQUE
+);
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
+    role_id INT REFERENCES roles(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -36,10 +42,6 @@ CREATE TABLE projects (
     project_status project_status DEFAULT 'IN_PROGRESS'
 );
 
-CREATE TABLE roles (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(20) NOT NULL UNIQUE
-);
 
 CREATE TABLE team_users (
     team_id INT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
@@ -53,11 +55,6 @@ CREATE TABLE project_teams (
     PRIMARY KEY (project_id, team_id)
 );
 
-CREATE TABLE user_roles (
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    role_id INT NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, role_id)
-);
-
 CREATE INDEX idx_team_users_user_team ON team_users(user_id, team_id);
 CREATE INDEX idx_project_teams_team_project ON project_teams(team_id, project_id);
+

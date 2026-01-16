@@ -1,120 +1,83 @@
 import * as bcrypt from "bcrypt";
 import db from "@/db/client"
-import { runTransaction } from "@/db/helper";
 
 const hashPassword: (raw: string) => Promise<string> = async (rawPassword) => bcrypt.hash(rawPassword, 12);
 
-export async function createUser(
-    {
-        email,
-        name,
-        password }:
-    {
-        email: string,
-        name: string,
-        password: string
-    }) {
-
-    const password_hash = await hashPassword(password);
-    const newId = await runTransaction(db, async (tx) => {
-
-        const userResult = await tx.query(
-            `INSERT INTO users
-             (email, name, password_hash)
-             VALUES ($1, $2, $3)
-             RETURNING id;`,
-            [email, name, password_hash]
-        );
-        const userId = userResult.rows[0]?.id;
-        if (!userId) throw new Error("User insert failed");
-
-        const roleResult = await tx.query(
-            `SELECT id FROM roles WHERE name = 'ADMIN';`
-        );
-        const roleId = roleResult.rows[0]?.id;
-        if (!roleId) throw new Error("Role not found");
-
-        const roleInsert = await tx.query(
-            `INSERT INTO user_roles
-             (role_id, user_id)
-             VALUES ($1, $2);`,
-            [roleId, userId]
-        );
-        if (roleInsert.rowCount === 0) throw new Error("Failed to assign role");
-        return userId;
-    });
-
-
-    return newId ?? null;
+interface User {
+    id?: number
+    name?: string,
+    email?: string,
+    password_hash?: string,
+    role?: string,
 }
 
+interface createUserRequest {
+    name: string,
+    email: string,
+    password: string
+}
 
-export async function findUserById(id: number) {
+export async function createUser(request: createUserRequest): Promise<number | undefined> {
+
+    const password_hash = await hashPassword(request.password);
+
+    return db.query(
+        `INSERT INTO users
+             (email, name, password_hash, role_id)
+             SELECT $1, $2, $3, r.id
+             FROM roles r 
+             WHERE  r.name = 'ADMIN'
+             RETURNING id;`,
+        [request.email, request.name, password_hash]
+    ).then(({ rows }) => rows[0]?.id)
+
+}
+
+export async function findUserById(id: number): Promise<any | undefined> {
     const sql = `SELECT id, email, name, created_at FROM users WHERE id = $1;`;
-    const { rows } = await db.query(sql, [id]);
-    return rows[0] ?? null;
+    return db.query(sql, [id]).then(({ rows }) => rows[0]);
 }
 
 export async function updatePassword(id: number, password: string) {
     const password_hash = await hashPassword(password);
     const sql = `UPDATE users SET password_hash = $1 WHERE id = $2;`;
-    const { rowCount } =  await db.query(sql, [password_hash, id]);
-    return rowCount > 0;
+    return db.query(sql, [password_hash, id]).then(({ rowCount }) => rowCount > 0)
 }
 
-export async function getPasswordHashById(id: number) {
+export async function getPasswordHashById(id: number): Promise<any | undefined> {
     const sql = `SELECT password_hash FROM users WHERE id = $1;`;
-    const { rows } = await db.query(sql, [id])
-    return rows[0] ?? null;
+    return db.query(sql, [id]).then(({ rows }) => rows[0]);
 }
 
-export async function getUserAuthByEmail(email: string) {
-    const sql = `SELECT id, email, password_hash FROM users WHERE email = $1;`;
-    const { rows } = await db.query(sql, [email]);
+export async function getUserAuthByEmail(email: string): Promise<User | undefined> {
 
-    const userRow = rows[0];
-    if (!userRow) return null;
+    const sql = `SELECT
+    u.id,
+    u.email,
+    u.password_hash,
+    r.name as role FROM users u JOIN roles r ON r.id = u.role_id WHERE email = $1;`;
 
-    const roles = await getUserRoles(userRow?.id);
-    return {
-        ...userRow,
-        roles: roles.map(r => r.name)
-    }
-}
-
-async function getUserRoles(userId: number): Promise<{ name: string }[]> {
-    const sql = `
-    SELECT r.name
-    FROM user_roles ur 
-    JOIN roles r ON ur.role_id = r.id
-    WHERE ur.user_id = $1;
-    `;
-    const { rows } = await db.query(sql, [userId]);
-    return rows;
+    const { rows } = await db.query<User>(sql, [email]);
+    return rows[0];
 }
 
 export async function emailExists(email: string): Promise<boolean> {
-    const sql = `SELECT
-     EXISTS( SELECT 1 FROM users WHERE email = $1)
-      AS email_exists;`
-    const { rows } = await db.query(sql, [email]);
-    return rows[0]?.email_exists ?? false;
+    const sql = `SELECT id FROM users WHERE email = $1 LIMIT 1`
+    return db.query(sql, [email]).then(({ rowCount }) => rowCount > 0)
 }
 
-export async function getAllUsers() {
+export async function getAllUsers(): Promise<User[]> {
     const sql = `SELECT id, name, email, created_at FROM users ORDER BY id ASC;`;
-    const { rows } = await db.query(sql);
-    return rows;
+    return db.query(sql).then(({ rows }) => rows)
 }
 
-export async function deleteUser(userId: number) {
-    const { rowCount } = await db.query(`
+export async function deleteUser(userId: number): Promise<boolean> {
+    return db.query(`
     DELETE FROM users where id = $1
-    `, [userId]);
-    return rowCount > 0;
+    `, [userId]).then(({ rowCount }) => rowCount > 0)
 }
 
-export async function getUserProjects(userId: number){
+export async function getUserProjects(userId: number): Promise<any> {
     const sql = `
     SELECT DISTINCT p.id, p.name, p.project_status
     FROM projects p
@@ -122,12 +85,10 @@ export async function getUserProjects(userId: number){
     JOIN team_users tu ON tu.team_id = pt.team_id
     WHERE tu.user_id = $1
     `
-    const { rows } = await db.query(sql,[userId])
-
-    return rows;
+    return db.query(sql,[userId]).then(({ rows }) => rows)
 }
 
-export async function getUserSkills(userId: number){
+export async function getUserSkills(userId: number): Promise<any> {
     const sql =
         `
         SELECT s.name, s.id, us.skill_level AS skill_level
@@ -135,7 +96,6 @@ export async function getUserSkills(userId: number){
         JOIN skills s ON s.id = us.skill_id
         WHERE us.user_id = $1
 `;
-    const { rows } = await db.query(sql, [userId]);
-    return rows;
+    return db.query(sql, [userId]).then(({ rows }) => rows);
 }
 

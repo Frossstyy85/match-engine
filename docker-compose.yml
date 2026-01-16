@@ -11,5 +11,6 @@ services:
       POSTGRES_PASSWORD: app_password
     volumes:
       - postgres_data:/var/lib/postgresql
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
 volumes:
   postgres_data:

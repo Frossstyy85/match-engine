@@ -14,6 +14,7 @@ export async function POST(req) {
     }
 
     const userAuth = await getUserAuthByEmail(email);
+    console.log(userAuth)
 
 
     if (!userAuth) {
@@ -26,7 +27,7 @@ export async function POST(req) {
       return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
     }
 
-    const token = await signAuthToken(userAuth.id, userAuth.roles);
+    const token = await signAuthToken(userAuth.id, userAuth.role);
 
     const res = NextResponse.json({ message: "Login successful" }, { status: 200 });
 

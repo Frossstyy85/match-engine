@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import "./page.css";
-import {useQuery} from "@apollo/client/react";
-import {gql} from "graphql-tag";
+import {useGraph} from "@/lib/hooks";
 
 export default function Anvandare() {
 
+    const query = 'query { users { id name email } }'
 
-    const { data, loading, error } = useQuery(gql` query {users { id  name email } }`)
+    const { data, loading, error } = useGraph(query);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;

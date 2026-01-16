@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import "./page.css";
-import {useQuery} from "@apollo/client/react";
-import {gql} from "graphql-tag";
+
+import {useGraph} from "@/lib/hooks";
 
 export default function Team() {
 
 
-    const { data, error, loading } = useQuery(gql`query { teams { name id users { id }  } }`)
+    const { data, error, loading } = useGraph('query { teams { id name users { id } } }')
 
     if (loading) return <div>Loading...</div>
     if (error) return <div>{error.message}</div>

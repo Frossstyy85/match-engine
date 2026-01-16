@@ -1,17 +1,12 @@
 import Link from "next/link";
 import LogoutButton from "./LogoutButton"
 import "./Sidebar.css";
-import {useAuth} from "@/lib/auth";
+import {useAuth} from "@/lib/hooks";
 
 export default async function Sidebar() {
 
 
-    const auth = useAuth();
-
-
-
-
-
+    let auth =null;
 
     const NAV_LINKS = [
         { id: 1, label: "🏠 Översikt", href: "/dashboard" },

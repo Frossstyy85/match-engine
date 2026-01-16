@@ -1,13 +1,12 @@
 "use client";
 
-import {useQuery} from "@apollo/client/react";
-import {gql} from "graphql-tag";
+import {useGraph} from "@/lib/hooks";
 
 export default function AdminDashboard() {
 
-    const { loading, data, error } = useQuery(
-        gql`query { teams { id name } projects { id name } users { id name } }`
-    );
+    const query = 'query { teams { id name } projects { id name } users { id name } }'
+
+    const { loading, data, error } = useGraph(query);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;

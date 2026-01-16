@@ -2,13 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import "./page.css";
-import {useQuery} from "@apollo/client/react";
-import {gql} from "graphql-tag";
+import {useGraph} from "@/lib/hooks";
 
 export default function Kompetenser() {
 
 
-    const { data, error, loading } = useQuery(gql(`query { skills { name id } }`))
+    const { data, error, loading } = useGraph('query { skills { id name } }');
 
 
     if (loading) return <div>Loading...</div>

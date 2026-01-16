@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import { useRef, useState } from "react";
 import InputField from "@/components/InputField";
 

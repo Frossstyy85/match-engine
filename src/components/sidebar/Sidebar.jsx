@@ -1,12 +1,7 @@
 import Link from "next/link";
 import LogoutButton from "./LogoutButton"
 import "./Sidebar.css";
-import {useAuth} from "@/lib/hooks";
-
 export default async function Sidebar() {
-
-
-    let auth = null;
 
     const NAV_LINKS = [
         { id: 1, label: "Översikt", href: "/dashboard" },
@@ -19,7 +14,10 @@ export default async function Sidebar() {
 
     return (
         <aside className="sidebar">
-            <h3>Matchningssystem</h3>
+            <Link href={"/dashboard"}>
+                <h3>Welcome</h3>
+            </Link>
+
             <ul className="nav-list">
                 {NAV_LINKS.map((link) => (
                     <li key={link.id} className="nav-item">
@@ -30,12 +28,6 @@ export default async function Sidebar() {
                 ))}
             </ul>
             <div className="sidebar-footer">
-                {auth && (
-                    <div className="user-info">
-                        Inloggad som<br />
-                        {auth.name} ({auth.email})
-                    </div>
-                )}
                 <LogoutButton />
             </div>
         </aside>

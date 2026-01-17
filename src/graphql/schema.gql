@@ -6,6 +6,7 @@ type Query {
     skills: [Skill!]!
 }
 
+
 interface Node {
     id: ID!
 }

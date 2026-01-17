@@ -1,13 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server";
-import {verifyToken} from "@/lib/jwt";
-import {JWTPayload} from "jose";
+import {getSession} from "@/lib/session";
+import {AUTH_COOKIE_NAME} from "@/lib/authCookies";
 
 export async function proxy(request: NextRequest){
-    const token: string = request.cookies.get("auth")?.value;
+    const token: string = request.cookies.get(AUTH_COOKIE_NAME)?.value;
     if (!token)
         return loginRedirect(request)
-    const payload: JWTPayload = await verifyToken(token)
-    if (!payload)
+    const session = getSession(token);
+    if (!session)
         return loginRedirect(request)
     return NextResponse.next();
 }

@@ -1,4 +1,4 @@
-export const AUTH_COOKIE_NAME = "auth";
+export const AUTH_COOKIE_NAME = "sessionId";
 export const AUTH_TOKEN_MAX_AGE_SECONDS = 60 * 60 * 24;
 
 export const sessionCookieOptions = {
@@ -6,7 +6,7 @@ export const sessionCookieOptions = {
   path: "/",
   sameSite: "strict",
   maxAge: AUTH_TOKEN_MAX_AGE_SECONDS,
-  secure: process.env.NODE_ENV === "production",
+  secure: false
 };
 
 export const clearedSessionCookie = {
@@ -14,10 +14,9 @@ export const clearedSessionCookie = {
   value: "",
   httpOnly: true,
   path: "/",
-  sameSite: "strict",
-  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict" as const,
+  secure: false,
   maxAge: 0,
-  expires: new Date(0),
 };
 
 

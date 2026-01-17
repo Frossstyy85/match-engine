@@ -18,7 +18,7 @@ interface GraphResult {
     refetch: () => void
 }
 
-export function useGraph(query: string, variables: Record<string, any>): GraphResult {
+export function useGraph(query: string, variables?: Record<string, any>): GraphResult {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [data, setData] = useState(null);
@@ -28,17 +28,19 @@ export function useGraph(query: string, variables: Record<string, any>): GraphRe
         setLoading(true)
         setError(null)
 
-        fetch("/api/graphql", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", },
-            credentials: "include",
-            body: JSON.stringify({ query: query, variables: variables }),
+        setTimeout(() => {
+            fetch("/api/graphql", {
+                method: "POST",
+                headers: {"Content-Type": "application/json",},
+                credentials: "include",
+                body: JSON.stringify({query: query, variables: variables}),
+            })
+                .then(res => res.json())
+                .then(res => res.data)
+                .then(data => setData(data))
+                .catch(err => setError(err))
+                .finally(() => setLoading(false))
         })
-            .then(res => res.json())
-            .then(res => res.data)
-            .then(data => setData(data))
-            .catch(err => setError(err))
-            .finally(() => setLoading(false))
     }
 
     useEffect(() => {

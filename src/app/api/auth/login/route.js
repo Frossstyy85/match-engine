@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { AUTH_COOKIE_NAME, AUTH_TOKEN_MAX_AGE_SECONDS, sessionCookieOptions } from "@/lib/authCookies";
-import { signToken } from "@/lib/jwt";
 import {getUserAuthByEmail} from "@/db/repositories/UserRepository";
+import {createSession} from "@/lib/session";
 
 export async function POST(req) {
 
@@ -15,6 +15,8 @@ export async function POST(req) {
 
     const userAuth = await getUserAuthByEmail(email);
 
+    console.log(userAuth)
+
     if (!userAuth) {
       return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
     }
@@ -25,11 +27,16 @@ export async function POST(req) {
       return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
     }
 
-    const token = await signToken(userAuth.id, userAuth.role);
+    const sessionId = createSession({
+      id: userAuth.id,
+      role: userAuth.role
+    });
+    if (!sessionId)
+      throw new Error("Something went wrong")
 
     const res = NextResponse.json({ message: "Login successful" }, { status: 200 });
 
-    res.cookies.set(AUTH_COOKIE_NAME, token, sessionCookieOptions);
+    res.cookies.set(AUTH_COOKIE_NAME, sessionId, sessionCookieOptions);
 
     return res;
   } catch (err) {

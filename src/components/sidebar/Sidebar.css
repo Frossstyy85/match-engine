@@ -8,7 +8,7 @@
     overflow-y: auto;
     background: #1f2937;
     color: #fff;
-    padding: 25px;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 6px rgba(0,0,0,0.1);
@@ -20,10 +20,9 @@
     font-size: 1.4rem;
     font-weight: 700;
     color: #f3f4f6;
-    margin-bottom: 25px;
-    letter-spacing: 0.5px;
+    margin-bottom: 1.5rem;
     text-transform: uppercase;
-    padding-left: 12px;
+    padding-left: 0.75rem;
     position: relative;
 }
 
@@ -40,7 +39,7 @@
 
 .sidebar-user {
     font-size: 1rem;
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem;
     color: #d1d5db;
 }
 
@@ -50,48 +49,45 @@
 
 .sidebar ul {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
     margin: 0;
-}
-
-.sidebar ul li {
-    margin-bottom: 10px;
 }
 
 .nav-link {
     display: block;
     text-decoration: none;
     color: #d1d5db;
-    padding: 10px 14px;
+    padding: 0.625rem 0.875rem;
     border-radius: 8px;
     font-size: 1.1rem;
-    transition: all 0.2s ease;
+    transition: 0.2s;
+    margin-bottom: 0.5rem;
 }
 
 .nav-link:hover {
     background-color: #2563eb;
-    color: #fff !important;
+    color: #fff;
     transform: translateX(2px);
 }
 
 .nav-link.active {
     background-color: #3b82f6;
-    color: #fff !important;
+    color: #fff;
     font-weight: 600;
 }
 
 .sidebar-footer {
-    margin-top: auto;
-    padding-top: 15px;
+    margin-top: 8rem;
+    padding-top: 0.75rem;
     border-top: 1px solid #374151;
-    font-size: 13px;
+    font-size: 0.8125rem;
 }
 
 .sidebar-footer a {
     display: block;
     text-decoration: none;
     color: #f87171;
-    padding: 10px;
+    padding: 0.625rem;
     border-radius: 6px;
     transition: 0.2s;
 }
@@ -104,20 +100,15 @@
 @media (max-width: 768px) {
     .sidebar {
         width: 80px;
-        padding: 10px;
+        padding: 0.625rem;
     }
-
-    .sidebar h3 {
-        display: none;
-    }
-
+    .sidebar h3,
     .sidebar-user {
         display: none;
     }
-
     .nav-link {
-        padding: 8px;
-        text-align: center;
+        padding: 0.5rem;
         font-size: 0.95rem;
+        text-align: center;
     }
 }

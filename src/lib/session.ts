@@ -1,6 +1,5 @@
 import redis from "@/lib/redis";
 import * as crypto from "node:crypto";
-import {json} from "node:stream/consumers";
 
 export interface Session {
     principal: Principal
@@ -15,8 +14,7 @@ function createSessionId(): string {
     return crypto.randomUUID();
 }
 
-export async function createSession(id: number, role: string): Promise<string>
-{
+export async function createSession(id: number, role: string): Promise<string> {
     const sessionId = createSessionId();
 
     const sessionObj: Session = {

@@ -56,9 +56,9 @@ export async function getProjectTeams(projectId: number): Promise<Team[]> {
     return teams;
 }
 
-export async function getRecommendedUsers(projectId: number): Promise<User[]>{
+export async function getRecommendedUsers(projectId: number): Promise<User[]> {
     const sql = `
-        SELECT  u.id, u.name, u.email, COUNT(*) AS matched_users
+        SELECT u.id, u.name, u.email, COUNT(*) AS matched_users
         FROM project_required_skills prs
                  JOIN skills s
                       ON prs.skill_id = s.id
@@ -69,8 +69,8 @@ export async function getRecommendedUsers(projectId: number): Promise<User[]>{
         WHERE prs.project_id = $1
         GROUP BY u.id, u.name, u.email
         ORDER BY matched_users DESC;
-`
-    const { rows } = await db.query(sql, [projectId]);
+    `
+    const {rows} = await db.query(sql, [projectId]);
     return rows;
 }
 

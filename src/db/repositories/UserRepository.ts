@@ -18,8 +18,10 @@ export async function getUserNameAndEmail(id: number): Promise<User | undefined>
 }
 
 export async function getUserById(id: number): Promise<User> {
-    const sql = `SELECT id, name, email FROM users WHERE id = $1`
-    const { rows } = await db.query(sql, [id])
+    const sql = `SELECT id, name, email
+                 FROM users
+                 WHERE id = $1`
+    const {rows} = await db.query(sql, [id])
     return rows[0]
 }
 
@@ -126,24 +128,24 @@ export async function getUserTeams(userId: number): Promise<Team[]> {
         WHERE tu.user_id = $1
         ORDER BY t.name ASC
     `;
-    const { rows: teams } = await db.query(sql, [userId]);
+    const {rows: teams} = await db.query(sql, [userId]);
     return teams;
 }
 
-export async function getRecommendedProjects(userId: number): Promise<Project[]>{
+export async function getRecommendedProjects(userId: number): Promise<Project[]> {
     const sql = `
-    SELECT p.id, p.name, p.status, COUNT(*) AS matched_projects
-    FROM user_skills us
-    JOIN project_required_skills prs
-        ON prs.skill_id = us.skill_id
-    JOIN projects p 
-        ON p.id = prs.project_id
-    WHERE us.user_id = $1
-    GROUP BY p.id, p.name, p.status
-    ORDER BY matched_projects DESC
+        SELECT p.id, p.name, p.status, COUNT(*) AS matched_projects
+        FROM user_skills us
+                 JOIN project_required_skills prs
+                      ON prs.skill_id = us.skill_id
+                 JOIN projects p
+                      ON p.id = prs.project_id
+        WHERE us.user_id = $1
+        GROUP BY p.id, p.name, p.status
+        ORDER BY matched_projects DESC
     `
 
-    const { rows } = await db.query(sql, [userId]);
+    const {rows} = await db.query(sql, [userId]);
     return rows;
 }
 

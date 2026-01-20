@@ -4,7 +4,6 @@ import {gql} from "graphql-tag";
 import {readFileSync} from "fs";
 import path from "path";
 import {resolvers} from "@/graphql/resolvers";
-import {NextApiRequest, NextApiResponse} from "next";
 import {AUTH_COOKIE_NAME} from "@/lib/authCookies";
 import {getSession, Session} from "@/lib/session";
 import {GraphQLError} from "graphql/error";

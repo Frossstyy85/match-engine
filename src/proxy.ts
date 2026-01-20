@@ -6,7 +6,7 @@ export async function proxy(request: NextRequest) {
     const token: string = request.cookies.get(AUTH_COOKIE_NAME)?.value;
 
     return !token || !(await getSession(token))
-    ? loginRedirect(request) : NextResponse.next();
+        ? loginRedirect(request) : NextResponse.next();
 
 }
 

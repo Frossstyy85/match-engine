@@ -17,7 +17,7 @@ export const resolvers = {
 
     Query: {
 
-        me: async (_,_a,ctx): Promise<User> => {
+        me: async (_, _a, ctx): Promise<User> => {
             const principal: Principal = ctx.principal;
             const currentUser: User = await getUserById(principal.id);
             return currentUser;
@@ -40,12 +40,12 @@ export const resolvers = {
         },
 
         recommendedProjects: async (_, args): Promise<Project[]> => {
-            const { userId } = args;
+            const {userId} = args;
             return getRecommendedProjects(userId)
         },
 
         recommendedUsers: async (_, args): Promise<User[]> => {
-            const { projectId } = args;
+            const {projectId} = args;
             return getRecommendedUsers(projectId);
         }
 
@@ -54,12 +54,12 @@ export const resolvers = {
     Mutation: {
 
         createProject: async (_, args): Promise<Project> => {
-            const { name } = args;
+            const {name} = args;
             return createProject(name);
         },
 
         createTeam: async (_, args): Promise<Team> => {
-            const { name } = args;
+            const {name} = args;
             return createTeam(name);
         }
 

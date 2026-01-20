@@ -3,10 +3,11 @@ CREATE TYPE project_status AS ENUM (
     'COMPLETED'
     );
 
-CREATE TABLE languages (
-    id SERIAL PRIMARY KEY,
-    code CHAR(5) UNIQUE NOT NULL,
-    name_en VARCHAR(100) NOT NULL
+CREATE TABLE languages
+(
+    id      SERIAL PRIMARY KEY,
+    code    CHAR(5) UNIQUE NOT NULL,
+    name_en VARCHAR(100)   NOT NULL
 );
 
 CREATE TABLE roles
@@ -17,13 +18,13 @@ CREATE TABLE roles
 
 CREATE TABLE users
 (
-    id            SERIAL PRIMARY KEY,
-    name          VARCHAR(255) NOT NULL,
-    email         VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    role_id       INT REFERENCES roles (id),
-    primary_language_id INT REFERENCES languages(id),
-    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id                  SERIAL PRIMARY KEY,
+    name                VARCHAR(255) NOT NULL,
+    email               VARCHAR(255) NOT NULL UNIQUE,
+    password_hash       VARCHAR(255) NOT NULL,
+    role_id             INT REFERENCES roles (id),
+    primary_language_id INT REFERENCES languages (id),
+    created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE teams
@@ -41,10 +42,10 @@ CREATE TABLE skills
 
 CREATE TABLE projects
 (
-    id             SERIAL PRIMARY KEY,
-    name           VARCHAR(255) NOT NULL,
-    created_at     TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
-    status project_status DEFAULT 'IN_PROGRESS'
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
+    status     project_status DEFAULT 'IN_PROGRESS'
 );
 
 
@@ -56,9 +57,10 @@ CREATE TABLE user_skills
     PRIMARY KEY (user_id, skill_id)
 );
 
-CREATE TABLE project_required_skills (
-    project_id INT NOT NULL REFERENCES projects(id),
-    skill_id INT NOT NULL REFERENCES skills(id),
+CREATE TABLE project_required_skills
+(
+    project_id INT NOT NULL REFERENCES projects (id),
+    skill_id   INT NOT NULL REFERENCES skills (id),
     primary key (project_id, skill_id)
 );
 
@@ -78,7 +80,6 @@ CREATE TABLE project_teams
 
 CREATE INDEX idx_team_users_user_team ON team_users (user_id, team_id);
 CREATE INDEX idx_project_teams_team_project ON project_teams (team_id, project_id);
-
 
 
 
@@ -152,67 +153,68 @@ VALUES (1, 1),
        (2, 2),
        (3, 3);
 
-INSERT INTO languages (code, name_en) VALUES
-                                          ('en', 'English'),
-                                          ('fr', 'French'),
-                                          ('es', 'Spanish'),
-                                          ('de', 'German'),
-                                          ('it', 'Italian'),
-                                          ('pt', 'Portuguese'),
-                                          ('ru', 'Russian'),
-                                          ('zh', 'Chinese'),
-                                          ('ja', 'Japanese'),
-                                          ('ar', 'Arabic'),
-                                          ('hi', 'Hindi'),
-                                          ('bn', 'Bengali'),
-                                          ('pa', 'Punjabi'),
-                                          ('ur', 'Urdu'),
-                                          ('id', 'Indonesian'),
-                                          ('ms', 'Malay'),
-                                          ('vi', 'Vietnamese'),
-                                          ('ko', 'Korean'),
-                                          ('th', 'Thai'),
-                                          ('tr', 'Turkish'),
-                                          ('fa', 'Persian'),
-                                          ('sw', 'Swahili'),
-                                          ('tl', 'Tagalog'),
-                                          ('ta', 'Tamil'),
-                                          ('te', 'Telugu'),
-                                          ('ml', 'Malayalam'),
-                                          ('mr', 'Marathi'),
-                                          ('gu', 'Gujarati'),
-                                          ('kn', 'Kannada'),
-                                          ('or', 'Odia'),
-                                          ('si', 'Sinhala'),
-                                          ('he', 'Hebrew'),
-                                          ('sv', 'Swedish'),
-                                          ('da', 'Danish'),
-                                          ('no', 'Norwegian'),
-                                          ('fi', 'Finnish'),
-                                          ('nl', 'Dutch'),
-                                          ('pl', 'Polish'),
-                                          ('ro', 'Romanian'),
-                                          ('hu', 'Hungarian'),
-                                          ('cs', 'Czech'),
-                                          ('sk', 'Slovak'),
-                                          ('bg', 'Bulgarian'),
-                                          ('sr', 'Serbian'),
-                                          ('hr', 'Croatian'),
-                                          ('sl', 'Slovenian'),
-                                          ('el', 'Greek'),
-                                          ('ka', 'Georgian'),
-                                          ('hy', 'Armenian'),
-                                          ('az', 'Azerbaijani'),
-                                          ('kk', 'Kazakh'),
-                                          ('uz', 'Uzbek'),
-                                          ('mn', 'Mongolian'),
-                                          ('lo', 'Lao'),
-                                          ('my', 'Burmese'),
-                                          ('km', 'Khmer'),
-                                          ('ne', 'Nepali'),
-                                          ('other', 'Other');
+INSERT INTO languages (code, name_en)
+VALUES ('en', 'English'),
+       ('fr', 'French'),
+       ('es', 'Spanish'),
+       ('de', 'German'),
+       ('it', 'Italian'),
+       ('pt', 'Portuguese'),
+       ('ru', 'Russian'),
+       ('zh', 'Chinese'),
+       ('ja', 'Japanese'),
+       ('ar', 'Arabic'),
+       ('hi', 'Hindi'),
+       ('bn', 'Bengali'),
+       ('pa', 'Punjabi'),
+       ('ur', 'Urdu'),
+       ('id', 'Indonesian'),
+       ('ms', 'Malay'),
+       ('vi', 'Vietnamese'),
+       ('ko', 'Korean'),
+       ('th', 'Thai'),
+       ('tr', 'Turkish'),
+       ('fa', 'Persian'),
+       ('sw', 'Swahili'),
+       ('tl', 'Tagalog'),
+       ('ta', 'Tamil'),
+       ('te', 'Telugu'),
+       ('ml', 'Malayalam'),
+       ('mr', 'Marathi'),
+       ('gu', 'Gujarati'),
+       ('kn', 'Kannada'),
+       ('or', 'Odia'),
+       ('si', 'Sinhala'),
+       ('he', 'Hebrew'),
+       ('sv', 'Swedish'),
+       ('da', 'Danish'),
+       ('no', 'Norwegian'),
+       ('fi', 'Finnish'),
+       ('nl', 'Dutch'),
+       ('pl', 'Polish'),
+       ('ro', 'Romanian'),
+       ('hu', 'Hungarian'),
+       ('cs', 'Czech'),
+       ('sk', 'Slovak'),
+       ('bg', 'Bulgarian'),
+       ('sr', 'Serbian'),
+       ('hr', 'Croatian'),
+       ('sl', 'Slovenian'),
+       ('el', 'Greek'),
+       ('ka', 'Georgian'),
+       ('hy', 'Armenian'),
+       ('az', 'Azerbaijani'),
+       ('kk', 'Kazakh'),
+       ('uz', 'Uzbek'),
+       ('mn', 'Mongolian'),
+       ('lo', 'Lao'),
+       ('my', 'Burmese'),
+       ('km', 'Khmer'),
+       ('ne', 'Nepali'),
+       ('other', 'Other');
 
 INSERT INTO project_required_skills (project_id, skill_id)
-VALUES (1,1), (2, 2)
+VALUES (1, 1),
+       (2, 2)
 
 

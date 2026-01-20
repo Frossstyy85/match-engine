@@ -7,7 +7,6 @@ import {createSession} from "@/lib/session";
 export async function POST(req) {
 
 
-
     try {
         const {email, password} = await req.json();
 

@@ -1,7 +1,8 @@
-import { getProjects} from "@/db/repositories/ProjectRepository";
-import { getProjectTeams, getTeams, getUserTeams, getTeamUsers } from "@/db/repositories/TeamRepository";
-import { getAllUsers, getUserSkills, getUserProjects } from "@/db/repositories/UserRepository";
-import { getSkills } from "@/db/repositories/SkillRepository";
+import {getProjects} from "@/db/repositories/ProjectRepository";
+import {getProjectTeams, getTeams, getTeamUsers, getUserTeams} from "@/db/repositories/TeamRepository";
+import {getAllUsers, getUserProjects, getUserSkills} from "@/db/repositories/UserRepository";
+import {getSkills} from "@/db/repositories/SkillRepository";
+import { Project, Team, User } from "@/lib/types";
 
 export const resolvers = {
 
@@ -13,14 +14,28 @@ export const resolvers = {
         skills: async () => await getSkills(),
     },
 
+    Mutation: {
+
+        createProject: async (_, args): PR => {
+            const { name } = args;
+        },
+
+        createTeam: async (_, args) => {
+            const { name } = args;
+        }
+
+    },
+
+
+
     Project: {
-        teams: async (parent) =>  {
+        teams: async (parent) => {
             return await getProjectTeams(parent.id);
         },
 
 
         status: (parent) => {
-           return parent.project_status
+            return parent.project_status
         }
 
     },
@@ -31,8 +46,6 @@ export const resolvers = {
         },
 
 
-
-
     },
 
     User: {
@@ -40,7 +53,6 @@ export const resolvers = {
         teams: async (parent) => await getUserTeams(parent.id),
         skills: async (parent) => await getUserSkills(parent.id)
     },
-
 
 
 }

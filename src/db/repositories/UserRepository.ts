@@ -40,12 +40,15 @@ export async function createUser(request: createUserRequest): Promise<number | u
 
 }
 
-export async function findUserById(id: number): Promise<any | undefined> {
-    const sql = `SELECT id, email, name, created_at
-                 FROM users
-                 WHERE id = $1;`;
-    return db.query(sql, [id]).then(({rows}) => rows[0]);
-}
+    export async function findUserById(id: number): Promise<any | undefined> {
+        const sql = `SELECT *
+                     FROM users
+                     WHERE id = $1;`;
+        const { rows } = await db.query(sql, [id]);
+        console.log(rows)
+        return rows[0];
+
+    }
 
 export async function updatePassword(id: number, password: string) {
     const password_hash = await hashPassword(password);
@@ -69,7 +72,7 @@ export async function getUserAuthByEmail(email: string): Promise<User | undefine
                         u.password_hash,
                         r.name as role
                  FROM users u
-                          JOIN roles r ON r.id = u.role_id
+                          JOIN system_roles r ON r.id = u.role_id
                  WHERE email = $1;`;
 
     const {rows} = await db.query<User>(sql, [email]);
@@ -132,20 +135,42 @@ export async function getUserTeams(userId: number): Promise<Team[]> {
     return teams;
 }
 
-export async function getRecommendedProjects(userId: number): Promise<Project[]> {
+
+interface UserProjectMatch {
+    project_id?: Number,
+    role_configuration_id?: Number
+    match_percentage?: Number,
+    matched_skills?: Number
+    role_name: String
+}
+
+export async function getRecommendedProjects(userId: number): Promise<UserProjectMatch[]> {
     const sql = `
-        SELECT p.id, p.name, p.status, COUNT(*) AS matched_projects
-        FROM user_skills us
-                 JOIN project_required_skills prs
-                      ON prs.skill_id = us.skill_id
-                 JOIN projects p
-                      ON p.id = prs.project_id
-        WHERE us.user_id = $1
-        GROUP BY p.id, p.name, p.status
-        ORDER BY matched_projects DESC
+        SELECT p.id AS project_id,
+               rc.id AS role_configuration_id,
+               r.name AS role_name,
+               p.name AS project_name,
+               
+        COUNT(DISTINCT rcs.skill_id) AS matched_skills,
+        COUNT(DISTINCT rcs.skill_id)::FLOAT / (
+        SELECT COUNT(*)
+        FROM role_configuration_skills
+        WHERE role_configuration_id = rc.id
+        ) as match_percentage
+        FROM users u
+        JOIN user_skills us ON us.user_id = u.id
+        JOIN role_configuration_skills rcs ON rcs.skill_id = us.skill_id
+        JOIN user_roles ur ON ur.user_id = u.id 
+        JOIN roles r ON r.id = ur.role_id
+        JOIN role_configuration rc ON rc.id = rcs.role_configuration_id AND rc.role_id = ur.role_id
+        JOIN projects p ON rc.project_id = p.id  
+        WHERE u.id = $1
+        GROUP BY p.id, rc.id, r.id, p.name
+        ORDER BY match_percentage DESC
     `
 
     const {rows} = await db.query(sql, [userId]);
+    console.log(rows)
     return rows;
 }
 

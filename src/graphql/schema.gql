@@ -6,8 +6,10 @@ type Query {
     users: [User!]!
     skills: [Skill!]!
 
-    recommendedProjects(userId: ID!): [Project!]!
-    recommendedUsers(projectId: ID!): [User!]!
+    user(userId: ID!): User!
+    project(projectId: ID!): Project!
+
+
 }
 
 interface Node {
@@ -19,6 +21,7 @@ type Project implements Node {
     name: String!
     teams: [Team!]!
     status: String
+    recommendedUsers: [ProjectUserMatch!]!
 }
 
 type Skill implements Node {
@@ -37,12 +40,43 @@ type User implements Node {
     projects: [Project!]!
     teams: [Team!]!
     skills: [Skill!]!
+    recommendedProjects: [UserProjectMatch!]!
 }
+
+
+type ProjectUserMatch {
+    user_id: Int
+    user_name: String
+    role_configuration_id: Int
+    matched_skills: Int
+    match_percentage: Float
+    role_name: String
+}
+
+type UserProjectMatch {
+    project_id: Int
+    project_name: String
+    role_configuration_id: Int
+    matched_skills: Int
+    match_percentage: Float
+    role_name: String
+}
+
+type ProjectConfiguration {
+    id: ID!
+}
+
+
+
 
 type Mutation {
     createTeam(name: String!): Team
     createProject(name: String!): Project
 }
+
+
+
+
 
 
 

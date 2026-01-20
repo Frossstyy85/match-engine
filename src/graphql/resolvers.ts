@@ -1,6 +1,13 @@
-import {createProject, getProjects, getProjectTeams, getRecommendedUsers} from "@/db/repositories/ProjectRepository";
+import {
+    createProject,
+    getProjectById,
+    getProjects,
+    getProjectTeams,
+    getRecommendedUsers
+} from "@/db/repositories/ProjectRepository";
 import {createTeam, getTeams, getTeamUsers} from "@/db/repositories/TeamRepository";
 import {
+    findUserById,
     getAllUsers,
     getRecommendedProjects,
     getUserById,
@@ -39,14 +46,12 @@ export const resolvers = {
             return getSkills()
         },
 
-        recommendedProjects: async (_, args): Promise<Project[]> => {
-            const {userId} = args;
-            return getRecommendedProjects(userId)
+        user: async (_, { userId }): Promise<User> => {
+            return findUserById(userId);
         },
 
-        recommendedUsers: async (_, args): Promise<User[]> => {
-            const {projectId} = args;
-            return getRecommendedUsers(projectId);
+        project: async (_, { projectId }): Promise<Project> => {
+            return getProjectById(projectId);
         }
 
     },
@@ -71,6 +76,10 @@ export const resolvers = {
             return getProjectTeams(project.id);
         },
 
+        recommendedUsers: async (project: Project): Promise<User[]> => {
+            return getRecommendedUsers(project.id);
+        },
+
     },
 
     Team: {
@@ -91,7 +100,12 @@ export const resolvers = {
 
         skills: async (user: User): Promise<Skill[]> => {
             return getUserSkills(user.id)
-        }
+        },
+
+        recommendedProjects: async (user: User, args): Promise<any> => {
+            return getRecommendedProjects(user.id)
+        },
+
 
     },
 

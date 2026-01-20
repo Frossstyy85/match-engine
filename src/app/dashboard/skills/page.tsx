@@ -1,19 +1,20 @@
 "use client";
+
 import "@/components/table/table.css";
 import TableView from "@/components/table/TableView";
 
-export default function Projekt() {
+export default function Kompetenser() {
 
     return (
         <div>
             <TableView
-                query={`query { projects { id name status } }`}
+                query={`query { skills { id name } }`}
                 schema={{
                     id: {label: "id"},
                     name: {label: "name"},
-                    status: {label: "status"}
                 }
                 }
+                itemUrl={null}
             />
         </div>
     );

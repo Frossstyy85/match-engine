@@ -13,7 +13,7 @@ setInterval(async () => {
     redis.ping((_, result) => {
         console.log(result);
     });
-}, 60000)
+}, 60000 * 10)
 
 export default redis;
 

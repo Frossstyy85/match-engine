@@ -1,6 +1,7 @@
 import {type NextRequest, NextResponse} from "next/server";
 import {getSession} from "@/lib/session";
 import {AUTH_COOKIE_NAME} from "@/lib/authCookies";
+import { URL } from 'url';
 
 export async function proxy(request: NextRequest) {
     const token: string = request.cookies.get(AUTH_COOKIE_NAME)?.value;

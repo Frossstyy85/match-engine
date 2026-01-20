@@ -2,15 +2,6 @@
 
 import {useEffect, useState} from "react";
 
-
-export function useAuth() {
-    const user = {
-        name: "temp",
-        email: "temp@gmail.com"
-    }
-    return user;
-}
-
 interface GraphResult {
     loading: boolean,
     error: any,
@@ -18,7 +9,12 @@ interface GraphResult {
     refetch: () => void
 }
 
-export function useGraph(query: string, variables?: Record<string, any>): GraphResult {
+
+interface Extensions {
+    variables?: Record<string, any>
+}
+
+export function useGraph(query: string, extensions: Extensions =  {}): GraphResult {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [data, setData] = useState(null);
@@ -28,19 +24,18 @@ export function useGraph(query: string, variables?: Record<string, any>): GraphR
         setLoading(true)
         setError(null)
 
-        setTimeout(() => {
             fetch("/api/graphql", {
                 method: "POST",
                 headers: {"Content-Type": "application/json",},
                 credentials: "include",
-                body: JSON.stringify({query: query, variables: variables}),
+                body: JSON.stringify({query: query, variables: extensions?.variables}),
             })
                 .then(res => res.json())
                 .then(res => res.data)
                 .then(data => setData(data))
                 .catch(err => setError(err))
                 .finally(() => setLoading(false))
-        })
+
     }
 
     useEffect(() => {

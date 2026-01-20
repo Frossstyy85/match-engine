@@ -58,19 +58,32 @@ export async function getProjectTeams(projectId: number): Promise<Team[]> {
 
 export async function getRecommendedUsers(projectId: number): Promise<User[]> {
     const sql = `
-        SELECT u.id, u.name, u.email, COUNT(*) AS matched_users
-        FROM project_required_skills prs
-                 JOIN skills s
-                      ON prs.skill_id = s.id
-                 JOIN user_skills us
-                      ON us.skill_id = s.id
-                 JOIN users u
-                      ON u.id = us.user_id
-        WHERE prs.project_id = $1
-        GROUP BY u.id, u.name, u.email
-        ORDER BY matched_users DESC;
+        SELECT u.id AS user_id,
+               rc.id AS role_configuration_id,
+               r.name AS role_name,
+               u.name AS user_name,
+               
+        COUNT(DISTINCT rcs.skill_id) AS matched_skills,
+        COUNT(DISTINCT rcs.skill_id)::FLOAT / (
+        SELECT COUNT(*)
+        FROM role_configuration_skills
+        WHERE role_configuration_id = rc.id
+        ) as match_percentage
+        FROM users u
+        JOIN user_skills us ON us.user_id = u.id
+        JOIN role_configuration_skills rcs ON rcs.skill_id = us.skill_id
+        JOIN user_roles ur ON ur.user_id = u.id 
+        JOIN roles r ON r.id = ur.role_id
+        JOIN role_configuration rc ON rc.id = rcs.role_configuration_id AND rc.role_id = ur.role_id
+        JOIN projects p ON rc.project_id = p.id  
+        WHERE p.id = $1
+        GROUP BY u.id, rc.id, r.id, u.name
+        ORDER BY match_percentage DESC
     `
+
+
     const {rows} = await db.query(sql, [projectId]);
+    console.log(rows)
     return rows;
 }
 

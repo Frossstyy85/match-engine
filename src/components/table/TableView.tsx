@@ -2,7 +2,7 @@ import "@/components/table/table.css"
 import TableRenderer from "@/components/table/TableRenderer";
 import {useGraph} from "@/lib/hooks";
 
-export default function TableView({query, schema}) {
+export default function TableView({query, schema, itemUrl}) {
 
     const {data, loading, error, refetch} = useGraph(query);
 
@@ -20,6 +20,7 @@ export default function TableView({query, schema}) {
             columns={columns}
             loading={loading}
             refetch={refetch}
+            itemUrl={itemUrl}
         />
     )
 

@@ -1,4 +1,8 @@
-export default function TableRenderer({rows, columns, loading, refetch}) {
+import {useRouter} from "next/navigation";
+
+export default function TableRenderer({rows, columns, loading, refetch, itemUrl}) {
+
+    const router = useRouter();
 
     return (
         <div className={"table-container"}>
@@ -13,7 +17,7 @@ export default function TableRenderer({rows, columns, loading, refetch}) {
                 </thead>
                 <tbody>
                 {!loading && rows.map((row, idx) => (
-                    <tr key={idx}>
+                    <tr key={idx} onClick={() => router.push(itemUrl(row))}>
                         {columns.map((col, key) => (
                             <td key={key}>{col.cell(row)}</td>
                         ))}

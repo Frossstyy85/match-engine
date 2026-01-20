@@ -15,6 +15,7 @@ export default function Anvandare() {
                     email: {label: "email"}
                 }
                 }
+                itemUrl={(item) => `users/${item.id}`}
             />
         </div>
     );

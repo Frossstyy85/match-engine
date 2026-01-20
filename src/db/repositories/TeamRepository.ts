@@ -1,81 +1,52 @@
 import db from "@/db/client";
-import {deleteUser} from "@/db/repositories/UserRepository";
+import {Team, User} from "@/lib/types";
 
-export async function getUserTeams(userId: number){
+export async function getTeamUsers(teamId: number): Promise<User[]> {
     const sql = `
-    SELECT t.id, t.name FROM teams t
-    JOIN team_users tu ON t.id = tu.team_id
-    WHERE tu.user_id = $1
-    ORDER BY t.name ASC
+        SELECT id, name, email
+        FROM users u
+                 JOIN team_users tu ON tu.user_id = u.id
+        WHERE tu.team_id = $1
     `;
-    const { rows: teams } = await db.query(sql, [userId]);
-    return teams;
-}
-
-export async function getTeamUsers(teamId: number){
-    const sql = `
-    SELECT id, name, email FROM users u
-    JOIN team_users tu ON tu.user_id = u.id
-    WHERE tu.team_id = $1
-    `;
-    const { rows } = await db.query(sql, [teamId]);
+    const {rows} = await db.query(sql, [teamId]);
     return rows;
 }
 
-export async function getProjectTeams(projectId: number){
+export async function addUserToTeam(userId: number, teamId: number): Promise<Team> {
     const sql = `
-    SELECT t.id, t.name FROM teams t
-    JOIN project_teams pt ON t.id = pt.team_id
-    WHERE pt.project_id = $1
-    ORDER BY t.name ASC 
-    `;
-    const { rows: teams } = await db.query(sql, [projectId]);
-    return teams;
+    WITH team_cte AS ( SELECT * FROM teams WHERE id = $1 ),
+    insert_cte AS ( INSERT INTO team_users (user_id, team_id)
+    SELECT $2, id FROM team_cte)
+    SELECT * FROM team_cte
+    `
+    const { rows } = await db.query(sql, [teamId, userId]);
+    return rows[0];
 }
 
-export async function addUserToTeam(userId: number, teamId: number){
-    const { rowCount } = await db.query(`
-    INSERT INTO team_users (user_id, team_id) VALUES ($1, $2)
-    ON CONFLICT DO NOTHING
-    `, [userId, teamId])
-    return rowCount > 0;
-}
+export async function createTeam(name: string): Promise<Team> {
+    const sql = `INSERT INTO teams (name)VALUES ($1) RETURNING *`;
 
-export async function createTeam(name: string) {
-    const sql = `INSERT INTO teams (name) VALUES ($1) RETURNING id, name, created_at;`;
     const { rows } = await db.query(sql, [name]);
     return rows[0] ?? null;
 }
 
-export async function getTeamById(teamId: number) {
-    const sql = `SELECT id, name, created_at FROM teams WHERE id = $1;`;
+export async function getTeamById(teamId: number): Promise<Team> {
+    const sql = `SELECT id, name, created_at
+                 FROM teams
+                 WHERE id = $1;`;
     const { rows } = await db.query(sql, [teamId]);
     return rows[0] ?? null;
 }
 
-export async function updateTeam(teamId: number, fields: { name?: string }) {
-    if (fields.name === undefined) return null;
-    const sql = `
-        UPDATE teams
-        SET name = $1
-        WHERE id = $2
-        RETURNING id, name, created_at;
-    `;
-    const { rows } = await db.query(sql, [fields.name, teamId]);
-    return rows[0] ?? null;
+export async function deleteTeam(teamId: number): Promise<Team> {
+    const sql = 'DELETE FROM teams WHERE id = $1 RETURNING *'
+    const { rows } = await db.query(sql, [teamId])
+    return rows[0]
 }
 
-export async function deleteTeam(teamId: number){
-    const { rowCount } = await db.query(`
-    DELETE FROM teams where id = $1
-    `, [teamId]);
-    return rowCount > 0;
-}
-
-export async function getTeams(){
-    const { rows } = await db.query(`
-    SELECT id, name, created_at FROM teams ORDER BY id ASC
-    `);
+export async function getTeams(): Promise<Team[]> {
+    const sql = 'SELECT id, name FROM teams ORDER BY ID asc'
+    const { rows } = await db.query(sql);
     return rows;
 }
 

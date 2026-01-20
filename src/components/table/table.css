@@ -7,7 +7,7 @@
 .table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;     /* keep columns consistent */
+    table-layout: fixed;
 }
 
 .table th, .table td {
@@ -17,12 +17,12 @@
 }
 
 .table th {
-    position: sticky;        /* fix header */
-    top: 0;                  /* stick to top */
+    position: sticky;
+    top: 0;
     background: #f3f4f6;
     font-weight: 600;
-    z-index: 2;              /* above body rows */
-    box-shadow: inset 0 -1px 0 #e5e7eb; /* subtle separation */
+    z-index: 2;
+    box-shadow: inset 0 -1px 0 #e5e7eb;
 }
 
 .table tr:nth-child(even) {

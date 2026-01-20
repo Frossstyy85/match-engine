@@ -1,11 +1,14 @@
 type Query {
     me: User
+
     projects: [Project!]!
     teams: [Team!]!
     users: [User!]!
     skills: [Skill!]!
-}
 
+    recommendedProjects(userId: ID!): [Project!]!
+    recommendedUsers(projectId: ID!): [User!]!
+}
 
 interface Node {
     id: ID!
@@ -15,7 +18,7 @@ type Project implements Node {
     id: ID!
     name: String!
     teams: [Team!]!
-    status: ProjectStatus!
+    status: String
 }
 
 type Skill implements Node {
@@ -36,7 +39,10 @@ type User implements Node {
     skills: [Skill!]!
 }
 
-enum ProjectStatus {
-    IN_PROGRESS
-    COMPLETED
+type Mutation {
+    createTeam(name: String!): Team
+    createProject(name: String!): Project
 }
+
+
+

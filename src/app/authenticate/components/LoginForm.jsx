@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import {useState} from "react";
+import {useRouter} from "next/navigation";
 import InputField from "@/components/InputField";
 import styles from "./AuthModal.module.css"
 
-const LoginForm =  ({ onSwitch, redirectUri }) => {
+const LoginForm = ({onSwitch}) => {
 
-  const router = useRouter();
-  const [error, setError] = useState(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const [error, setError] = useState(null);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  const isPristine = email === "" && password === "";
+    const isPristine = email === "" && password === "";
 
     const clearFields = () => {
         setError(null);
@@ -33,7 +33,7 @@ const LoginForm =  ({ onSwitch, redirectUri }) => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({email, password}),
                 credentials: "include"
             });
 
@@ -42,7 +42,7 @@ const LoginForm =  ({ onSwitch, redirectUri }) => {
                 throw new Error(data?.message);
             }
 
-            router.push(redirectUri);
+            router.push('/dashboard');
 
         } catch (err) {
             setError(err.message || "Network error")
@@ -71,15 +71,15 @@ const LoginForm =  ({ onSwitch, redirectUri }) => {
                         />
                     </div>
                     <div>
-                       <InputField
-                           type={"password"}
-                           label={"PASSWORD"}
-                           onChange={(e) => {
-                               setError(null)
-                               setPassword(e.target.value)
-                           }}
-                           value={password}
-                       />
+                        <InputField
+                            type={"password"}
+                            label={"PASSWORD"}
+                            onChange={(e) => {
+                                setError(null)
+                                setPassword(e.target.value)
+                            }}
+                            value={password}
+                        />
                     </div>
                 </div>
                 <div>

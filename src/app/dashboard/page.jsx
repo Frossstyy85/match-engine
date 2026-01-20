@@ -6,7 +6,7 @@ import HrDashboard from "@/app/dashboard/components/HrDashboard";
 import UserDashboard from "@/app/dashboard/components/UserDashboard";
 import {useState} from "react";
 
-export default  function DashboardPage() {
+export default function DashboardPage() {
 
     const roles = ["ADMIN", "USER", "HR", "PROJECT_LEAD"];
 
@@ -19,7 +19,7 @@ export default  function DashboardPage() {
 
     const role = roles[counter];
 
-    return(
+    return (
         <>
             <button onClick={changeRole}>Dev | Change role</button>
 
@@ -29,8 +29,6 @@ export default  function DashboardPage() {
             {role === "PROJECT_LEAD" && <ProjectLeadDashboard/>}
         </>
     )
-    
-
 
 
 }

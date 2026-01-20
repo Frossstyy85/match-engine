@@ -2,9 +2,9 @@ import "@/components/table/table.css"
 import TableRenderer from "@/components/table/TableRenderer";
 import {useGraph} from "@/lib/hooks";
 
-export default function TableView({ query, schema }) {
+export default function TableView({query, schema}) {
 
-    const { data, loading, error, refetch } = useGraph(query);
+    const {data, loading, error, refetch} = useGraph(query);
 
 
     const columns = Object.keys(schema).map(key => ({

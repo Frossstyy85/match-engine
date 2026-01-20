@@ -3,7 +3,7 @@
 import {useEffect, useState} from "react";
 
 
-export function useAuth(){
+export function useAuth() {
     const user = {
         name: "temp",
         email: "temp@gmail.com"
@@ -24,7 +24,7 @@ export function useGraph(query: string, variables?: Record<string, any>): GraphR
     const [data, setData] = useState(null);
 
 
-    function fetchData(){
+    function fetchData() {
         setLoading(true)
         setError(null)
 
@@ -44,8 +44,8 @@ export function useGraph(query: string, variables?: Record<string, any>): GraphR
     }
 
     useEffect(() => {
-       fetchData();
-    },[]);
+        fetchData();
+    }, []);
 
     return {
         loading: loading,

@@ -10,10 +10,10 @@ export default function Kompetenser() {
             <TableView
                 query={`query { skills { id name } }`}
                 schema={{
-                    id: { label: "id" },
-                    name: { label: "name" },
+                    id: {label: "id"},
+                    name: {label: "name"},
                 }
-            }
+                }
             />
         </div>
     );

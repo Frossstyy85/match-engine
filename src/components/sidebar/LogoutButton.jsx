@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 
-export default function LogoutButton(){
+export default function LogoutButton() {
 
     const router = useRouter();
 

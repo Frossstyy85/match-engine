@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import {useState} from "react";
 import InputField from "@/components/InputField";
 
 export function PasswordCard() {
@@ -23,7 +23,7 @@ export function PasswordCard() {
         setError(null);
         setSuccess(null);
 
-        if (newPassword !== confirmPassword){
+        if (newPassword !== confirmPassword) {
             setError("password dont match");
             return;
         }

@@ -6,12 +6,12 @@ export default function AdminDashboard() {
 
     const query = 'query { teams { id name } projects { id name } users { id name } }'
 
-    const { loading, data, error } = useGraph(query);
+    const {loading, data, error} = useGraph(query);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
-    const { teams, projects, users } = data;
+    const {teams, projects, users} = data;
 
     return (
         <div className="dashboard-container">
@@ -34,7 +34,7 @@ export default function AdminDashboard() {
             <section className="dashboard-section">
                 <h3>Projekt</h3>
                 <ul className="dashboard-list">
-                    {projects.map(({ id, name }) => (
+                    {projects.map(({id, name}) => (
                         <li key={id}>{name}</li>
                     ))}
                 </ul>
@@ -44,7 +44,7 @@ export default function AdminDashboard() {
             <section className="dashboard-section">
                 <h3>Team</h3>
                 <ul className="dashboard-list">
-                    {teams.map(({ id, name }) => (
+                    {teams.map(({id, name}) => (
                         <li key={id}>{name}</li>
                     ))}
                 </ul>

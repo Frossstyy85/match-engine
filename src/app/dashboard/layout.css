@@ -1,9 +1,9 @@
-    .dashboard-layout {
-        min-height: 100vh;
-    }
+.dashboard-layout {
+    min-height: 100vh;
+}
 
-    .main-content {
-        min-height: 100vh;
-        margin-left: 300px;
+.main-content {
+    min-height: 100vh;
+    margin-left: 300px;
 
-    }
+}

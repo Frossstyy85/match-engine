@@ -1,43 +1,50 @@
-import Redis from "ioredis";
+import redis from "@/lib/redis";
+import * as crypto from "node:crypto";
+import {json} from "node:stream/consumers";
 
-const sessions = new Map<string, string>()
+export interface Session {
+    principal: Principal
+}
 
-interface Session {
-    id: string
+export interface Principal {
+    id: number
     role: string
 }
 
-interface SessionRequest {
-    id: string
-    role: string
-}
-
-function createSessionId(){
+function createSessionId(): string {
     return crypto.randomUUID();
 }
 
-export function createSession(request: SessionRequest) {
-    const { id, role } = request;
+export async function createSession(id: number, role: string): Promise<string>
+{
     const sessionId = createSessionId();
-    const session: Session = {
-        id,
-        role
+
+    const sessionObj: Session = {
+        principal: {
+            id,
+            role
+        }
     }
-
-
-    sessions.set(`sessionId:${sessionId}`, JSON.stringify(session));
-    console.log(sessions)
+    await redis.set(
+        `sessionId:${sessionId}`,
+        JSON.stringify(sessionObj),
+        'EX',
+        60 * 60 * 24 * 30
+    )
     return sessionId;
 }
 
-export async function getSession(sessionId: String): Promise<Session | undefined> {
-    const session: string = sessions.get(`sessionId:${sessionId}`)
-    if (!session) return undefined;
-    return JSON.parse(session) as Session;
+export async function getSession(sessionId: string): Promise<Session | undefined> {
+
+    const raw = await redis.get(`sessionId:${sessionId}`)
+
+    if (!raw) return undefined
+
+    return JSON.parse(raw);
 }
 
-export async function deleteSession(sessionId: string){
-    sessions.delete(`sessionId:${sessionId}`);
+export async function deleteSession(sessionId: string) {
+    await redis.del(`sessionId:${sessionId}`);
 }
 
 

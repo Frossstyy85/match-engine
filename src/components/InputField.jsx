@@ -1,7 +1,7 @@
 import {useRef} from "react";
 import styles from "./InputField.module.css"
 
-export default function InputField({ label, placeholder, value, onChange, type }) {
+export default function InputField({label, placeholder, value, onChange, type}) {
     const inputRef = useRef(null);
 
     const focusInput = () => {

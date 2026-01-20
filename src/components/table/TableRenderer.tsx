@@ -1,7 +1,4 @@
-
-
-
-export default function TableRenderer({ rows, columns, loading, refetch}){
+export default function TableRenderer({rows, columns, loading, refetch}) {
 
     return (
         <div className={"table-container"}>

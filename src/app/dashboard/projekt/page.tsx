@@ -1,6 +1,6 @@
 "use client";
 import "@/components/table/table.css";
-import TableView  from "@/components/table/TableView";
+import TableView from "@/components/table/TableView";
 
 export default function Projekt() {
 
@@ -9,11 +9,11 @@ export default function Projekt() {
             <TableView
                 query={`query { projects { id name status } }`}
                 schema={{
-                    id: { label: "id" },
-                    name: { label: "name" },
-                    status: { label: "status" }
+                    id: {label: "id"},
+                    name: {label: "name"},
+                    status: {label: "status"}
                 }
-            }
+                }
             />
         </div>
     );

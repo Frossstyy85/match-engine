@@ -10,8 +10,8 @@ export default function Team() {
             <TableView
                 query={`query { teams { id name } }`}
                 schema={{
-                    id: { label: "id" },
-                    name: { label: "name" },
+                    id: {label: "id"},
+                    name: {label: "name"},
                 }}
             />
         </div>

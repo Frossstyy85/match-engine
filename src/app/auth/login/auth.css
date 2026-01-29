@@ -1,0 +1,12 @@
+.input-area {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+}
+
+.form-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}

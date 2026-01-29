@@ -1,24 +1,13 @@
 "use client"
 
 import "@/components/table/table.css";
-import {supabase} from "@/lib/supabase/client";
-import {useQuery} from "@tanstack/react-query";
+import {useQueryProjects} from "@/lib/queries";
 
-
-async function getProjects() {
-    const {data} = await supabase
-        .from('projects')
-        .select()
-    return data
-}
 
 export default function Page() {
 
 
-    const {data: projects, isLoading} = useQuery({
-        queryKey: ['all_projects'],
-        queryFn: getProjects
-    })
+    const { data: projects, isLoading} = useQueryProjects();
 
     if (isLoading) return <p>loading...</p>
 

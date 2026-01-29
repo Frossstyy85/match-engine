@@ -7,7 +7,7 @@ import UserDashboard from "@/app/dashboard/components/UserDashboard";
 
 export default function DashboardPage() {
 
-    const role = "ADMIN"
+    const role = "PROJECT_LEAD"
 
     return (
         <>

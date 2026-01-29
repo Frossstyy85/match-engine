@@ -1,21 +1,19 @@
-import { type NextRequest, NextResponse } from "next/server";
-import {verifyToken} from "@/lib/jwt";
-import {JWTPayload} from "jose";
+import {type NextRequest} from "next/server"
+import {updateSession} from "@/lib/supabase/proxy"
 
-export async function proxy(request: NextRequest){
-    const token: string = request.cookies.get("auth")?.value;
-    if (!token)
-        return loginRedirect(request)
-    const payload: JWTPayload = await verifyToken(token)
-    if (!payload)
-        return loginRedirect(request)
-    return NextResponse.next();
-}
-
-export function loginRedirect(request: NextRequest){
-    return NextResponse.redirect(new URL("authenticate", request.url))
+export async function proxy(request: NextRequest) {
+    return await updateSession(request)
 }
 
 export const config = {
-    matcher: '/dashboard/:path*',
+    matcher: [
+        /*
+         * Match all request paths except for the ones starting with:
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - favicon.ico (favicon file)
+         * Feel free to modify this pattern to include more paths.
+         */
+        "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    ],
 }

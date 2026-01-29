@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 
 export default function UserDashboard() {
 
@@ -34,7 +34,7 @@ export default function UserDashboard() {
     });
 
     const toggleSection = (key) => {
-        setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
+        setOpenSections(prev => ({...prev, [key]: !prev[key]}));
     };
 
     // ===== LOAD FROM localStorage =====
@@ -46,14 +46,22 @@ export default function UserDashboard() {
     }, []);
 
     // ===== SAVE TO localStorage =====
-    useEffect(() => { localStorage.setItem("skills", JSON.stringify(skills)); }, [skills]);
-    useEffect(() => { localStorage.setItem("certificates", JSON.stringify(certificates)); }, [certificates]);
-    useEffect(() => { localStorage.setItem("languages", JSON.stringify(languages)); }, [languages]);
-    useEffect(() => { localStorage.setItem("availability", availability); }, [availability]);
+    useEffect(() => {
+        localStorage.setItem("skills", JSON.stringify(skills));
+    }, [skills]);
+    useEffect(() => {
+        localStorage.setItem("certificates", JSON.stringify(certificates));
+    }, [certificates]);
+    useEffect(() => {
+        localStorage.setItem("languages", JSON.stringify(languages));
+    }, [languages]);
+    useEffect(() => {
+        localStorage.setItem("availability", availability);
+    }, [availability]);
 
     // ===== SAVE ALL BUTTON =====
     const saveAllChanges = () => {
-        const profile = { skills, certificates, languages, availability };
+        const profile = {skills, certificates, languages, availability};
         console.log("Sparar profil:", profile);
         alert("Profil sparad! (kolla console.log för data)");
     };
@@ -79,8 +87,8 @@ export default function UserDashboard() {
     };
 
     return (
-        <div style={{ maxWidth: "900px", margin: "0 auto", padding: "20px", fontFamily: "sans-serif" }}>
-            <h2 style={{ marginBottom: "20px" }}>Min profil</h2>
+        <div style={{maxWidth: "900px", margin: "0 auto", padding: "20px", fontFamily: "sans-serif"}}>
+            <h2 style={{marginBottom: "20px"}}>Min profil</h2>
 
             {/* ================= SKILLS ================= */}
             <Section title="Kunskaper & Kompetenser" open={openSections.skills} toggle={() => toggleSection("skills")}>
@@ -96,9 +104,11 @@ export default function UserDashboard() {
 
                     <button style={buttonStyle} onClick={() => {
                         if (!skillName) return;
-                        setSkills([...skills, { name: skillName, level: skillLevel }]);
-                        setSkillName(""); setSkillLevel("Basic");
-                    }}>Lägg till</button>
+                        setSkills([...skills, {name: skillName, level: skillLevel}]);
+                        setSkillName("");
+                        setSkillLevel("Basic");
+                    }}>Lägg till
+                    </button>
                 </div>
 
                 <p><strong>Sparade kompetenser:</strong></p>
@@ -108,7 +118,8 @@ export default function UserDashboard() {
             {/* ================= CERTIFICATES ================= */}
             <Section title="Certifikat" open={openSections.certs} toggle={() => toggleSection("certs")}>
                 <div style={inputContainerStyle}>
-                    <select value={certificateName} onChange={(e) => setCertificateName(e.target.value)} style={dropdownStyle}>
+                    <select value={certificateName} onChange={(e) => setCertificateName(e.target.value)}
+                            style={dropdownStyle}>
                         <option value="">Välj certifikat</option>
                         {certificateOptions.map((c) => <option key={c}>{c}</option>)}
                     </select>
@@ -117,7 +128,8 @@ export default function UserDashboard() {
                         if (!certificateName) return;
                         setCertificates([...certificates, certificateName]);
                         setCertificateName("");
-                    }}>Lägg till</button>
+                    }}>Lägg till
+                    </button>
                 </div>
 
                 <p><strong>Sparade certifikat:</strong></p>
@@ -127,20 +139,24 @@ export default function UserDashboard() {
             {/* ================= LANGUAGES ================= */}
             <Section title="Språk" open={openSections.languages} toggle={() => toggleSection("languages")}>
                 <div style={inputContainerStyle}>
-                    <select value={languageName} onChange={(e) => setLanguageName(e.target.value)} style={dropdownStyle}>
+                    <select value={languageName} onChange={(e) => setLanguageName(e.target.value)}
+                            style={dropdownStyle}>
                         <option value="">Välj språk</option>
                         {languageOptions.map((l) => <option key={l}>{l}</option>)}
                     </select>
 
-                    <select value={languageLevel} onChange={(e) => setLanguageLevel(e.target.value)} style={dropdownStyle}>
+                    <select value={languageLevel} onChange={(e) => setLanguageLevel(e.target.value)}
+                            style={dropdownStyle}>
                         {levelOptions.map((l) => <option key={l}>{l}</option>)}
                     </select>
 
                     <button style={buttonStyle} onClick={() => {
                         if (!languageName) return;
-                        setLanguages([...languages, { name: languageName, level: languageLevel }]);
-                        setLanguageName(""); setLanguageLevel("Basic");
-                    }}>Lägg till</button>
+                        setLanguages([...languages, {name: languageName, level: languageLevel}]);
+                        setLanguageName("");
+                        setLanguageLevel("Basic");
+                    }}>Lägg till
+                    </button>
                 </div>
 
                 <p><strong>Sparade språk:</strong></p>
@@ -148,9 +164,11 @@ export default function UserDashboard() {
             </Section>
 
             {/* ================= AVAILABILITY ================= */}
-            <Section title="Tillgänglighet" open={openSections.availability} toggle={() => toggleSection("availability")}>
-                <div style={{ marginBottom: "10px" }}>
-                    <select value={availability} onChange={(e) => setAvailability(e.target.value)} style={dropdownStyle}>
+            <Section title="Tillgänglighet" open={openSections.availability}
+                     toggle={() => toggleSection("availability")}>
+                <div style={{marginBottom: "10px"}}>
+                    <select value={availability} onChange={(e) => setAvailability(e.target.value)}
+                            style={dropdownStyle}>
                         <option value="">Välj</option>
                         {availabilityOptions.map((a) => <option key={a}>{a}</option>)}
                     </select>
@@ -159,8 +177,8 @@ export default function UserDashboard() {
             </Section>
 
             {/* ================= SPARA ALLA ================= */}
-            <div style={{ marginTop: "20px" }}>
-                <button style={{ ...buttonStyle, width: "200px" }} onClick={saveAllChanges}>
+            <div style={{marginTop: "20px"}}>
+                <button style={{...buttonStyle, width: "200px"}} onClick={saveAllChanges}>
                     Spara alla ändringar
                 </button>
             </div>
@@ -169,14 +187,15 @@ export default function UserDashboard() {
 }
 
 /* ================= COMPONENTS ================= */
-function Section({ title, open, toggle, children }) {
+function Section({title, open, toggle, children}) {
     return (
-        <section style={{ marginBottom: "20px", border: "1px solid #ddd", borderRadius: "8px", padding: "10px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }} onClick={toggle}>
+        <section style={{marginBottom: "20px", border: "1px solid #ddd", borderRadius: "8px", padding: "10px"}}>
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer"}}
+                 onClick={toggle}>
                 <h3>{title}</h3>
-                <span style={{ fontSize: "18px" }}>{open ? "▲" : "▼"}</span>
+                <span style={{fontSize: "18px"}}>{open ? "▲" : "▼"}</span>
             </div>
-            {open && <div style={{ marginTop: "10px" }}>{children}</div>}
+            {open && <div style={{marginTop: "10px"}}>{children}</div>}
         </section>
     );
 }
@@ -198,8 +217,8 @@ const dropdownStyle = {
     border: "1px solid #ccc",
     minWidth: "150px",
 };
-const inputContainerStyle = { display: "flex", gap: "10px", marginBottom: "10px" };
-const listStyle = { listStyle: "none", padding: 0, margin: 0 };
+const inputContainerStyle = {display: "flex", gap: "10px", marginBottom: "10px"};
+const listStyle = {listStyle: "none", padding: 0, margin: 0};
 const savedItemStyle = {
     display: "flex",
     justifyContent: "space-between",

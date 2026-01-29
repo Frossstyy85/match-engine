@@ -3,7 +3,6 @@ export default function HrDashboard() {
         <div className="dashboard-container">
             <h2>HR Dashboard</h2>
 
-            {/* 📊 Bemanning */}
             <section className="dashboard-section">
                 <h3>Bemanningsgrad</h3>
                 <ul className="dashboard-list">
@@ -13,7 +12,6 @@ export default function HrDashboard() {
                 </ul>
             </section>
 
-            {/* 🧠 Kompetensöversikt */}
             <section className="dashboard-section">
                 <h3>Kompetensöversikt</h3>
                 <ul className="dashboard-list">
@@ -23,7 +21,6 @@ export default function HrDashboard() {
                 </ul>
             </section>
 
-            {/* 📈 Matchningar */}
             <section className="dashboard-section">
                 <h3>Matchningsresultat</h3>
                 <p>Visa topprankade kandidater per projekt</p>

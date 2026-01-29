@@ -1,18 +1,26 @@
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
 import "@/components/table/table.css";
-import {useGraph} from "@/lib/hooks";
+import {useQuery} from "@tanstack/react-query";
+import {supabase} from "@/lib/supabase/client";
 
-export default function Team() {
+async function getTeams() {
+    const {data} = await supabase
+        .from('teams')
+        .select()
+    return data
+}
+
+export default function Page() {
 
 
-    const { data, error, loading } = useGraph("query { teams { id name users { id } }  }")
+    const {data: teams, isLoading} = useQuery({
+        queryKey: ['all_teams'],
+        queryFn: getTeams
+    })
 
-    if (loading) return <div>Loading...</div>
-    if (error) return <div>{error.message}</div>
+    if (isLoading) return <p>loading...</p>
 
-    const teams = data.teams;
 
     return (
         <div>
@@ -21,14 +29,12 @@ export default function Team() {
                 <thead>
                 <tr>
                     <th>Team</th>
-                    <th>Antal medlemmar</th>
                 </tr>
                 </thead>
                 <tbody>
                 {teams.map(team => (
                     <tr key={team.id}>
                         <td>{team.name}</td>
-                        <td>{team.users.length}</td>
                     </tr>
                 ))}
                 </tbody>

@@ -1,43 +1,33 @@
-import Link from "next/link";
-import LogoutButton from "./LogoutButton"
-import "./Sidebar.css";
-import {useAuth} from "@/lib/hooks";
+"use client"
 
-export default async function Sidebar() {
+import Link from "next/link"
+import "./Sidebar.css"
 
+const items = [
+    {title: 'Dashboard', url: '/dashboard'},
+    {title: 'Projects', url: '/dashboard/projects'},
+    {title: 'Teams', url: '/dashboard/teams'},
+    {title: 'Users', url: '/dashboard/users'},
+    {title: 'Skills', url: '/dashboard/skills'},
+    {title: 'Profile', url: '/dashboard/profile'},
+]
 
-    let auth = null;
-
-    const NAV_LINKS = [
-        { id: 1, label: "Översikt", href: "/dashboard" },
-        { id: 2, label: "Användare", href: "/dashboard/anvandare" },
-        { id: 3, label: "Kompetenser", href: "/dashboard/kompetenser" },
-        { id: 4, label: "Projekt", href: "/dashboard/projekt" },
-        { id: 5, label: "Team", href: "/dashboard/team" },
-        { id: 6, label: "Profil", href: "/dashboard/profile" },
-    ];
+export default function Sidebar() {
 
     return (
         <aside className="sidebar">
-            <h3>Matchningssystem</h3>
-            <ul className="nav-list">
-                {NAV_LINKS.map((link) => (
-                    <li key={link.id} className="nav-item">
-                        <Link className="nav-link" href={link.href}>
-                            {link.label}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-            <div className="sidebar-footer">
-                {auth && (
-                    <div className="user-info">
-                        Inloggad som<br />
-                        {auth.name} ({auth.email})
-                    </div>
-                )}
-                <LogoutButton />
-            </div>
+            <h3>App</h3>
+            <nav>
+                <ul>
+                    {items.map(item => (
+                        <li key={item.title}>
+                            <Link href={item.url} className={`nav-link`}>
+                                {item.title}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
         </aside>
-    );
+    )
 }

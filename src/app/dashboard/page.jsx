@@ -1,21 +1,24 @@
+"use server"
+
 import "./dashboard.css";
-import AdminDashboard from "@/app/dashboard/components/AdminDashboard";
-import ProjectLeadDashboard from "@/app/dashboard/components/ProjectLeadDashboard";
-import HrDashboard from "@/app/dashboard/components/HrDashboard";
-import UserDashboard from "@/app/dashboard/components/UserDashboard";
+import dynamic from "next/dynamic";
+
+const component = {
+    admin: dynamic(() => import("@/app/dashboard/components/AdminDashboard")),
+    user: dynamic(() => import("@/app/dashboard/components/UserDashboard")),
+    hr: dynamic(() => import("@/app/dashboard/components/HrDashboard")),
+    project_lead: dynamic(() => import("@/app/dashboard/components/ProjectLeadDashboard"))
+}
 
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
 
-    const role = "PROJECT_LEAD"
+    const role = "admin"
+
+    const Dashboard = component[role];
 
     return (
-        <>
-            {role === "ADMIN" && <AdminDashboard/>}
-            {role === "USER" && <UserDashboard/>}
-            {role === "HR" && <HrDashboard/>}
-            {role === "PROJECT_LEAD" && <ProjectLeadDashboard/>}
-        </>
+        <Dashboard/>
     )
 
 

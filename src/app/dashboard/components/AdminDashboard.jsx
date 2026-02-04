@@ -1,27 +1,19 @@
-"use client"
+import {createClient} from "@/lib/supabase/server";
 
-import React from "react"
+export default async function AdminDashboard() {
 
-export default function AdminDashboard() {
+    const supabase = await createClient();
 
-    const data = {
-        users: [
-            {id: 1, name: "Alice"},
-            {id: 2, name: "Bob"},
-            {id: 3, name: "Charlie"},
-        ],
-        projects: [
-            {id: 1, name: "Project Alpha"},
-            {id: 2, name: "Project Beta"},
-            {id: 3, name: "Project Gamma"},
-        ],
-        teams: [
-            {id: 1, name: "Team Rocket"},
-            {id: 2, name: "Team Alpha"},
-        ],
-    }
+    const {data: users, count: userCount} = await supabase
+        .from('profiles')
+        .select(`id, name`, {count: "estimated"})
+    const {data: teams, count: teamCount} = await supabase
+        .from('teams')
+        .select(`id, name`, {count: "estimated"})
+    const {data: projects, count: projectCount} = await supabase
+        .from('projects')
+        .select(`id, name`, {count: "estimated"})
 
-    const {users, projects, teams} = data
 
     return (
         <div className="dashboard-container">
@@ -29,21 +21,21 @@ export default function AdminDashboard() {
 
             <div className="dashboard-stats">
                 <div className="stat-card">
-                    <h4>Användare</h4>
-                    <p>{users.length}</p>
+                    <h4>Users</h4>
+                    <p>{userCount}</p>
                 </div>
                 <div className="stat-card">
-                    <h4>Projekt</h4>
-                    <p>{projects.length}</p>
+                    <h4>Projects</h4>
+                    <p>{projectCount}</p>
                 </div>
                 <div className="stat-card">
                     <h4>Team</h4>
-                    <p>{teams.length}</p>
+                    <p>{teamCount}</p>
                 </div>
             </div>
 
             <section className="dashboard-section">
-                <h3>Projekt</h3>
+                <h3>Projects</h3>
                 <ul className="dashboard-list">
                     {projects.map(({id, name}) => (
                         <li key={id}>{name}</li>
@@ -52,13 +44,23 @@ export default function AdminDashboard() {
             </section>
 
             <section className="dashboard-section">
-                <h3>Team</h3>
+                <h3>Teams</h3>
                 <ul className="dashboard-list">
                     {teams.map(({id, name}) => (
                         <li key={id}>{name}</li>
                     ))}
                 </ul>
             </section>
+
+            <section className="dashboard-section">
+                <h3>Users</h3>
+                <ul className="dashboard-list">
+                    {users.map(({id, name}) => (
+                        <li key={id}>{name ?? 'no_name_found'}</li>
+                    ))}
+                </ul>
+            </section>
+
         </div>
     )
 }

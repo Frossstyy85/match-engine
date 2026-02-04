@@ -14,12 +14,12 @@ export default function Sidebar() {
 
     return (
         <aside className="sidebar">
-            <h3>App</h3>
+            <h3>Match Engine</h3>
             <nav>
                 <ul>
                     {items.map(item => (
                         <li key={item.title}>
-                            <Link href={item.url} className={`nav-link`}>
+                            <Link href={item.url} className={`nav-link`} prefetch={"auto"}>
                                 {item.title}
                             </Link>
                         </li>

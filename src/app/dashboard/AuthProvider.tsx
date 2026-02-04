@@ -11,15 +11,15 @@ type AuthContextValue = {
 
 const AuthContext = React.createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children }){
+export function AuthProvider({children}) {
 
     const [user, setUser] = useState<User>(null)
 
     useEffect(() => {
         let mounted = true;
 
-        async function init(){
-            const { data: { user: u }, error } = await supabase.auth.getUser();
+        async function init() {
+            const {data: {user: u}, error} = await supabase.auth.getUser();
             if (!mounted) return
 
             setUser(u ?? null)
@@ -28,7 +28,7 @@ export function AuthProvider({ children }){
         init()
 
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session ) => {
+        const {data: {subscription}} = supabase.auth.onAuthStateChange((_event, session) => {
             if (!mounted) return;
             setUser(session.user ?? null)
         })
@@ -53,7 +53,7 @@ export function AuthProvider({ children }){
 
 }
 
-export function useAuth(){
+export function useAuth() {
     const ctx = useContext(AuthContext);
     if (!ctx) throw new Error("No provider found")
     return ctx;

@@ -1,7 +1,7 @@
 "use client";
 
-import {useEffect, useState} from "react";
 import type {CSSProperties} from "react";
+import {useEffect, useState} from "react";
 import {supabase} from "@/lib/supabase/client";
 import {useAuth} from "@/app/dashboard/AuthProvider";
 import type {User} from "@supabase/auth-js";
@@ -66,14 +66,14 @@ const sectionHeaderStyle: CSSProperties = {
 
 const sectionContentStyle: CSSProperties = {marginTop: "10px"};
 
-type ProfileRow = {id: string; name: string | null; email: string | null};
-type BaseOption = {id: number; name: string | null};
-type SkillRow = {id: number; skill_id: number; name: string; level: string};
-type LanguageRow = {id: number; language_id: number; name: string};
-type CertificateRow = {id: number; certificate_id: number; name: string};
+type ProfileRow = { id: string; name: string | null; email: string | null };
+type BaseOption = { id: number; name: string | null };
+type SkillRow = { id: number; skill_id: number; name: string; level: string };
+type LanguageRow = { id: number; language_id: number; name: string };
+type CertificateRow = { id: number; certificate_id: number; name: string };
 
 const resolveName = (
-    relation: {name?: string | null} | {name?: string | null}[] | null | undefined
+    relation: { name?: string | null } | { name?: string | null }[] | null | undefined
 ) => {
     if (Array.isArray(relation)) {
         return relation[0]?.name ?? "Unknown";
@@ -143,8 +143,6 @@ export default function ProfilePage() {
         await Promise.all([loadBaseOptions(), loadProfileData(profileRow.id)]);
         setLoading(false);
     };
-
-
 
 
     const getOrCreateProfile = async (authUser: User): Promise<ProfileRow | null> => {

@@ -11,14 +11,13 @@ export default async function Page({params}: props) {
     const {id} = await params;
 
     const supabase = await createClient();
-    const {data: team} = await supabase.from('teams').select().eq('id', id).single();
+    const {data: project} = await supabase.from('projects').select().eq('id', id).single();
 
 
     return (
         <div>
-            <pre>{JSON.stringify(team, null, 3)}</pre>
+            <pre>{JSON.stringify(project, null, 3)}</pre>
         </div>
     )
-
 
 }

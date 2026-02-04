@@ -1,3 +1,5 @@
+import CreateProjectForm from "@/app/dashboard/projects/CreateProjectForm";
+
 export default function ProjectLeadDashboard() {
     return (
         <div className="dashboard-container">
@@ -10,7 +12,7 @@ export default function ProjectLeadDashboard() {
                     <li>Match Engine</li>
                     <li>HR System</li>
                 </ul>
-                <button>Skapa nytt projekt</button>
+                <CreateProjectForm/>
             </section>
 
             {/* 🎯 Kompetenskrav */}

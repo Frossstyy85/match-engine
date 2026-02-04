@@ -3,6 +3,7 @@
 import "@/components/table/table.css";
 import {useQuery} from "@tanstack/react-query";
 import {supabase} from "@/lib/supabase/client";
+import CreateTeamForm from "@/app/dashboard/teams/CreateTeamForm";
 
 async function getTeams() {
     const {data} = await supabase
@@ -25,6 +26,7 @@ export default function Page() {
     return (
         <div>
             <h2>Team</h2>
+            <CreateTeamForm/>
             <table className="table">
                 <thead>
                 <tr>

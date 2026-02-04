@@ -9,7 +9,8 @@ export default function QueryProvider({children}) {
     const [client] = useState(new QueryClient({
         defaultOptions: {
             queries: {
-                refetchOnMount: false
+                refetchOnMount: false,
+                refetchOnWindowFocus: false,
             }
         }
     }))

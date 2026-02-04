@@ -8,18 +8,13 @@ const component = {
     user: dynamic(() => import("@/app/dashboard/components/UserDashboard")),
     hr: dynamic(() => import("@/app/dashboard/components/HrDashboard")),
     project_lead: dynamic(() => import("@/app/dashboard/components/ProjectLeadDashboard"))
-}
-
+};
 
 export default async function DashboardPage() {
 
-    const role = "admin"
+    const role = "project_lead";
 
     const Dashboard = component[role];
 
-    return (
-        <Dashboard/>
-    )
-
-
+    return <Dashboard/> ?? <div>empty</div>
 }

@@ -1,22 +1,22 @@
 import { createClient } from "@/lib/supabase/server";
 import { Field, FieldGroup, FieldTitle } from "@/components/ui/field";
 
-type Props = {
-    params: {
-        id: string;
-    };
-};
+export default async function Page({
+                                       params,
+                                   }: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params;
 
-export default async function Page({ params }: Props) {
     const supabase = await createClient();
 
     const { data: project, error } = await supabase
         .from("projects")
-        .select()
-        .eq("id", params.id)
-        .single();
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
 
-    if (error || !project) {
+    if (!project) {
         return <div>Projektet hittades inte</div>;
     }
 
@@ -38,11 +38,12 @@ export default async function Page({ params }: Props) {
                 <Field>
                     <FieldTitle>Created</FieldTitle>
                     <div>
-                        {new Date(project.created_at).toLocaleDateString("sv-SE")}
+                        {project.created_at
+                            ? new Date(project.created_at).toLocaleDateString("sv-SE")
+                            : "—"}
                     </div>
                 </Field>
             </FieldGroup>
         </div>
     );
 }
-

@@ -1,9 +1,14 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import LandingPage from "./LandingPage";
 
-export default function Home() {
-    return (
-        <div>
-            <Link href="/dashboard">Go to Dashboard</Link>
-        </div>
-    );
+export default async function Home() {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+        redirect("/dashboard");
+    }
+
+    return <LandingPage />;
 }

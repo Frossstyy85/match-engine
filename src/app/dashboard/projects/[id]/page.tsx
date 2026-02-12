@@ -1,4 +1,3 @@
-import "@/components/table/table.css";
 import { createClient } from "@/lib/supabase/server";
 import { Field, FieldGroup, FieldTitle } from "@/components/ui/field";
 import Link from "next/link";

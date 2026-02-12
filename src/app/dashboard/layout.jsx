@@ -1,12 +1,10 @@
 import Sidebar from "@/components/sidebar/Sidebar";
-import "./layout.css";
 
 export default function DashboardLayout({children}) {
-
     return (
-        <div className="dashboard-layout">
+        <div className="min-h-screen">
             <Sidebar/>
-            <main className={"main-content"}>{children}</main>
+            <main className="min-h-screen ml-[300px]">{children}</main>
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import "@/components/table/table.css";
+import { tableClasses } from "@/lib/utils";
 import CreateTeamForm from "@/app/dashboard/teams/CreateTeamForm";
 import {createClient} from "@/lib/supabase/server";
 import Link from "next/link";
@@ -17,7 +17,7 @@ export default async function Page() {
                 <div className={"justify-end flex w-full mb-3 p-1"}>
                     <CreateTeamForm/>
                 </div>
-                <table className="table">
+                <table className={tableClasses}>
                     <thead>
                     <tr>
                         <th>ID</th>

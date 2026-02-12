@@ -1,6 +1,5 @@
 "use server"
 
-import "./dashboard.css";
 import dynamic from "next/dynamic";
 
 const component = {

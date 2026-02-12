@@ -1,5 +1,5 @@
-import "@/components/table/table.css";
-import {createClient} from "@/lib/supabase/server";
+import { tableClasses } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function Page() {
 
@@ -13,7 +13,7 @@ export default async function Page() {
                 className={"flex flex-col gap-0 max-w-4/5 h-fit mt-5 overflow-auto border-gray-300 border radius rounded w-full"}>
                 <div className={"justify-end flex w-full mb-3 p-1 h-full"}>
                 </div>
-                <table className="table">
+                <table className={tableClasses}>
                     <thead>
                     <tr>
                         <th>ID</th>

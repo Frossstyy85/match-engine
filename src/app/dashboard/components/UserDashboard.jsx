@@ -2,7 +2,7 @@
 
 export default function UserDashboard() {
     return (
-        <div style={{maxWidth: "900px", margin: "0 auto", padding: "20px", fontFamily: "sans-serif"}}>
+        <div className="max-w-[900px] mx-auto p-5 font-sans">
 
         </div>
     );

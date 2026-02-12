@@ -1,5 +1,6 @@
 import Link from "next/link"
 import "./Sidebar.css"
+import LogoutButton from "@/components/auth/LogoutButton";
 
 const items = [
     {title: 'Dashboard', url: '/dashboard'},
@@ -25,6 +26,7 @@ export default function Sidebar() {
                         </li>
                     ))}
                 </ul>
+                <LogoutButton/>
             </nav>
         </aside>
     )

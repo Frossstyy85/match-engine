@@ -1,6 +1,7 @@
 import "@/components/table/table.css";
 import CreateTeamForm from "@/app/dashboard/teams/CreateTeamForm";
 import {createClient} from "@/lib/supabase/server";
+import Link from "next/link";
 
 export default async function Page() {
 
@@ -27,7 +28,7 @@ export default async function Page() {
                     {teams.map(team => (
                         <tr key={team.id}>
                             <td>{team.id}</td>
-                            <td>{team.name}</td>
+                            <td><Link href={`/dashboard/teams/${team.id}`}>{team.name}</Link></td>
                         </tr>
                     ))}
                     </tbody>

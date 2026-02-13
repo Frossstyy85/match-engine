@@ -22,10 +22,11 @@ export default function CreateProjectForm() {
     const [endDate, setEndDate] = useState<Date | undefined>();
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button>Create project</Button>
-            </DialogTrigger>
+        <div className="w-fit">
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                    <Button size="sm">Create project</Button>
+                </DialogTrigger>
 
             <DialogContent>
                 <DialogHeader>
@@ -80,6 +81,7 @@ export default function CreateProjectForm() {
                     <Button type="submit">Create</Button>
                 </form>
             </DialogContent>
-        </Dialog>
+            </Dialog>
+        </div>
     );
 }

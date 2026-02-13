@@ -32,10 +32,8 @@ export default async function Page({ searchParams }) {
 
     return (
         <>
-            <div>
-            <CreateProjectForm/>
-            </div>
-            <ProjectsTable data={data}/>
+            <CreateProjectForm />
+            <ProjectsTable data={data} />
         </>
     );
 }

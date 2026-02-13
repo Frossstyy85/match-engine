@@ -12,7 +12,7 @@ export default function DataTable({ data, columns }) {
     })
 
     return (
-        <div className="overflow-hidden rounded-md border">
+        <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
         <Table>
             <TableHeader>
             {table.getHeaderGroups().map((hg) => (

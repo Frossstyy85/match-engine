@@ -3,13 +3,13 @@
 import dynamic from "next/dynamic";
 
 const component = {
-    admin: dynamic(() => import("@/app/dashboard/components/AdminDashboard"),
+    admin: dynamic(() => import("@/app/dashboard/dashboards/AdminDashboard"),
         {ssr: true}),
-    user: dynamic(() => import("@/app/dashboard/components/UserDashboard"),
+    user: dynamic(() => import("@/app/dashboard/dashboards/UserDashboard"),
         {ssr: true}),
-    hr: dynamic(() => import("@/app/dashboard/components/HrDashboard"),
+    hr: dynamic(() => import("@/app/dashboard/dashboards/HrDashboard"),
         {ssr: true}),
-    project_lead: dynamic(() => import("@/app/dashboard/components/ProjectLeadDashboard"),
+    project_lead: dynamic(() => import("@/app/dashboard/dashboards/ProjectLeadDashboard"),
         {ssr: true})
 };
 
@@ -19,5 +19,11 @@ export default async function DashboardPage() {
 
     const Dashboard = component[role];
 
-    return <Dashboard/> ?? <div>empty</div>
+
+    return (
+        <div>
+            <Dashboard/>
+        </div>
+
+    )
 }

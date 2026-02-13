@@ -4,7 +4,7 @@ import {createClient} from "@/lib/supabase/server";
 import {revalidatePath} from "next/cache";
 import {redirect} from "next/navigation";
 
-export async function createProject(formData: FormData) {
+export async function createTeam(formData: FormData) {
     const name = formData.get("name") as string;
 
     if (!name || name.trim().length === 0) {
@@ -18,6 +18,7 @@ export async function createProject(formData: FormData) {
         .insert({name})
         .select('id')
         .single()
+
 
     if (error) {
         throw error;

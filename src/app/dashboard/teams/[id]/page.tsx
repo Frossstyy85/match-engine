@@ -3,32 +3,37 @@ import { Field, FieldGroup, FieldTitle } from "@/components/ui/field";
 import Link from "next/link";
 import {notFound} from "next/navigation";
 
-export default async function Page({ params }){
+type PageProps = { params: Promise<{ id: string }> };
 
+export default async function Page({ params }: PageProps) {
     const { id } = await params;
 
     const supabase = await createClient();
 
-    const { data: team } = await supabase
+    const { data: team, error } = await supabase
         .from("teams")
         .select()
         .eq("id", id)
         .single();
 
-
-    if (!team) notFound()
+    if (error) {
+        return (
+            <div className="w-full min-w-0 p-4 sm:p-6">
+                <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+                    <p className="text-sm text-destructive">{error.message}</p>
+                </div>
+            </div>
+        );
+    }
+    if (!team) notFound();
 
     return (
-        <div className={"w-full h-screen flex justify-center bg-gray-50"}>
-            <div
-                className={
-                    "flex flex-col gap-4 w-full max-w-4/5 h-fit mt-5 mb-5 overflow-auto border-gray-200 border bg-white shadow-sm radius rounded p-6"
-                }
-            >
-                <div className={"flex items-center justify-between w-full"}>
+        <div className="w-full min-w-0 p-3 sm:p-4">
+            <div className="flex flex-col gap-4 w-full min-w-0 overflow-auto border border-gray-200 bg-white shadow-sm rounded p-4 sm:p-6">
+                <div className="flex flex-col gap-3 sm:items-start w-full">
                     <div>
-                        <div className={"flex space-x-6"}>
-                            <h1 className={"text-2xl font-semibold"}>{team.name}</h1>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-6">
+                            <h1 className="text-xl sm:text-2xl font-semibold">{team.name}</h1>
                             <Link
                                 href={`/dashboard/teams/${team.id}/edit`}
                                 className={"text-sm text-blue-600 hover:underline"}

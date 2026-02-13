@@ -1,11 +1,15 @@
-import Sidebar from "@/components/sidebar/Sidebar";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 
 export default function DashboardLayout({children}) {
     return (
-        <div className="min-h-screen">
-            <Sidebar/>
-            <main className="min-h-screen ml-[300px]">{children}</main>
-        </div>
+        <SidebarProvider>
+            <AppSidebar/>
+            <SidebarInset className="min-w-0">
+                <SidebarTrigger/>
+                {children}
+            </SidebarInset>
+        </SidebarProvider>
     );
 }
 

@@ -1,26 +1,21 @@
-import { createClient } from "@/lib/supabase/server";
 import { Field, FieldGroup, FieldTitle } from "@/components/ui/field";
 import Link from "next/link";
-import {notFound} from "next/navigation";
+import { notFound } from "next/navigation";
+import { fetchProject } from "@/lib/db/projects";
+import { formatDate } from "@/lib/helpers/date";
+import type { Team } from "@/lib/types";
 
-export default async function Page({ params }){
-
+export default async function Page({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
     const { id } = await params;
+    const project = await fetchProject(id);
 
-    const supabase = await createClient();
+    if (!project) notFound();
 
-    const { data: project } = await supabase
-        .from("projects")
-        .select("*, teams(id, name)")
-        .eq("id", id)
-        .single();
-
-
-    if (!project) notFound()
-
-
-
-    const teams: any[] = project.teams;
+    const teams: Team[] = Array.isArray(project.teams) ? project.teams : [];
     const teamsNode = teams.length !== 0 ? teams.map((team) => (
             <div key={team.id}>
                 <Link href={`/dashboard/teams/${team.id}`}
@@ -31,22 +26,25 @@ export default async function Page({ params }){
             </div>
         )) : <p>No teams found</p>
 
+    const skills = project.projectSkills;
+    const skillsNode = skills.length !== 0 ? skills.map((skill, idx) => (
+        <div key={idx}>
+                {skill}
+        </div>
+    )) : <p>No skills found</p>
+
 
     return (
-        <div className={"w-full h-screen flex justify-center bg-gray-50"}>
-            <div
-                className={
-                    "flex flex-col gap-4 w-full max-w-4/5 h-fit mt-5 mb-5 overflow-auto border-gray-200 border bg-white shadow-sm radius rounded p-6"
-                }
-            >
-                <div className={"flex items-center justify-between w-full"}>
+        <div className="w-full min-w-0 p-3 sm:p-4">
+            <div className="flex flex-col gap-4 w-full min-w-0 overflow-auto border border-gray-200 bg-white shadow-sm rounded p-4 sm:p-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
                     <div>
-                        <h1 className={"text-2xl font-semibold"}>{project.name}</h1>
-                        <p className={"text-sm text-gray-500"}>
+                        <h1 className="text-xl sm:text-2xl font-semibold">{project.name}</h1>
+                        <p className="text-sm text-gray-500">
                             ID: {project.id}
                         </p>
                     </div>
-                    <div className={"space-x-8"}>
+                    <div className="flex flex-wrap gap-2 sm:space-x-8">
                         <Link
                             href={`/dashboard/projects/${project.id}/edit`}
                             className={"text-sm text-blue-600 hover:underline"}
@@ -74,18 +72,23 @@ export default async function Page({ params }){
                             <FieldTitle>Project ID</FieldTitle>
                             <div>{project.id}</div>
                         </Field>
-
-                        <Field>
-                            <FieldTitle>Created</FieldTitle>
-                            <div>
-                                {project.created_at
-                                    ? new Date(project.created_at).toLocaleDateString("sv-SE")
-                                    : "—"}
-                            </div>
-                        </Field>
+                        <FieldGroup>
+                            <Field>
+                                <FieldTitle>Start date</FieldTitle>
+                                {formatDate(project.start_date)}
+                            </Field>
+                            <Field>
+                                <FieldTitle>End date</FieldTitle>
+                                {formatDate(project.end_date)}
+                            </Field>
+                        </FieldGroup>
                         <Field>
                             <FieldTitle>Teams</FieldTitle>
                             {teamsNode}
+                        </Field>
+                        <Field>
+                            <FieldTitle>Required skills</FieldTitle>
+                            {skillsNode}
                         </Field>
                     </FieldGroup>
                 </div>

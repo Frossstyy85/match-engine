@@ -1,176 +1,45 @@
-import {createClient} from "@/lib/supabase/server";
-import type {User} from "@supabase/auth-js";
-import type {ReactNode} from "react";
-import {revalidatePath} from "next/cache";
+import { createClient } from "@/lib/supabase/server";
+import { getOrCreateProfile, removeProfileSkill, removeProfileLanguage, removeProfileCertificate } from "@/lib/db/profile";
+import type { ProfileSkillRow, ProfileLanguageRow, ProfileCertificateRow } from "@/lib/db/profile";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { ProfileAddSkillForm, ProfileAddLanguageForm, ProfileAddCertificateForm } from "@/app/dashboard/profile/ProfileAddForms";
 
-const levelOptions = ["beginner", "intermediate", "advanced"];
-
-type ProfileRow = { id: string; name: string | null; email: string | null };
-type BaseOption = { id: number; name: string | null };
-type SkillRow = { id: number; skill_id: number; name: string; level: string };
-type LanguageRow = { id: number; language_id: number; name: string };
-type CertificateRow = { id: number; certificate_id: number; name: string };
-
-const resolveName = (
+function resolveName(
     relation: { name?: string | null } | { name?: string | null }[] | null | undefined
-) => {
-    if (Array.isArray(relation)) {
-        return relation[0]?.name ?? "Unknown";
-    }
+): string {
+    if (Array.isArray(relation)) return relation[0]?.name ?? "Unknown";
     return relation?.name ?? "Unknown";
-};
-
-const getOrCreateProfile = async (supabase, authUser: User): Promise<ProfileRow | null> => {
-    const {data: profileRows, error: profileError} = await supabase
-        .from("profiles")
-        .select("id, name, email")
-        .eq("auth_id", authUser.id)
-        .limit(1);
-
-    if (profileError) {
-        console.error(profileError);
-        return null;
-    }
-
-    let profileRow = profileRows?.[0] ?? null;
-
-    if (!profileRow) {
-        const {data: createdProfile, error: createError} = await supabase
-            .from("profiles")
-            .insert({
-                auth_id: authUser.id,
-                email: authUser.email ?? null,
-                name: authUser.user_metadata?.full_name ?? null
-            })
-            .select("id, name, email")
-            .single();
-
-        if (createError) {
-            console.error(createError);
-            return null;
-        }
-
-        profileRow = createdProfile;
-    } else if (!profileRow.email && authUser.email) {
-        const {data: updatedProfile, error: updateError} = await supabase
-            .from("profiles")
-            .update({email: authUser.email})
-            .eq("id", profileRow.id)
-            .select("id, name, email")
-            .single();
-
-        if (!updateError && updatedProfile) {
-            profileRow = updatedProfile;
-        }
-    }
-
-    return profileRow;
-};
-
-async function addSkill(formData: FormData) {
-    "use server";
-    const supabase = await createClient();
-    const {data: {user}} = await supabase.auth.getUser();
-    if (!user) return;
-
-    const profile = await getOrCreateProfile(supabase, user);
-    if (!profile) return;
-
-    const skillId = Number(formData.get("skillId"));
-    const skillLevel = String(formData.get("skillLevel") || levelOptions[0]);
-    if (!skillId) return;
-
-    await supabase.from("profile_skills").insert({
-        profile_id: profile.id,
-        skill_id: skillId,
-        skill_level: skillLevel
-    });
-    revalidatePath("/dashboard/profile");
 }
 
-async function addLanguage(formData: FormData) {
-    "use server";
-    const supabase = await createClient();
-    const {data: {user}} = await supabase.auth.getUser();
-    if (!user) return;
-
-    const profile = await getOrCreateProfile(supabase, user);
-    if (!profile) return;
-
-    const languageId = Number(formData.get("languageId"));
-    if (!languageId) return;
-
-    await supabase.from("profile_languages").insert({
-        profile_id: profile.id,
-        language_id: languageId
-    });
-    revalidatePath("/dashboard/profile");
-}
-
-async function addCertificate(formData: FormData) {
-    "use server";
-    const supabase = await createClient();
-    const {data: {user}} = await supabase.auth.getUser();
-    if (!user) return;
-
-    const profile = await getOrCreateProfile(supabase, user);
-    if (!profile) return;
-
-    const certificateId = Number(formData.get("certificateId"));
-    if (!certificateId) return;
-
-    await supabase.from("profile_certificates").insert({
-        profile_id: profile.id,
-        certificate_id: certificateId
-    });
-    revalidatePath("/dashboard/profile");
-}
-
-async function removeSkill(formData: FormData) {
-    "use server";
-    const supabase = await createClient();
-    const rowId = Number(formData.get("rowId"));
-    if (!rowId) return;
-    await supabase.from("profile_skills").delete().eq("id", rowId);
-    revalidatePath("/dashboard/profile");
-}
-
-async function removeLanguage(formData: FormData) {
-    "use server";
-    const supabase = await createClient();
-    const rowId = Number(formData.get("rowId"));
-    if (!rowId) return;
-    await supabase.from("profile_languages").delete().eq("id", rowId);
-    revalidatePath("/dashboard/profile");
-}
-
-async function removeCertificate(formData: FormData) {
-    "use server";
-    const supabase = await createClient();
-    const rowId = Number(formData.get("rowId"));
-    if (!rowId) return;
-    await supabase.from("profile_certificates").delete().eq("id", rowId);
-    revalidatePath("/dashboard/profile");
-}
+type SkillOptionRow = { id: number; name: string | null };
+type ProfileSkillRowDb = { id: number; skill_id: number; skill_level: string; skills: { name: string } | { name: string }[] | null };
+type ProfileLanguageRowDb = { id: number; language_id: number; languages: { name: string } | { name: string }[] | null };
+type ProfileCertificateRowDb = { id: number; certificate_id: number; certificates: { name: string } | { name: string }[] | null };
 
 export default async function ProfilePage() {
     const supabase = await createClient();
-    const {data: {user}, error: userError} = await supabase.auth.getUser();
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
 
     if (userError) {
         return (
-            <div className="mx-auto max-w-4xl p-6">
-                <h2 className="text-2xl font-semibold">Min profil</h2>
-                <p className="mt-3 text-red-600">{userError.message}</p>
+            <div className="w-full min-w-0 p-4 sm:p-6">
+                <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+                    <h2 className="text-lg font-semibold">Profile</h2>
+                    <p className="mt-2 text-sm text-destructive">{userError.message}</p>
+                </div>
             </div>
         );
     }
 
     if (!user) {
         return (
-            <div className="mx-auto max-w-4xl p-6">
-                <h2 className="text-2xl font-semibold">Min profil</h2>
-                <p className="mt-3 text-gray-600">Please sign in to view your profile.</p>
+            <div className="w-full min-w-0 p-4 sm:p-6">
+                <div className="rounded-lg border bg-card p-4 shadow-sm">
+                    <h2 className="text-lg font-semibold">Profile</h2>
+                    <p className="mt-2 text-sm text-muted-foreground">Sign in to view your profile.</p>
+                </div>
             </div>
         );
     }
@@ -178,223 +47,184 @@ export default async function ProfilePage() {
     const profile = await getOrCreateProfile(supabase, user);
     if (!profile) {
         return (
-            <div className="mx-auto max-w-4xl p-6">
-                <h2 className="text-2xl font-semibold">Min profil</h2>
-                <p className="mt-3 text-red-600">Could not load profile.</p>
+            <div className="w-full min-w-0 p-4 sm:p-6">
+                <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+                    <h2 className="text-lg font-semibold">Profile</h2>
+                    <p className="mt-2 text-sm text-destructive">Could not load profile.</p>
+                </div>
             </div>
         );
     }
 
     const [
-        {data: skillsData, error: skillsError},
-        {data: languagesData, error: languagesError},
-        {data: certificatesData, error: certificatesError}
+        { data: skillsData, error: skillsError },
+        { data: languagesData, error: languagesError },
+        { data: certificatesData, error: certificatesError },
+        { data: skillRows, error: skillError },
+        { data: languageRows, error: languageError },
+        { data: certificateRows, error: certificateError },
     ] = await Promise.all([
-        supabase.from("skills").select("id, name").order("name", {ascending: true}),
-        supabase.from("languages").select("id, name").order("name", {ascending: true}),
-        supabase.from("certificates").select("id, name").order("name", {ascending: true})
-    ]);
-
-    if (skillsError || languagesError || certificatesError) {
-        return (
-            <div className="mx-auto max-w-4xl p-6">
-                <h2 className="text-2xl font-semibold">Min profil</h2>
-                <p className="mt-3 text-red-600">
-                    {skillsError?.message || languagesError?.message || certificatesError?.message}
-                </p>
-            </div>
-        );
-    }
-
-    const [
-        {data: skillRows, error: skillError},
-        {data: languageRows, error: languageError},
-        {data: certificateRows, error: certificateError}
-    ] = await Promise.all([
+        supabase.from("skills").select("id, name").order("name", { ascending: true }),
+        supabase.from("languages").select("id, name").order("name", { ascending: true }),
+        supabase.from("certificates").select("id, name").order("name", { ascending: true }),
         supabase
             .from("profile_skills")
             .select("id, skill_id, skill_level, skills (id, name)")
             .eq("profile_id", profile.id)
-            .order("id", {ascending: true}),
+            .order("id", { ascending: true }),
         supabase
             .from("profile_languages")
             .select("id, language_id, languages (id, name)")
             .eq("profile_id", profile.id)
-            .order("id", {ascending: true}),
+            .order("id", { ascending: true }),
         supabase
             .from("profile_certificates")
             .select("id, certificate_id, certificates (id, name)")
             .eq("profile_id", profile.id)
-            .order("id", {ascending: true})
+            .order("id", { ascending: true }),
     ]);
 
-    if (skillError || languageError || certificateError) {
+    if (skillsError || languagesError || certificatesError || skillError || languageError || certificateError) {
+        const msg = skillsError?.message ?? languagesError?.message ?? certificatesError?.message
+            ?? skillError?.message ?? languageError?.message ?? certificateError?.message;
         return (
-            <div className="mx-auto max-w-4xl p-6">
-                <h2 className="text-2xl font-semibold">Min profil</h2>
-                <p className="mt-3 text-red-600">
-                    {skillError?.message || languageError?.message || certificateError?.message}
-                </p>
+            <div className="w-full min-w-0 p-4 sm:p-6">
+                <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+                    <h2 className="text-lg font-semibold">Profile</h2>
+                    <p className="mt-2 text-sm text-destructive">{msg}</p>
+                </div>
             </div>
         );
     }
 
-    const skills: SkillRow[] = (skillRows ?? []).map(row => ({
+    const skills: ProfileSkillRow[] = (skillRows ?? []).map((row: ProfileSkillRowDb) => ({
         id: row.id,
         skill_id: row.skill_id,
         name: resolveName(row.skills),
-        level: row.skill_level
+        level: row.skill_level,
     }));
-    const languages: LanguageRow[] = (languageRows ?? []).map(row => ({
+    const languages: ProfileLanguageRow[] = (languageRows ?? []).map((row: ProfileLanguageRowDb) => ({
         id: row.id,
         language_id: row.language_id,
-        name: resolveName(row.languages)
+        name: resolveName(row.languages),
     }));
-    const certificates: CertificateRow[] = (certificateRows ?? []).map(row => ({
+    const certificates: ProfileCertificateRow[] = (certificateRows ?? []).map((row: ProfileCertificateRowDb) => ({
         id: row.id,
         certificate_id: row.certificate_id,
-        name: resolveName(row.certificates)
+        name: resolveName(row.certificates),
     }));
 
-    const skillOptions: BaseOption[] = skillsData ?? [];
-    const languageOptions: BaseOption[] = languagesData ?? [];
-    const certificateOptions: BaseOption[] = certificatesData ?? [];
+    const skillOptions = (skillsData ?? []).map((r: SkillOptionRow) => ({ id: r.id, name: r.name }));
+    const languageOptions = (languagesData ?? []).map((r: SkillOptionRow) => ({ id: r.id, name: r.name }));
+    const certificateOptions = (certificatesData ?? []).map((r: SkillOptionRow) => ({ id: r.id, name: r.name }));
 
     return (
-        <div className="mx-auto max-w-4xl p-6">
-            <h2 className="text-2xl font-semibold">Min profil</h2>
-            <p className="mt-2 text-gray-600">
-                {profile.name || "Unnamed profile"}{profile.email ? ` · ${profile.email}` : ""}
-            </p>
+        <div className="w-full min-w-0 p-4 sm:p-6">
+            <div className="flex flex-col gap-6">
+                <div className="rounded-lg border bg-card px-4 py-5 shadow-sm sm:px-6">
+                    <h2 className="text-xl font-semibold sm:text-2xl">Profile</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                        {profile.name || "Unnamed"}{profile.email ? ` · ${profile.email}` : ""}
+                    </p>
+                </div>
 
-            <Section title="Kunskaper & Kompetenser">
-                <form action={addSkill} className="flex flex-wrap gap-3">
-                    <select name="skillId" className="rounded border border-gray-300 px-3 py-2">
-                        <option value="">Välj kompetens</option>
-                        {skillOptions.map(option => (
-                            <option key={option.id} value={option.id}>
-                                {option.name}
-                            </option>
-                        ))}
-                    </select>
-                    <select name="skillLevel" className="rounded border border-gray-300 px-3 py-2">
-                        {levelOptions.map(level => (
-                            <option key={level} value={level}>
-                                {level}
-                            </option>
-                        ))}
-                    </select>
-                    <button
-                        type="submit"
-                        className="rounded bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500"
-                    >
-                        Lägg till
-                    </button>
-                </form>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Skills</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-4 px-4 sm:px-6">
+                        <ProfileAddSkillForm options={skillOptions} />
+                        <div>
+                            <p className="mb-2 text-sm font-medium text-muted-foreground">Your skills</p>
+                            {skills.length === 0 ? (
+                                <p className="text-sm text-muted-foreground">No skills added yet.</p>
+                            ) : (
+                                <ul className="flex flex-col gap-2">
+                                    {skills.map((skill) => (
+                                        <li
+                                            key={skill.id}
+                                            className="flex flex-wrap items-center justify-between gap-2 rounded-md border bg-muted/30 px-3 py-2.5 text-sm"
+                                        >
+                                            <span className="font-medium">{skill.name}</span>
+                                            <span className="text-muted-foreground">— {skill.level}</span>
+                                            <form action={removeProfileSkill} className="ml-auto sm:ml-0">
+                                                <input type="hidden" name="rowId" value={skill.id} />
+                                                <Button type="submit" variant="ghost" size="icon-xs" aria-label="Remove">
+                                                    <Trash2 className="size-4" />
+                                                </Button>
+                                            </form>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
 
-                <p className="mt-4 font-semibold">Sparade kompetenser:</p>
-                <ul className="mt-2 space-y-2">
-                    {skills.length === 0 ? (
-                        <li className="text-gray-400">— Inga sparade kompetenser —</li>
-                    ) : (
-                        skills.map(skill => (
-                            <li key={skill.id}
-                                className="flex items-center justify-between rounded bg-gray-100 px-3 py-2">
-                                <span>{skill.name} – {skill.level}</span>
-                                <form action={removeSkill}>
-                                    <input type="hidden" name="rowId" value={skill.id}/>
-                                    <button type="submit" className="text-red-500 hover:text-red-600">🗑</button>
-                                </form>
-                            </li>
-                        ))
-                    )}
-                </ul>
-            </Section>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Languages</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-4 px-4 sm:px-6">
+                        <ProfileAddLanguageForm options={languageOptions} />
+                        <div>
+                            <p className="mb-2 text-sm font-medium text-muted-foreground">Your languages</p>
+                            {languages.length === 0 ? (
+                                <p className="text-sm text-muted-foreground">No languages added yet.</p>
+                            ) : (
+                                <ul className="flex flex-col gap-2">
+                                    {languages.map((lang) => (
+                                        <li
+                                            key={lang.id}
+                                            className="flex flex-wrap items-center justify-between gap-2 rounded-md border bg-muted/30 px-3 py-2.5 text-sm"
+                                        >
+                                            <span className="font-medium">{lang.name}</span>
+                                            <form action={removeProfileLanguage} className="ml-auto sm:ml-0">
+                                                <input type="hidden" name="rowId" value={lang.id} />
+                                                <Button type="submit" variant="ghost" size="icon-xs" aria-label="Remove">
+                                                    <Trash2 className="size-4" />
+                                                </Button>
+                                            </form>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
 
-            <Section title="Certifikat">
-                <form action={addCertificate} className="flex flex-wrap gap-3">
-                    <select name="certificateId" className="rounded border border-gray-300 px-3 py-2">
-                        <option value="">Välj certifikat</option>
-                        {certificateOptions.map(option => (
-                            <option key={option.id} value={option.id}>
-                                {option.name}
-                            </option>
-                        ))}
-                    </select>
-                    <button
-                        type="submit"
-                        className="rounded bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500"
-                    >
-                        Lägg till
-                    </button>
-                </form>
-
-                <p className="mt-4 font-semibold">Sparade certifikat:</p>
-                <ul className="mt-2 space-y-2">
-                    {certificates.length === 0 ? (
-                        <li className="text-gray-400">— Inga sparade certifikat —</li>
-                    ) : (
-                        certificates.map(certificate => (
-                            <li key={certificate.id}
-                                className="flex items-center justify-between rounded bg-gray-100 px-3 py-2">
-                                <span>{certificate.name}</span>
-                                <form action={removeCertificate}>
-                                    <input type="hidden" name="rowId" value={certificate.id}/>
-                                    <button type="submit" className="text-red-500 hover:text-red-600">🗑</button>
-                                </form>
-                            </li>
-                        ))
-                    )}
-                </ul>
-            </Section>
-
-            <Section title="Språk">
-                <form action={addLanguage} className="flex flex-wrap gap-3">
-                    <select name="languageId" className="rounded border border-gray-300 px-3 py-2">
-                        <option value="">Välj språk</option>
-                        {languageOptions.map(option => (
-                            <option key={option.id} value={option.id}>
-                                {option.name}
-                            </option>
-                        ))}
-                    </select>
-                    <button
-                        type="submit"
-                        className="rounded bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500"
-                    >
-                        Lägg till
-                    </button>
-                </form>
-
-                <p className="mt-4 font-semibold">Sparade språk:</p>
-                <ul className="mt-2 space-y-2">
-                    {languages.length === 0 ? (
-                        <li className="text-gray-400">— Inga sparade språk —</li>
-                    ) : (
-                        languages.map(language => (
-                            <li key={language.id}
-                                className="flex items-center justify-between rounded bg-gray-100 px-3 py-2">
-                                <span>{language.name}</span>
-                                <form action={removeLanguage}>
-                                    <input type="hidden" name="rowId" value={language.id}/>
-                                    <button type="submit" className="text-red-500 hover:text-red-600">🗑</button>
-                                </form>
-                            </li>
-                        ))
-                    )}
-                </ul>
-            </Section>
-        </div>
-    );
-}
-
-function Section({title, children}: { title: string; children: ReactNode }) {
-    return (
-        <section className="mt-6 rounded border border-gray-200 p-4">
-            <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">{title}</h3>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Certificates</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-4 px-4 sm:px-6">
+                        <ProfileAddCertificateForm options={certificateOptions} />
+                        <div>
+                            <p className="mb-2 text-sm font-medium text-muted-foreground">Your certificates</p>
+                            {certificates.length === 0 ? (
+                                <p className="text-sm text-muted-foreground">No certificates added yet.</p>
+                            ) : (
+                                <ul className="flex flex-col gap-2">
+                                    {certificates.map((cert) => (
+                                        <li
+                                            key={cert.id}
+                                            className="flex flex-wrap items-center justify-between gap-2 rounded-md border bg-muted/30 px-3 py-2.5 text-sm"
+                                        >
+                                            <span className="font-medium">{cert.name}</span>
+                                            <form action={removeProfileCertificate} className="ml-auto sm:ml-0">
+                                                <input type="hidden" name="rowId" value={cert.id} />
+                                                <Button type="submit" variant="ghost" size="icon-xs" aria-label="Remove">
+                                                    <Trash2 className="size-4" />
+                                                </Button>
+                                            </form>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
-            <div className="mt-3">{children}</div>
-        </section>
+        </div>
     );
 }

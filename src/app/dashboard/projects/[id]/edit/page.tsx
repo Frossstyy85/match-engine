@@ -1,21 +1,31 @@
 import Link from "next/link";
+import {fetchProject} from "@/lib/db/projects";
+import {fetchSkillsWithCategories} from "@/lib/db/skills";
 import EditProjectForm from "@/app/dashboard/projects/[id]/edit/edit-project-form";
 
 
-export  default async function Page({ params }){
+type PageProps = { params: Promise<{ id: string }> };
+
+export default async function Page({ params }: PageProps) {
     const { id } = await params;
+
+    const [project, skills] = await Promise.all(
+        [
+            fetchProject(id),
+            fetchSkillsWithCategories(),
+        ]
+    )
+
     return (
-        <div className={"w-full h-screen flex justify-center bg-gray-50"}>
-            <div className={"flex flex-col gap-4 w-full max-w-4/5 h-fit mt-5 mb-5 overflow-auto border-gray-200 border bg-white shadow-sm radius rounded p-6"}>
-                <div className={"flex items-center justify-between w-full"}>
-                    <Link
-                        href={`/dashboard/projects/${id}`}
-                        className={"text-sm text-blue-600 hover:underline"}
-                    >
-                        Back to projects
-                    </Link>
-                </div>
-                <EditProjectForm/>
+        <div className="w-full min-w-0 p-3 sm:p-4">
+            <div className="flex flex-col gap-4 w-full max-w-xl overflow-auto border border-gray-200 bg-white shadow-sm rounded p-4 sm:p-6">
+                <Link
+                    href={`/dashboard/projects/${id}`}
+                    className={"text-sm text-blue-600 hover:underline"}
+                >
+                    Back to projects
+                </Link>
+                <EditProjectForm project={project} skills={skills} projectSkills={project.projectSkills}/>
             </div>
         </div>
     )

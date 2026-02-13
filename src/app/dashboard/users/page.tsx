@@ -8,29 +8,26 @@ export default async function Page() {
     const {data: users} = await supabase.from('profiles').select()
 
     return (
-        <div className={"w-full h-screen flex justify-center"}>
-            <div
-                className={"flex flex-col gap-0 max-w-4/5 h-fit mt-5 overflow-auto border-gray-300 border radius rounded w-full"}>
-                <div className={"justify-end flex w-full mb-3 p-1 h-full"}>
+        <div className="w-full min-w-0 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 w-full min-w-0">
+                <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm [-webkit-overflow-scrolling:touch]">
+                    <table className={tableClasses}>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((user) => (
+                                <tr key={user.id}>
+                                    <td data-label="Name">{user.name ?? "—"}</td>
+                                    <td data-label="Email">{user.email ?? "—"}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
-                <table className={tableClasses}>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {users.map(user => (
-                        <tr key={user.id}>
-                            <td>{user.id}</td>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
             </div>
         </div>
     );

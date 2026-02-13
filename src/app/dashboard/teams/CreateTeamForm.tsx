@@ -4,7 +4,7 @@ import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@
 import {Button} from "@/components/ui/button";
 import {Field, FieldGroup, FieldTitle} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
-import {createProject} from "@/lib/db/projects";
+import {createTeam} from "@/lib/db/teams";
 import {useState} from "react";
 
 export default function CreateTeamForm() {
@@ -24,14 +24,14 @@ export default function CreateTeamForm() {
 
                 <form
                     action={async (formData) => {
-                        await createProject(formData);
+                        await createTeam(formData);
                         setOpen(false);
                     }}
                 >
                     <FieldGroup>
                         <Field>
                             <FieldTitle>Team name (required)</FieldTitle>
-                            <Input name="name" placeholder="project x" required/>
+                            <Input name="name" placeholder="Team name" required />
                         </Field>
                     </FieldGroup>
 

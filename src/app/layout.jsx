@@ -7,7 +7,13 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-    title: "App"
+    title: "Match Engine",
+};
+
+export const viewport = {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
 };
 
 export default function RootLayout({children}) {

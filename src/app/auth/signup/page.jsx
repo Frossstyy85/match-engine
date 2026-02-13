@@ -15,8 +15,8 @@ export default function SignupPage() {
                         Match engine.
                     </Link>
                 </div>
-                <div className="flex flex-1 items-center justify-center">
-                    <div className="w-full max-w-xs">
+                <div className="flex flex-1 items-center justify-center px-2">
+                    <div className="w-full max-w-xs min-w-0">
                         <SignupForm />
                     </div>
                 </div>

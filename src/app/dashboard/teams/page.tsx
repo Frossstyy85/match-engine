@@ -8,31 +8,46 @@ export default async function Page() {
 
     const supabase = await createClient();
 
-    const {data: teams, error} = await supabase.from('teams').select()
+    const { data: teams, error } = await supabase.from("teams").select("*");
+
+    if (error) {
+        return (
+            <div className="w-full min-w-0 p-4 sm:p-6">
+                <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+                    <p className="text-sm text-destructive">{error.message}</p>
+                </div>
+            </div>
+        );
+    }
+
+    const teamList = teams ?? [];
 
     return (
-        <div className={"w-full h-screen flex justify-center"}>
-            <div
-                className={"flex flex-col gap-0 max-w-4/5 h-fit mt-5 overflow-auto border-gray-300 border radius rounded w-full"}>
-                <div className={"justify-end flex w-full mb-3 p-1"}>
-                    <CreateTeamForm/>
+        <div className="w-full min-w-0 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 w-full min-w-0">
+                <div className="flex w-full justify-end">
+                    <CreateTeamForm />
                 </div>
-                <table className={tableClasses}>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {teams.map(team => (
-                        <tr key={team.id}>
-                            <td>{team.id}</td>
-                            <td><Link href={`/dashboard/teams/${team.id}`}>{team.name}</Link></td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm [-webkit-overflow-scrolling:touch]">
+                    <table className={tableClasses}>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {teamList.map((team) => (
+                                <tr key={team.id}>
+                                    <td data-label="Name">
+                                        <Link href={`/dashboard/teams/${team.id}`} className="font-medium text-blue-600 hover:underline">
+                                            {team.name}
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

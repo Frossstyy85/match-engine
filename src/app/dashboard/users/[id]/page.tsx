@@ -1,14 +1,9 @@
 import {createClient} from "@/lib/supabase/server";
 
-type props = {
-    params: {
-        id: string
-    }
-}
+type PageProps = { params: Promise<{ id: string }> };
 
-export default async function Page({params}: props) {
-
-    const {id} = await params;
+export default async function Page({ params }: PageProps) {
+    const { id } = await params;
 
     const supabase = await createClient();
     const {data: user} = await supabase.from('profiles').select().eq('id', id).single();

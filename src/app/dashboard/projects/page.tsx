@@ -1,6 +1,7 @@
 import { tableClasses } from "@/lib/utils";
+import { formatDate } from "@/lib/helpers/date";
 import CreateProjectForm from "@/app/dashboard/projects/CreateProjectForm";
-import {createClient} from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
 export default async function Page() {
@@ -14,36 +15,39 @@ export default async function Page() {
     }
 
     return (
-        <div className={"w-full h-screen flex justify-center"}>
-            <div
-                className={"flex flex-col gap-0 max-w-4/5 h-fit mt-5 overflow-auto border-gray-300 border radius rounded"}>
-                <div className={"justify-end flex w-full mb-3 p-1"}>
-                    <CreateProjectForm/>
+        <div className="w-full min-w-0 p-4 sm:p-6">
+            <div className="flex flex-col gap-4 w-full min-w-0">
+                <div className="flex w-full justify-end">
+                    <CreateProjectForm />
                 </div>
-                <table className={tableClasses}>
-                    <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Start date</th>
-                        <th>End date</th>
-                        <th>Project lead</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {projects.map(project => (
-                        <tr key={project.id}>
-                            <td>{project.id}</td>
-                            <td><Link href={`/dashboard/projects/${project.id}`}>{project.name}</Link></td>
-                            <td>{project.status}</td>
-                            <td>{project.start_date}</td>
-                            <td>{project.end_date}</td>
-                            <td>_</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm [-webkit-overflow-scrolling:touch]">
+                    <table className={tableClasses}>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Start date</th>
+                                <th>End date</th>
+                                <th>Project lead</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {projects.map((project) => (
+                                <tr key={project.id}>
+                                    <td data-label="Name">
+                                        <Link href={`/dashboard/projects/${project.id}`} className="font-medium text-blue-600 hover:underline">
+                                            {project.name}
+                                        </Link>
+                                    </td>
+                                    <td data-label="Status">{project.status ?? "—"}</td>
+                                    <td data-label="Start date">{formatDate(project.start_date)}</td>
+                                    <td data-label="End date">{formatDate(project.end_date)}</td>
+                                    <td data-label="Project lead">—</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

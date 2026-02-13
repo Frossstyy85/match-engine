@@ -2,12 +2,13 @@
 
 import * as React from "react"
 import {
-    Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu,
+    Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import Link from "next/link";
-import LogoutButton from "@/components/auth/LogoutButton";
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import LogoutButton from "@/components/auth/LogoutButton"
 
 
 const items = [
@@ -40,6 +41,8 @@ const items = [
 
 
 export function AppSidebar() {
+    const pathname = usePathname()
+
     return (
         <Sidebar>
             <SidebarHeader>
@@ -50,7 +53,7 @@ export function AppSidebar() {
                     <SidebarMenu>
                         {items.map((item, idx) => (
                             <SidebarMenuItem key={idx}>
-                                <SidebarMenuButton asChild className={"hover:bg-blue-500"}>
+                                <SidebarMenuButton asChild isActive={pathname === item.url || (item.url !== "/dashboard" && pathname.startsWith(item.url))}>
                                     <Link href={item.url}>
                                         <span>{item.title}</span>
                                     </Link>

@@ -25,7 +25,12 @@ export default async function Page({ params }: PageProps) {
                 >
                     Back to projects
                 </Link>
-                <EditProjectForm project={project} skills={skills} projectSkills={project.projectSkills}/>
+                <EditProjectForm
+                    project={project}
+                    skills={skills}
+                    projectSkills={project.projectSkills}
+                    teams={Array.isArray(project.teams) ? project.teams : []}
+                />
             </div>
         </div>
     )

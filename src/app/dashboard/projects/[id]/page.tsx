@@ -5,13 +5,9 @@ import { fetchProject } from "@/lib/db/projects";
 import { formatDate } from "@/lib/helpers/date";
 import type { Team } from "@/lib/types";
 
-export default async function Page({
-    params,
-}: {
-    params: Promise<{ id: string }>;
-}) {
+export default async function Page({ params }) {
     const { id } = await params;
-    const project = await fetchProject(id);
+    const project = await fetchProject(Number(id));
 
     if (!project) notFound();
 
@@ -86,7 +82,7 @@ export default async function Page({
                             <FieldTitle>Teams</FieldTitle>
                             {teamsNode}
                         </Field>
-                        <Field>
+                        <Field className={"flex flex-rows-4"}>
                             <FieldTitle>Required skills</FieldTitle>
                             {skillsNode}
                         </Field>

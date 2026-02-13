@@ -1,6 +1,5 @@
 import { tableClasses } from "@/lib/utils";
-import CreateTeamForm from "@/app/dashboard/teams/CreateTeamForm";
-import {createClient} from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
 export default async function Page() {
@@ -25,9 +24,6 @@ export default async function Page() {
     return (
         <div className="w-full min-w-0 p-4 sm:p-6">
             <div className="flex flex-col gap-4 w-full min-w-0">
-                <div className="flex w-full justify-end">
-                    <CreateTeamForm />
-                </div>
                 <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm [-webkit-overflow-scrolling:touch]">
                     <table className={tableClasses}>
                         <thead>

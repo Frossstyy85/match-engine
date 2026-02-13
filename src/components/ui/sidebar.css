@@ -1,0 +1,91 @@
+/* Sidebar: dark panel, blue accent, scoped to sidebar only */
+[data-slot="sidebar-wrapper"] {
+    --sidebar: #1f2937;
+    --sidebar-foreground: #fff;
+    --sidebar-primary: #2563eb;
+    --sidebar-primary-foreground: #fff;
+    --sidebar-accent: #2563eb;
+    --sidebar-accent-foreground: #fff;
+    --sidebar-border: rgba(255, 255, 255, 0.1);
+    --sidebar-ring: oklch(0.705 0.015 286.067);
+}
+
+[data-slot="sidebar-inner"] {
+    padding: 25px;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+    transition: width 0.3s ease;
+}
+
+[data-slot="sidebar-wrapper"] [data-sidebar="header"] {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f3f4f6;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 0 0 0 12px;
+    position: relative;
+}
+
+[data-slot="sidebar-wrapper"] [data-sidebar="header"]::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    background-color: #2563eb;
+    border-radius: 2px;
+}
+
+[data-slot="sidebar-wrapper"] [data-sidebar="menu-button"] {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    color: #d1d5db;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+[data-slot="sidebar-wrapper"] [data-sidebar="menu-button"]:hover {
+    background-color: #2563eb;
+    color: #fff;
+}
+
+[data-slot="sidebar-wrapper"] [data-sidebar="menu-button"][data-active="true"] {
+    background-color: #3b82f6;
+    color: #fff;
+    font-weight: 600;
+}
+
+[data-slot="sidebar-wrapper"] [data-slot="sidebar-group-content"] {
+    padding-left: 0;
+}
+
+[data-slot="sidebar-wrapper"] [data-slot="sidebar-menu"] {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+[data-slot="sidebar-wrapper"] [data-sidebar="menu-item"] {
+    margin-bottom: 6px;
+}
+
+@media (max-width: 768px) {
+    [data-slot="sidebar-wrapper"] [data-slot="sidebar-inner"] {
+        padding: 10px;
+    }
+
+    [data-slot="sidebar-wrapper"] [data-sidebar="header"] {
+        display: none;
+    }
+
+    [data-slot="sidebar-wrapper"] [data-sidebar="menu-button"] {
+        padding: 8px;
+        text-align: center;
+        font-size: 0.95rem;
+    }
+}

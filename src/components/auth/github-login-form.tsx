@@ -1,8 +1,11 @@
 import {Button} from "@/components/ui/button";
 import {supabase} from "@/lib/supabase/client";
+import {useRouter} from "next/navigation";
 
 
 export default function GithubLoginForm(){
+
+    const router = useRouter();
 
     const handleClick = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
@@ -11,6 +14,7 @@ export default function GithubLoginForm(){
                 redirectTo: `${window.location.origin}/dashboard`
             }
         })
+
     }
 
     return (

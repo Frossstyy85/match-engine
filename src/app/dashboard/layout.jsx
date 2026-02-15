@@ -1,8 +1,10 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
+import QueryProvider from "@/app/dashboard/QueryProvider";
 
 export default function DashboardLayout({ children }) {
     return (
+        <QueryProvider>
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset className="min-w-0">
@@ -12,6 +14,7 @@ export default function DashboardLayout({ children }) {
                 </main>
             </SidebarInset>
         </SidebarProvider>
+        </QueryProvider>
     );
 }
 

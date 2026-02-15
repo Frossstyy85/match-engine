@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useQueryClient } from "@tanstack/react-query"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,6 +26,7 @@ interface CreateSkillFormProps {
 }
 
 export default function CreateSkillForm({ categories }: CreateSkillFormProps) {
+    const queryClient = useQueryClient()
     const [open, setOpen] = React.useState(false)
     const [name, setName] = React.useState("")
     const [categoryId, setCategoryId] = React.useState<string>("")
@@ -37,6 +39,7 @@ export default function CreateSkillForm({ categories }: CreateSkillFormProps) {
         setSaving(true)
         try {
             await createSkill(name, Number(categoryId))
+            queryClient.invalidateQueries({ queryKey: ["skills"] })
             setName("")
             setCategoryId("")
             setOpen(false)

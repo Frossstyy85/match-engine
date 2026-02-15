@@ -1,13 +1,14 @@
-'use client'
+"use client";
 
-import { ColumnDef } from "@tanstack/table-core"
-import DataTable from "@/components/table/DataTable"
+import { ColumnDef } from "@tanstack/table-core";
+import DataTable from "@/components/table/DataTable";
+import type { PaginationState } from "@tanstack/react-table";
 
 type Profile = {
-    id: string
-    name?: string | null
-    email?: string | null
-}
+    id: string;
+    name?: string | null;
+    email?: string | null;
+};
 
 const columns: ColumnDef<Profile>[] = [
     {
@@ -20,8 +21,36 @@ const columns: ColumnDef<Profile>[] = [
         accessorKey: "email",
         cell: ({ row }) => row.original.email ?? "—",
     },
-]
+];
 
-export default function UsersTable({ data }: { data: Profile[] }) {
-    return <DataTable data={data} columns={columns} />
+export interface UsersTableProps {
+    data: Profile[];
+    rowCount: number;
+    pageIndex: number;
+    pageSize: number;
+    onPaginationChange: (updater: (old: PaginationState) => PaginationState) => void;
+    isLoading?: boolean;
+}
+
+export default function UsersTable({
+    data,
+    rowCount,
+    pageIndex,
+    pageSize,
+    onPaginationChange,
+    isLoading,
+}: UsersTableProps) {
+    return (
+        <DataTable
+            data={data}
+            columns={columns}
+            pagination={{
+                rowCount,
+                pageIndex,
+                pageSize,
+                onPaginationChange,
+                isLoading,
+            }}
+        />
+    );
 }

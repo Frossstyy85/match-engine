@@ -1,10 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
-import UsersTable from "@/app/dashboard/users/UsersTable";
+import UsersPageContent from "@/app/dashboard/users/UsersPageContent";
 
-export default async function Page() {
-    const supabase = await createClient();
-
-    const { data: users } = await supabase.from("profiles").select();
-
-    return <UsersTable data={users ?? []} />;
+export default function Page() {
+    return <UsersPageContent />;
 }

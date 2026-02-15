@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
     Dialog,
     DialogContent,
@@ -17,6 +18,7 @@ import { formatDateForInput } from "@/lib/helpers/date";
 import { createProject } from "@/lib/db/projects";
 
 export default function CreateProjectForm() {
+    const queryClient = useQueryClient();
     const [open, setOpen] = useState(false);
     const [startDate, setStartDate] = useState<Date | undefined>();
     const [endDate, setEndDate] = useState<Date | undefined>();
@@ -36,6 +38,7 @@ export default function CreateProjectForm() {
                 <form
                     action={async (formData) => {
                         await createProject(formData);
+                        queryClient.invalidateQueries({ queryKey: ["projects"] });
                         setOpen(false);
                         setStartDate(undefined);
                         setEndDate(undefined);

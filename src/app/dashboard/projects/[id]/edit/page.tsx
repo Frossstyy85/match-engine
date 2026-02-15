@@ -11,7 +11,7 @@ export default async function Page({ params }: PageProps) {
 
     const [project, skills] = await Promise.all(
         [
-            fetchProject(id),
+            fetchProject(Number(id)),
             fetchSkillsWithCategories(),
         ]
     )

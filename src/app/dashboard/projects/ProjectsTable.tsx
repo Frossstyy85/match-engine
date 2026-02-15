@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
 import { ColumnDef } from "@tanstack/table-core";
 import { Project } from "@/lib/types";
 import DataTable from "@/components/table/DataTable";
 import { formatDate } from "@/lib/helpers";
 import Link from "next/link";
-import CreateProjectForm from "@/app/dashboard/projects/CreateProjectForm";
+import type { PaginationState } from "@tanstack/react-table";
 
 const columns: ColumnDef<Project>[] = [
     {
@@ -13,7 +13,11 @@ const columns: ColumnDef<Project>[] = [
         accessorKey: "name",
         cell: ({ row }) => {
             const { name, id } = row.original;
-            return <Link href={`/dashboard/projects/${id}`} className="font-medium text-blue-600 hover:underline">{name}</Link>;
+            return (
+                <Link href={`/dashboard/projects/${id}`} className="font-medium text-blue-600 hover:underline">
+                    {name}
+                </Link>
+            );
         },
     },
     { header: "Status", accessorKey: "status" },
@@ -29,15 +33,34 @@ const columns: ColumnDef<Project>[] = [
     },
 ];
 
-export default function ProjectsTable({ data }) {
+export interface ProjectsTableProps {
+    data: Project[];
+    rowCount: number;
+    pageIndex: number;
+    pageSize: number;
+    onPaginationChange: (updater: (old: PaginationState) => PaginationState) => void;
+    isLoading?: boolean;
+}
 
+export default function ProjectsTable({
+    data,
+    rowCount,
+    pageIndex,
+    pageSize,
+    onPaginationChange,
+    isLoading,
+}: ProjectsTableProps) {
     return (
-        <>
-            <DataTable
-                data={data}
-                columns={columns}
-            />
-        </>
-
+        <DataTable
+            data={data}
+            columns={columns}
+            pagination={{
+                rowCount,
+                pageIndex,
+                pageSize,
+                onPaginationChange,
+                isLoading,
+            }}
+        />
     );
 }

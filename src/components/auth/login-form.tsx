@@ -34,10 +34,11 @@
                 password: "",
             },
             onSubmit: async ({ value }) => {
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const {  data, error } = await supabase.auth.signInWithPassword({
                     email: value.email,
                     password: value.password
                 })
+                console.log(data, error)
                 if (data) router.push("/dashboard")
             }
         })

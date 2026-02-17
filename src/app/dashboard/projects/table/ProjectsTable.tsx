@@ -6,6 +6,7 @@ import DataTable from "@/components/table/DataTable";
 import { formatDate } from "@/lib/helpers";
 import Link from "next/link";
 import type { PaginationState } from "@tanstack/react-table";
+import ProjectRowActions from "@/app/dashboard/projects/ProjectRowActions";
 
 const columns: ColumnDef<Project>[] = [
     {
@@ -31,7 +32,17 @@ const columns: ColumnDef<Project>[] = [
         accessorKey: "end_date",
         cell: ({ row }) => formatDate(row.original.end_date),
     },
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            const project = row.original
+            return <ProjectRowActions project={project}/>
+        },
+
+
+    },
 ];
+
 
 export interface ProjectsTableProps {
     data: Project[];

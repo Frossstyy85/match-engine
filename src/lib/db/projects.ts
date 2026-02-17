@@ -90,15 +90,41 @@ export async function updateProject(
     revalidatePath(`/dashboard/projects/${id}/edit`)
 }
 
+export async function deleteProject(id: number) {
+    const supabase = await createClient();
+
+    // Delete related teams first to satisfy foreign key constraint
+    const { error: teamsError } = await supabase
+        .from("teams")
+        .delete()
+        .eq("project_id", id);
+
+    if (teamsError) throw teamsError;
+
+    const { error: projectError } = await supabase
+        .from("projects")
+        .delete()
+        .eq("id", id);
+
+    if (projectError) throw projectError;
+
+    revalidatePath("/dashboard/projects");
+    redirect("/dashboard/projects");
+}
+
 export async function fetchProject(id: number){
     const supabase = await createClient();
     const { data, error } = await supabase
         .from('projects')
         .select("*, project_skills(skills(id, name)), teams(id, name)")
         .eq('id', id)
-        .single()
+        .maybeSingle()
 
     if (error) throw error
+
+    if (!data) {
+        return null;
+    }
 
     const projectSkills = (data.project_skills ?? []).map(
         (ps: { skills?: { name?: string } | null }) => ps.skills?.name ?? null

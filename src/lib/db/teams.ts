@@ -76,3 +76,27 @@ export async function deleteTeam(teamId: number) {
         revalidatePath(`/dashboard/projects/${team.project_id}/edit`);
     }
 }
+
+export async function updateTeamMembers(teamId: number, memberIds: string[]) {
+    const supabase = await createClient();
+
+    // Remove all current members from this team
+    const { error: clearError } = await supabase
+        .from("profiles")
+        .update({ team_id: null })
+        .eq("team_id", teamId);
+
+    if (clearError) throw clearError;
+
+    if (memberIds.length > 0) {
+        const { error: assignError } = await supabase
+            .from("profiles")
+            .update({ team_id: teamId })
+            .in("id", memberIds);
+
+        if (assignError) throw assignError;
+    }
+
+    revalidatePath("/dashboard/teams");
+    revalidatePath(`/dashboard/teams/${teamId}`);
+}

@@ -133,18 +133,3 @@ export async function fetchProject(id: number){
     return { ...data, projectSkills };
 }
 
-export async function deleteProject(id: number) {
-    const supabase = await createClient();
-    const { error } = await supabase
-        .from("projects")
-        .delete()
-        .eq("id", id);
-
-
-    if (error) throw error
-
-    revalidatePath("dashboard/projects")
-    revalidatePath(`dashboard/projects${id}`)
-    revalidatePath(`dashboard/projects${id}/edit`)
-}
-

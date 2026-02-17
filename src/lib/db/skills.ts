@@ -36,6 +36,17 @@ export async function fetchCategories() {
     return data;
 }
 
+export async function fetchSkill(id: number) {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from("skills")
+        .select("id, name, category_id, skill_categories(id, name)")
+        .eq("id", id)
+        .maybeSingle();
+    if (error) throw error;
+    return data;
+}
+
 export async function createSkill(name: string, categoryId: number) {
     if (!name.trim()) throw new Error("Skill name is required")
 

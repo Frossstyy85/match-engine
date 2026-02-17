@@ -14,7 +14,6 @@ import {
 import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import Link from "next/link";
-import {AlertDialog, AlertDialogCancel, AlertDialogTrigger} from "@/components/ui/alert-dialog";
 
 const columns: ColumnDef<SkillWithCategory>[] = [
     { header: "Name", accessorKey: "name" },
@@ -29,17 +28,17 @@ const columns: ColumnDef<SkillWithCategory>[] = [
             const skill = row.original
 
             return (
-                <DropdownMenu>
+                <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Open menu</span>
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" avoidCollisions={false}>
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem><Link href={`/dashboard/projects/${skill.id}/edit`}>Edit skill</Link></DropdownMenuItem>
+                        <DropdownMenuItem><Link href={`/dashboard/skills/${skill.id}/edit`}>Edit skill</Link></DropdownMenuItem>
                         <DropdownMenuItem variant={"destructive"}>Delete skill</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

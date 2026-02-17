@@ -59,3 +59,10 @@ export async function createSkill(name: string, categoryId: number) {
 
     revalidatePath("/dashboard/skills")
 }
+
+export async function deleteSkill(id: number) {
+    const supabase = await createClient();
+    const { error } = await supabase.from("skills").delete().eq("id", id);
+    if (error) throw error;
+    revalidatePath("/dashboard/skills");
+}

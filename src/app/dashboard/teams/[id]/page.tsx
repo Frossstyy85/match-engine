@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Field, FieldGroup, FieldTitle } from "@/components/ui/field";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { deleteTeam } from "@/lib/db/teams";
+import { DeleteTeamButton } from "@/components/DeleteTeamButton";
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -19,7 +19,7 @@ export default async function Page({ params }: PageProps) {
 
     if (error) {
         return (
-            <div className="w-full min-w-0 p-4 sm:p-6">
+            <div className="w-full min-w-0 p-3 sm:p-4">
                 <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-4">
                     <p className="text-sm text-destructive">{error.message}</p>
                 </div>
@@ -35,7 +35,7 @@ export default async function Page({ params }: PageProps) {
 
     return (
         <div className="w-full min-w-0 p-3 sm:p-4">
-            <div className="flex flex-col gap-4 w-full min-w-0 overflow-auto border border-gray-200 bg-white shadow-sm rounded p-4 sm:p-6">
+            <div className="flex flex-col gap-4 w-full min-w-0 overflow-auto border border-gray-200 bg-white shadow-sm rounded-lg p-4 sm:p-6">
                 <div className="flex flex-col gap-3 sm:items-start w-full">
                     <div>
                         <div className="flex flex-wrap items-center gap-2 sm:gap-6">
@@ -58,19 +58,7 @@ export default async function Page({ params }: PageProps) {
                             >
                                 Back to teams
                             </Link>
-                            <form
-                                action={async () => {
-                                    "use server";
-                                    await deleteTeam(team.id);
-                                }}
-                            >
-                                <button
-                                    type="submit"
-                                    className="text-sm text-red-600 hover:underline"
-                                >
-                                    Delete team
-                                </button>
-                            </form>
+                            <DeleteTeamButton teamId={team.id} teamName={team.name} />
                         </div>
 
 

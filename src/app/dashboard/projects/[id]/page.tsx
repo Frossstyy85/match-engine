@@ -1,10 +1,11 @@
 import { Field, FieldGroup, FieldTitle } from "@/components/ui/field";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { fetchProject, deleteProject } from "@/lib/db/projects";
+import { fetchProject } from "@/lib/db/projects";
 import { formatDate } from "@/lib/helpers/date";
 import type { Team } from "@/lib/types";
 import RecommendedUsers from "@/components/RecommendedUsers";
+import { DeleteProjectButton } from "@/components/DeleteProjectButton";
 
 export default async function Page({ params }) {
     const { id } = await params;
@@ -33,7 +34,7 @@ export default async function Page({ params }) {
 
     return (
         <div className="w-full min-w-0 p-3 sm:p-4">
-            <div className="flex flex-col gap-4 w-full min-w-0 overflow-auto border border-gray-200 bg-white shadow-sm rounded p-4 sm:p-6">
+            <div className="flex flex-col gap-4 w-full min-w-0 overflow-auto border border-gray-200 bg-white shadow-sm rounded-lg p-4 sm:p-6">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
                     <div>
                         <h1 className="text-xl sm:text-2xl font-semibold">{project.name}</h1>
@@ -41,7 +42,7 @@ export default async function Page({ params }) {
                             ID: {project.id}
                         </p>
                     </div>
-                    <div className="flex flex-wrap gap-2 sm:space-x-6">
+                    <div className="flex flex-wrap gap-2 sm:gap-6">
                         <Link
                             href={`/dashboard/projects/${project.id}/edit`}
                             className={"text-sm text-blue-600 hover:underline"}
@@ -54,19 +55,7 @@ export default async function Page({ params }) {
                         >
                             Back to projects
                         </Link>
-                        <form
-                            action={async () => {
-                                "use server";
-                                await deleteProject(project.id);
-                            }}
-                        >
-                            <button
-                                type="submit"
-                                className="text-sm text-red-600 hover:underline"
-                            >
-                                Delete project
-                            </button>
-                        </form>
+                        <DeleteProjectButton projectId={project.id} projectName={project.name} />
                     </div>
 
                 </div>
@@ -96,7 +85,7 @@ export default async function Page({ params }) {
                             <FieldTitle>Teams</FieldTitle>
                             {teamsNode}
                         </Field>
-                        <Field className={"flex flex-rows-4"}>
+                        <Field>
                             <FieldTitle>Required skills</FieldTitle>
                             {skillsNode}
                         </Field>

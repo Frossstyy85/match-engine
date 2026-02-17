@@ -21,7 +21,7 @@ export default async function Page({ params }: PageProps) {
 
     return (
         <div className="w-full min-w-0 p-3 sm:p-4">
-            <div className="flex flex-col gap-4 w-full overflow-auto border border-gray-200 bg-white shadow-sm rounded p-4 sm:p-6">
+            <div className="flex flex-col gap-4 w-full min-w-0 overflow-auto border border-gray-200 bg-white shadow-sm rounded-lg p-4 sm:p-6">
                 <div className={"flex items-center justify-between w-full"}>
                     <Link
                         href={`/dashboard/teams/${id}`}

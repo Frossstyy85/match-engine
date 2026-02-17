@@ -2,8 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Project } from "@/lib/types"
-
+import type { SkillWithCategory } from "@/lib/types"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,17 +11,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import { Button } from "@/components/ui/button"
 import { MoreHorizontal } from "lucide-react"
 import { ConfirmDeleteDialog } from "@/components/ConfirmDeleteDialog"
-import {deleteProject} from "@/lib/db/projects";
+import { deleteSkill } from "@/lib/db/skills"
 
 interface Props {
-    project: Project
+    skill: SkillWithCategory
 }
 
-export default function ProjectRowActions({ project }: Props) {
+export default function SkillRowActions({ skill }: Props) {
     const [confirmOpen, setConfirmOpen] = useState(false)
 
     return (
@@ -30,6 +28,7 @@ export default function ProjectRowActions({ project }: Props) {
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
                         <MoreHorizontal className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
@@ -39,14 +38,8 @@ export default function ProjectRowActions({ project }: Props) {
                     <DropdownMenuSeparator />
 
                     <DropdownMenuItem asChild>
-                        <Link href={`/dashboard/projects/${project.id}`}>
-                            View project
-                        </Link>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem asChild>
-                        <Link href={`/dashboard/projects/${project.id}/edit`}>
-                            Edit project
+                        <Link href={`/dashboard/skills/${skill.id}/edit`}>
+                            Edit skill
                         </Link>
                     </DropdownMenuItem>
 
@@ -57,7 +50,7 @@ export default function ProjectRowActions({ project }: Props) {
                             setConfirmOpen(true)
                         }}
                     >
-                        Delete project
+                        Delete skill
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -65,9 +58,9 @@ export default function ProjectRowActions({ project }: Props) {
             <ConfirmDeleteDialog
                 open={confirmOpen}
                 onOpenChange={setConfirmOpen}
-                title="Delete project?"
-                description="This will remove the project and its data. This action cannot be undone."
-                onConfirm={async () => deleteProject(project.id)}
+                title="Delete skill?"
+                description="This will remove the skill. This action cannot be undone."
+                onConfirm={async () => deleteSkill(skill.id)}
             />
         </>
     )

@@ -36,6 +36,7 @@ import { formatDateForInput } from "@/lib/helpers/date";
 import { updateProject } from "@/lib/db/projects";
 import { createTeamForProject, deleteTeam } from "@/lib/db/teams";
 import { Trash2 } from "lucide-react";
+import { ConfirmDeleteDialog } from "@/components/ConfirmDeleteDialog";
 
 interface EditProjectFormProps {
     project: Pick<Project, "id" | "name" | "description" | "start_date" | "end_date">
@@ -60,6 +61,7 @@ export default function EditProjectForm({ project, skills, projectSkills = [], t
     const [saving, setSaving] = React.useState(false)
     const [addTeamOpen, setAddTeamOpen] = React.useState(false)
     const [deletingId, setDeletingId] = React.useState<number | null>(null)
+    const [teamToDelete, setTeamToDelete] = React.useState<number | null>(null)
 
     const allSkillNames = React.useMemo(
         () => skills.flatMap((cat) => cat.skills.map((s) => s.name)),
@@ -88,10 +90,12 @@ export default function EditProjectForm({ project, skills, projectSkills = [], t
         }
     }
 
-    async function handleDeleteTeam(teamId: number) {
-        setDeletingId(teamId)
+    async function handleConfirmDeleteTeam() {
+        if (teamToDelete == null) return
+        setDeletingId(teamToDelete)
         try {
-            await deleteTeam(teamId)
+            await deleteTeam(teamToDelete)
+            setTeamToDelete(null)
             router.refresh()
         } catch (e) {
             console.error("Failed to delete team:", e)
@@ -159,7 +163,7 @@ export default function EditProjectForm({ project, skills, projectSkills = [], t
                                         size="icon"
                                         className="h-8 w-8 shrink-0 text-destructive hover:text-destructive"
                                         disabled={deletingId === team.id}
-                                        onClick={() => handleDeleteTeam(team.id)}
+                                        onClick={() => setTeamToDelete(team.id)}
                                         aria-label={`Delete ${team.name}`}
                                     >
                                         <Trash2 className="h-4 w-4" />
@@ -168,6 +172,13 @@ export default function EditProjectForm({ project, skills, projectSkills = [], t
                             ))}
                         </ul>
                     )}
+                    <ConfirmDeleteDialog
+                        open={teamToDelete !== null}
+                        onOpenChange={(open) => !open && setTeamToDelete(null)}
+                        title="Delete team?"
+                        description="This will remove the team from the project. This action cannot be undone."
+                        onConfirm={handleConfirmDeleteTeam}
+                    />
                     <Dialog open={addTeamOpen} onOpenChange={setAddTeamOpen}>
                         <DialogTrigger asChild>
                             <Button type="button" variant="outline" size="sm" className="w-fit">

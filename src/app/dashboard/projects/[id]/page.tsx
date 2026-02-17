@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { fetchProject } from "@/lib/db/projects";
 import { formatDate } from "@/lib/helpers/date";
 import type { Team } from "@/lib/types";
+import RecommendedUsers from "@/components/RecommendedUsers";
 
 export default async function Page({ params }) {
     const { id } = await params;
@@ -87,6 +88,7 @@ export default async function Page({ params }) {
                             {skillsNode}
                         </Field>
                     </FieldGroup>
+                    <RecommendedUsers projectId={1}/>
                 </div>
             </div>
         </div>

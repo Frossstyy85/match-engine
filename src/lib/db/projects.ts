@@ -3,6 +3,7 @@
 import {createClient} from "@/lib/supabase/server";
 import {revalidatePath} from "next/cache";
 import {redirect} from "next/navigation";
+import {supabase} from "@/lib/supabase/client";
 
 export async function createProject(formData: FormData) {
     const name = formData.get("name") as string;
@@ -104,5 +105,20 @@ export async function fetchProject(id: number){
     ).filter((n): n is string => Boolean(n))
 
     return { ...data, projectSkills };
+}
+
+export async function deleteProject(id: number) {
+    const supabase = await createClient();
+    const { error } = await supabase
+        .from("projects")
+        .delete()
+        .eq("id", id);
+
+
+    if (error) throw error
+
+    revalidatePath("dashboard/projects")
+    revalidatePath(`dashboard/projects${id}`)
+    revalidatePath(`dashboard/projects${id}/edit`)
 }
 

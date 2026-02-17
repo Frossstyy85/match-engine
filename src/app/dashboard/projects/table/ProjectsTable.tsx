@@ -6,7 +6,7 @@ import DataTable from "@/components/table/DataTable";
 import { formatDate } from "@/lib/helpers";
 import Link from "next/link";
 import type { PaginationState } from "@tanstack/react-table";
-import ProjectRowActions from "@/app/dashboard/projects/ProjectRowActions";
+import ProjectRowActions from "@/app/dashboard/projects/table/ProjectRowActions";
 
 const columns: ColumnDef<Project>[] = [
     {

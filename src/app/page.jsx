@@ -10,12 +10,14 @@ export default function Home() {
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 50)
+            setScrolled(scrollY > 50);
         }
 
         window.addEventListener("scroll", handleScroll, { passive: true })
         return () => window.removeEventListener("scroll", handleScroll)
     }, [])
+
+
 
     return (
         <div className="min-h-screen">

@@ -1,7 +1,7 @@
 import { Field, FieldGroup, FieldTitle } from "@/components/ui/field";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { fetchProject } from "@/lib/db/projects";
+import { fetchProject, deleteProject } from "@/lib/db/projects";
 import { formatDate } from "@/lib/helpers/date";
 import type { Team } from "@/lib/types";
 
@@ -40,11 +40,11 @@ export default async function Page({ params }) {
                             ID: {project.id}
                         </p>
                     </div>
-                    <div className="flex flex-wrap gap-2 sm:space-x-8">
+                    <div className="flex flex-wrap gap-2 sm:space-x-6">
                         <Link
                             href={`/dashboard/projects/${project.id}/edit`}
                             className={"text-sm text-blue-600 hover:underline"}
-                            >
+                        >
                             Edit project
                         </Link>
                         <Link
@@ -53,6 +53,19 @@ export default async function Page({ params }) {
                         >
                             Back to projects
                         </Link>
+                        <form
+                            action={async () => {
+                                "use server";
+                                await deleteProject(project.id);
+                            }}
+                        >
+                            <button
+                                type="submit"
+                                className="text-sm text-red-600 hover:underline"
+                            >
+                                Delete project
+                            </button>
+                        </form>
                     </div>
 
                 </div>

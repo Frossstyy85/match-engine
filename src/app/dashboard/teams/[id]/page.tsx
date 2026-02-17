@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { Field, FieldGroup, FieldTitle } from "@/components/ui/field";
 import Link from "next/link";
-import {notFound} from "next/navigation";
+import { notFound } from "next/navigation";
+import { deleteTeam } from "@/lib/db/teams";
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -27,6 +28,11 @@ export default async function Page({ params }: PageProps) {
     }
     if (!team) notFound();
 
+    const { data: members } = await supabase
+        .from("profiles")
+        .select("id, name, email, team_id")
+        .eq("team_id", team.id);
+
     return (
         <div className="w-full min-w-0 p-3 sm:p-4">
             <div className="flex flex-col gap-4 w-full min-w-0 overflow-auto border border-gray-200 bg-white shadow-sm rounded p-4 sm:p-6">
@@ -42,7 +48,7 @@ export default async function Page({ params }: PageProps) {
                             </Link>
                             <Link
                                 href={`/dashboard/projects/${team.project_id}`}
-                            className={"text-sm text-blue-600 hover:underline"}
+                                className={"text-sm text-blue-600 hover:underline"}
                             >
                                 View project
                             </Link>
@@ -52,6 +58,19 @@ export default async function Page({ params }: PageProps) {
                             >
                                 Back to teams
                             </Link>
+                            <form
+                                action={async () => {
+                                    "use server";
+                                    await deleteTeam(team.id);
+                                }}
+                            >
+                                <button
+                                    type="submit"
+                                    className="text-sm text-red-600 hover:underline"
+                                >
+                                    Delete team
+                                </button>
+                            </form>
                         </div>
 
 
@@ -67,6 +86,20 @@ export default async function Page({ params }: PageProps) {
                         <Field>
                             <FieldTitle>Team name</FieldTitle>
                             <div>{team.name}</div>
+                        </Field>
+                        <Field>
+                            <FieldTitle>Team members</FieldTitle>
+                            <div className="space-y-1 text-sm">
+                                {members && members.length > 0 ? (
+                                    members.map((member: any) => (
+                                        <div key={member.id}>
+                                            {member.name ?? member.email ?? "Unnamed member"}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-gray-400">No members in this team.</div>
+                                )}
+                            </div>
                         </Field>
                     </FieldGroup>
                 </div>

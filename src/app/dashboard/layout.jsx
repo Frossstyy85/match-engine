@@ -1,20 +1,18 @@
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
-import QueryProvider from "@/app/dashboard/QueryProvider";
+import QueryProvider from '@/app/dashboard/query-provider'
+import { AppSidebar } from '@/components/sidebar/app-sidebar'
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 
 export default function DashboardLayout({ children }) {
-    return (
-        <QueryProvider>
-        <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset className="min-w-0">
-                <SidebarTrigger />
-                <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-6">
-                    {children}
-                </main>
-            </SidebarInset>
-        </SidebarProvider>
-        </QueryProvider>
-    );
-}
+  return (
+    <QueryProvider>
+      <SidebarProvider>
+        <AppSidebar />
 
+        <SidebarInset className='min-w-0'>
+          <SidebarTrigger />
+          <main>{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
+    </QueryProvider>
+  )
+}

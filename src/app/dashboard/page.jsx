@@ -1,29 +1,20 @@
-"use server"
-
-import dynamic from "next/dynamic";
-
-const component = {
-    admin: dynamic(() => import("@/app/dashboard/dashboards/AdminDashboard"),
-        {ssr: true}),
-    user: dynamic(() => import("@/app/dashboard/dashboards/UserDashboard"),
-        {ssr: true}),
-    hr: dynamic(() => import("@/app/dashboard/dashboards/HrDashboard"),
-        {ssr: true}),
-    project_lead: dynamic(() => import("@/app/dashboard/dashboards/ProjectLeadDashboard"),
-        {ssr: true})
-};
+import AdminDashboardScreen from '@/features/dashboard/screens/admin-dashboard-screen'
+import HrDashboardScreen from '@/features/dashboard/screens/hr-dashboard-screen'
+import ProjectLeadDashboardScreen from '@/features/dashboard/screens/project-lead-dashboard-screen'
+import UserDashboardScreen from '@/features/dashboard/screens/user-dashboard-screen'
+import { fetchDashboardRole } from '@/features/dashboard/data/dashboard-repository'
 
 export default async function DashboardPage() {
+  const role = await fetchDashboardRole()
 
-    const role = "admin";
-
-    const Dashboard = component[role];
-
-
-    return (
-        <div>
-            <Dashboard/>
-        </div>
-
-    )
+  switch (role) {
+    case 'admin':
+      return <AdminDashboardScreen />
+    case 'hr':
+      return <HrDashboardScreen />
+    case 'project_lead':
+      return <ProjectLeadDashboardScreen />
+    default:
+      return <UserDashboardScreen />
+  }
 }

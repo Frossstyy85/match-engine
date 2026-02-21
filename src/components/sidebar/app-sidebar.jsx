@@ -21,7 +21,8 @@ const navigationItems = [
   { title: 'Projects', url: '/dashboard/projects' },
   { title: 'Teams', url: '/dashboard/teams' },
   { title: 'Skills', url: '/dashboard/skills' },
-  { title: 'Users', url: '/dashboard/users' }
+  { title: 'Users', url: '/dashboard/users' },
+  { title: 'Profile', url: '/dashboard/profile' }
 ]
 
 export function AppSidebar() {

@@ -27,8 +27,8 @@ import { Field, FieldGroup } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { createTeamForProject, deleteTeam } from '@/features/teams/actions/team-actions'
-import { updateProject } from '@/features/projects/actions/project-actions'
+import { createTeamForProject, deleteTeam } from '@/lib/db/teams'
+import { updateProject } from '@/lib/db/projects'
 import { formatDateForInput } from '@/lib/helpers/date'
 import { ConfirmDeleteDialog } from '@/shared/dialogs/confirm-delete-dialog'
 
@@ -72,6 +72,23 @@ export default function EditProjectForm({ project, skills, projectSkills = [], t
       console.error('Failed to save project:', error)
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleCreateTeam(event) {
+    event.preventDefault()
+
+    const formData = new FormData(event.currentTarget)
+    const name = formData.get('name')
+    if (!name) return
+
+    try {
+      await createTeamForProject(project.id, String(name))
+      setAddTeamOpen(false)
+      router.refresh()
+      event.currentTarget.reset()
+    } catch (error) {
+      console.error('Failed to create team:', error)
     }
   }
 
@@ -134,9 +151,9 @@ export default function EditProjectForm({ project, skills, projectSkills = [], t
                   key={team.id}
                   className='flex items-center justify-between gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm'
                 >
-                  <Link href={`/dashboard/teams/${team.id}`} className='font-medium text-primary hover:underline'>
-                    {team.name}
-                  </Link>
+                  <Button asChild variant='link' className='h-auto p-0 font-medium'>
+                    <Link href={`/dashboard/teams/${team.id}`}>{team.name}</Link>
+                  </Button>
                   <Button
                     type='button'
                     variant='ghost'
@@ -173,14 +190,7 @@ export default function EditProjectForm({ project, skills, projectSkills = [], t
                 <DialogTitle>Add team</DialogTitle>
               </DialogHeader>
 
-              <form
-                action={async (formData) => {
-                  await createTeamForProject(project.id, formData)
-                  setAddTeamOpen(false)
-                  router.refresh()
-                }}
-                className='flex flex-col gap-4'
-              >
+              <form onSubmit={handleCreateTeam} className='flex flex-col gap-4'>
                 <FieldGroup>
                   <Field>
                     <Label>Team name</Label>

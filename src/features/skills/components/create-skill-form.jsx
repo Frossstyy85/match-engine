@@ -1,17 +1,15 @@
 'use client'
 
 import * as React from 'react'
-import { useQueryClient } from '@tanstack/react-query'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Field, FieldGroup, FieldTitle } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { createSkill } from '@/features/skills/actions/skill-actions'
+import { createSkill } from '@/lib/db/skills'
 
-export default function CreateSkillForm({ categories }) {
-  const queryClient = useQueryClient()
+export default function CreateSkillForm({ categories = [] }) {
   const [open, setOpen] = React.useState(false)
   const [name, setName] = React.useState('')
   const [categoryId, setCategoryId] = React.useState('')
@@ -25,7 +23,6 @@ export default function CreateSkillForm({ categories }) {
 
     try {
       await createSkill(name, Number(categoryId))
-      queryClient.invalidateQueries({ queryKey: ['skills'] })
       setName('')
       setCategoryId('')
       setOpen(false)
@@ -39,7 +36,7 @@ export default function CreateSkillForm({ categories }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant='default'>Create skill</Button>
+        <Button variant='default'>Create new</Button>
       </DialogTrigger>
 
       <DialogContent>

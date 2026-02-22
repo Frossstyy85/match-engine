@@ -1,6 +1,6 @@
-import ProjectDetailsScreen from '@/features/projects/screens/project-details-screen'
+import ProjectDetailsPage from '@/features/projects/app/project-details-page'
 
 export default async function Page({ params }) {
   const { id } = await params
-  return <ProjectDetailsScreen projectId={Number(id)} />
+  return <ProjectDetailsPage projectId={id} />
 }

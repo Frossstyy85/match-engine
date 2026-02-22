@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import { DatePicker } from '@/components/ui/date-picker'
@@ -10,19 +10,48 @@ import { Field, FieldGroup, FieldTitle } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { formatDateForInput } from '@/lib/helpers/date'
-import { createProject } from '@/features/projects/actions/project-actions'
+import { createProject } from '@/lib/db/projects'
 
 export default function CreateProjectForm() {
-  const queryClient = useQueryClient()
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [startDate, setStartDate] = useState()
   const [endDate, setEndDate] = useState()
+  const [saving, setSaving] = useState(false)
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+
+    const formData = new FormData(event.currentTarget)
+
+    setSaving(true)
+    try {
+      const projectId = await createProject({
+        name: formData.get('name'),
+        description: formData.get('description'),
+        startDate: formatDateForInput(startDate) || null,
+        endDate: formatDateForInput(endDate) || null
+      })
+
+      setOpen(false)
+      setStartDate(undefined)
+      setEndDate(undefined)
+
+      if (projectId) {
+        router.push(`/dashboard/projects/${projectId}`)
+      } else {
+        router.refresh()
+      }
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <div className='w-fit'>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button size='sm'>Create project</Button>
+          <Button size='sm'>Create new</Button>
         </DialogTrigger>
 
         <DialogContent>
@@ -30,16 +59,7 @@ export default function CreateProjectForm() {
             <DialogTitle>Create project</DialogTitle>
           </DialogHeader>
 
-          <form
-            action={async (formData) => {
-              await createProject(formData)
-              queryClient.invalidateQueries({ queryKey: ['projects'] })
-              setOpen(false)
-              setStartDate(undefined)
-              setEndDate(undefined)
-            }}
-            className='flex flex-col gap-4'
-          >
+          <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
             <input type='hidden' name='start_date' value={formatDateForInput(startDate)} />
             <input type='hidden' name='end_date' value={formatDateForInput(endDate)} />
 
@@ -66,7 +86,9 @@ export default function CreateProjectForm() {
               </FieldGroup>
             </FieldGroup>
 
-            <Button type='submit'>Create</Button>
+            <Button type='submit' disabled={saving}>
+              {saving ? 'Creating...' : 'Create'}
+            </Button>
           </form>
         </DialogContent>
       </Dialog>

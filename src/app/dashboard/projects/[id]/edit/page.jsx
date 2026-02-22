@@ -1,6 +1,6 @@
-import EditProjectScreen from '@/features/projects/screens/edit-project-screen'
+import EditProjectPage from '@/features/projects/app/edit-project-page'
 
 export default async function Page({ params }) {
   const { id } = await params
-  return <EditProjectScreen projectId={Number(id)} />
+  return <EditProjectPage projectId={id} />
 }

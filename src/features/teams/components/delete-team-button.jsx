@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { deleteTeam } from '@/features/teams/actions/team-actions'
+import { Button } from '@/components/ui/button'
+import { deleteTeam } from '@/lib/db/teams'
 import { ConfirmDeleteDialog } from '@/shared/dialogs/confirm-delete-dialog'
 
 export function DeleteTeamButton({ teamId, teamName, redirectTo = '/dashboard/teams' }) {
@@ -12,14 +13,9 @@ export function DeleteTeamButton({ teamId, teamName, redirectTo = '/dashboard/te
 
   return (
     <>
-      <button
-        type='button'
-        onClick={() => setOpen(true)}
-        className='text-sm text-red-600 hover:underline'
-        aria-label={teamName ? `Delete team ${teamName}` : 'Delete team'}
-      >
+      <Button type='button' variant='destructive' size='sm' onClick={() => setOpen(true)}>
         Delete team
-      </button>
+      </Button>
 
       <ConfirmDeleteDialog
         open={open}

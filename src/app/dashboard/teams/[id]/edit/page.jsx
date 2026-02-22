@@ -1,6 +1,6 @@
-import EditTeamScreen from '@/features/teams/screens/edit-team-screen'
+import EditTeamPage from '@/features/teams/app/edit-team-page'
 
 export default async function Page({ params }) {
   const { id } = await params
-  return <EditTeamScreen teamId={Number(id)} />
+  return <EditTeamPage teamId={id} />
 }

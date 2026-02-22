@@ -41,7 +41,7 @@ export function RowActionsMenu({ label = 'Actions', items }) {
           return (
             <DropdownMenuItem
               key={`${item.label}-${index}`}
-              className={item.destructive ? 'text-red-600' : undefined}
+              className={item.destructive ? 'text-destructive' : undefined}
               onSelect={(event) => {
                 event.preventDefault()
                 item.onSelect()

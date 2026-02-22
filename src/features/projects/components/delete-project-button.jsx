@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { deleteProject } from '@/features/projects/actions/project-actions'
+import { Button } from '@/components/ui/button'
+import { deleteProject } from '@/lib/db/projects'
 import { ConfirmDeleteDialog } from '@/shared/dialogs/confirm-delete-dialog'
 
 export function DeleteProjectButton({ projectId, projectName }) {
@@ -12,14 +13,9 @@ export function DeleteProjectButton({ projectId, projectName }) {
 
   return (
     <>
-      <button
-        type='button'
-        onClick={() => setOpen(true)}
-        className='text-sm text-red-600 hover:underline'
-        aria-label={projectName ? `Delete project ${projectName}` : 'Delete project'}
-      >
+      <Button type='button' variant='destructive' size='sm' onClick={() => setOpen(true)}>
         Delete project
-      </button>
+      </Button>
 
       <ConfirmDeleteDialog
         open={open}

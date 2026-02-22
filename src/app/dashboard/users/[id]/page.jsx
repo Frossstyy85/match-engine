@@ -1,6 +1,6 @@
-import UserDetailsScreen from '@/features/users/screens/user-details-screen'
+import UserDetailsPage from '@/features/users/app/user-details-page'
 
 export default async function Page({ params }) {
   const { id } = await params
-  return <UserDetailsScreen userId={id} />
+  return <UserDetailsPage userId={id} />
 }

@@ -160,7 +160,7 @@ export async function getRecommendedUsers(projectId: unknown) {
   const normalizedProjectId = normalizeId(projectId)
   const supabase = await createClient()
 
-  const { data, error } = await supabase.rpc('get_recommended_users', {
+  const { data, error } = await supabase.rpc('get_recommended_users_for_project', {
     p_project_id: normalizedProjectId,
     p_limit: 5
   })
@@ -168,7 +168,12 @@ export async function getRecommendedUsers(projectId: unknown) {
   if (error) throw error
 
   return (data ?? []).map((row: any) => ({
-    id: row.profile_id,
-    name: row.profile_name ?? 'Unnamed user'
+    user_id: row.user_id,
+    user_name: row.user_name ?? 'Unnamed user',
+    match_score_percent: Number(row.match_score_percent) ?? 0,
+    matched_skills: Array.isArray(row.matched_skills) ? row.matched_skills : [],
+    unmatched_skills: Array.isArray(row.unmatched_skills) ? row.unmatched_skills : [],
+    matched_count: Number(row.matched_count) ?? 0,
+    unmatched_count: Number(row.unmatched_count) ?? 0
   }))
 }

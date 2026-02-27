@@ -54,7 +54,7 @@ export default function ProfileSkillsForm({ id }) {
 
   return (
     <form action={formAction} className="space-y-3">
-      <input type="hidden" name="auth_id" value={id} />
+      <input type="hidden" name="auth_id" value={id ?? ''} />
       {selected.map((name) => (
         <input key={name} type="hidden" name="skill_names" value={name} />
       ))}

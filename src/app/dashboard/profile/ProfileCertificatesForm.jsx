@@ -62,7 +62,7 @@ export default function ProfileCertificatesForm({ id }) {
 
   return (
     <form action={formAction} className="space-y-3">
-      <input type="hidden" name="auth_id" value={id} />
+      <input type="hidden" name="auth_id" value={id ?? ''} />
       {selected.map((name) => (
         <input key={name} type="hidden" name="certificate_names" value={name} />
       ))}

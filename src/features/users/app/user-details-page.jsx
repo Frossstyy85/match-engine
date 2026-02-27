@@ -7,6 +7,12 @@ import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldGroup, FieldTitle } from '@/components/ui/field'
+import {
+  UserCertificatesForm,
+  UserIdentityForm,
+  UserLanguagesForm,
+  UserSkillsForm
+} from '@/features/users/app/user-profile-forms'
 import { getUserById as fetchUser } from '@/lib/db/users'
 
 function valueOrDash(value) {
@@ -29,7 +35,7 @@ export default function UserDetailsPage({ userId }) {
 
   return (
     <div className='w-full min-w-0 p-3 sm:p-4'>
-      <div className='mx-auto flex w-full min-w-0 max-w-5xl flex-col gap-3'>
+      <div className='mx-auto flex w-full min-w-0 max-w-5xl flex-col gap-4'>
         <header className='flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
           <div className='min-w-0 space-y-1'>
             <h1 className='inline-flex items-center gap-2 text-lg font-semibold tracking-tight sm:text-xl'>
@@ -66,6 +72,17 @@ export default function UserDetailsPage({ userId }) {
             </FieldGroup>
           </CardContent>
         </Card>
+
+        <div className='space-y-6'>
+          <UserIdentityForm
+            profileId={user.id}
+            name={user.name ?? ''}
+            email={user.email ?? ''}
+          />
+          <UserSkillsForm profileId={user.id} />
+          <UserCertificatesForm profileId={user.id} />
+          <UserLanguagesForm profileId={user.id} />
+        </div>
       </div>
     </div>
   )

@@ -11,7 +11,7 @@ export default function ProfileIdentityForm({ id, name = '', email = '' }) {
 
   return (
     <form action={formAction} className="space-y-3">
-      <input type="hidden" name="auth_id" value={id} />
+      <input type="hidden" name="auth_id" value={id ?? ''} />
       <Field>
         <FieldTitle>Name</FieldTitle>
         <Input key={name} name="name" defaultValue={name} placeholder="Name" className="max-w-md" />

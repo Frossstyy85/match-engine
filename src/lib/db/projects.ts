@@ -83,12 +83,18 @@ export async function createProject({
   name,
   description,
   startDate,
-  endDate
+  endDate,
+  skillNames = [],
+  languageNames = [],
+  certificateNames = []
 }: {
   name: string
   description?: string | null
   startDate?: string | null
   endDate?: string | null
+  skillNames?: string[]
+  languageNames?: string[]
+  certificateNames?: string[]
 }) {
   const projectName = name?.trim()
   if (!projectName) throw new Error('Project name is required')
@@ -106,7 +112,66 @@ export async function createProject({
     .single()
 
   if (error) throw error
-  return data?.id ?? null
+
+  const projectId = data?.id ?? null
+  if (!projectId) return null
+
+  const cleanSkillNames = (skillNames ?? []).map((s) => String(s).trim()).filter(Boolean)
+  const cleanLanguageNames = (languageNames ?? []).map((s) => String(s).trim()).filter(Boolean)
+  const cleanCertificateNames = (certificateNames ?? []).map((s) => String(s).trim()).filter(Boolean)
+
+  if (cleanSkillNames.length > 0) {
+    const { data: skillRows, error: skillsError } = await supabase
+      .from('skills')
+      .select('id')
+      .in('name', cleanSkillNames)
+    if (skillsError) throw skillsError
+    if (skillRows && skillRows.length > 0) {
+      const { error: insertSkillsError } = await supabase.from('project_skills').insert(
+        skillRows.map((skill: any) => ({
+          project_id: projectId,
+          skill_id: skill.id
+        }))
+      )
+      if (insertSkillsError) throw insertSkillsError
+    }
+  }
+
+  if (cleanLanguageNames.length > 0) {
+    const { data: languageRows, error: languagesError } = await supabase
+      .from('languages')
+      .select('id')
+      .in('name', cleanLanguageNames)
+    if (languagesError) throw languagesError
+    if (languageRows && languageRows.length > 0) {
+      const { error: insertLanguagesError } = await supabase.from('project_languages').insert(
+        languageRows.map((language: any) => ({
+          project_id: projectId,
+          language_id: language.id
+        }))
+      )
+      if (insertLanguagesError) throw insertLanguagesError
+    }
+  }
+
+  if (cleanCertificateNames.length > 0) {
+    const { data: certificateRows, error: certificatesError } = await supabase
+      .from('certificates')
+      .select('id')
+      .in('name', cleanCertificateNames)
+    if (certificatesError) throw certificatesError
+    if (certificateRows && certificateRows.length > 0) {
+      const { error: insertCertificatesError } = await supabase.from('project_certificates').insert(
+        certificateRows.map((certificate: any) => ({
+          project_id: projectId,
+          certificate_id: certificate.id
+        }))
+      )
+      if (insertCertificatesError) throw insertCertificatesError
+    }
+  }
+
+  return projectId
 }
 
 export async function updateProject(projectId: unknown, fields: any, skillNames: string[]) {

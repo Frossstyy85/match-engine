@@ -9,8 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Field, FieldGroup, FieldTitle } from '@/components/ui/field'
 import { getProjectById as fetchProject } from '@/lib/db/projects'
 import { formatDate } from '@/lib/helpers/date'
-import RecommendedUsers from '@/features/projects/components/recommended-users'
-import { DeleteProjectButton } from '@/features/projects/components/delete-project-button'
+import RecommendedUsers from '@/app/dashboard/projects/components/recommended-users'
+import { DeleteProjectButton } from '@/app/dashboard/projects/components/delete-project-button'
 
 export default function ProjectDetailsPage({ projectId }) {
   const { data: project, isLoading, error } = useQuery({

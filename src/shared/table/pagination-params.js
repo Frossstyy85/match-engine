@@ -1,4 +1,4 @@
-export async function parsePaginationParams(searchParams, { defaultPageSize = 15, queryKey = 'query' } = {}) {
+export async function parsePaginationParams(searchParams, { defaultPageSize = 20, queryKey = 'query' } = {}) {
   const params = await searchParams
 
   const page = Math.max(1, Number(params?.page) || 1)

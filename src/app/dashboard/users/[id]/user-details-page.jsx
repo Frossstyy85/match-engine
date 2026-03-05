@@ -12,7 +12,7 @@ import {
   UserIdentityForm,
   UserLanguagesForm,
   UserSkillsForm
-} from '@/features/users/app/user-profile-forms'
+} from '@/app/dashboard/users/[id]/user-profile-forms'
 import { getUserById as fetchUser } from '@/lib/db/users'
 
 function valueOrDash(value) {

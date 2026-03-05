@@ -3,7 +3,13 @@ import ProfileCertificatesForm from "@/app/dashboard/profile/ProfileCertificates
 import ProfileIdentityForm from "@/app/dashboard/profile/ProfileIdentityForm";
 import ProfileLanguagesForm from "@/app/dashboard/profile/ProfileLanguagesForm";
 import ProfileSkillsForm from "@/app/dashboard/profile/ProfileSkillsForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function ProfilePage() {
@@ -76,10 +82,18 @@ export default async function ProfilePage() {
 		.filter(Boolean);
 
 	return (
-		<div className="space-y-6">
-			<Card>
-				<CardHeader>
-					<CardTitle>Identity</CardTitle>
+		<div className="mx-auto w-full max-w-5xl space-y-5">
+			<div className="space-y-1">
+				<h1 className="text-xl font-semibold tracking-tight">Profile</h1>
+				<p className="text-muted-foreground text-sm">
+					Update your personal details and qualifications.
+				</p>
+			</div>
+
+			<Card className="gap-4 py-5">
+				<CardHeader className="gap-1 pb-0">
+					<CardTitle className="text-base">Identity</CardTitle>
+					<CardDescription>Your name and account email.</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<ProfileIdentityForm
@@ -89,42 +103,52 @@ export default async function ProfilePage() {
 					/>
 				</CardContent>
 			</Card>
-			<Card>
-				<CardHeader>
-					<CardTitle>Skills</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<ProfileSkillsForm
-						id={user.id}
-						options={skills}
-						initialSelected={selectedSkills}
-					/>
-				</CardContent>
-			</Card>
-			<Card>
-				<CardHeader>
-					<CardTitle>Certificates</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<ProfileCertificatesForm
-						id={user.id}
-						options={certificates}
-						initialSelected={selectedCertificates}
-					/>
-				</CardContent>
-			</Card>
-			<Card>
-				<CardHeader>
-					<CardTitle>Languages</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<ProfileLanguagesForm
-						id={user.id}
-						options={languages}
-						initialSelected={selectedLanguages}
-					/>
-				</CardContent>
-			</Card>
+
+			<div className="grid gap-4 lg:grid-cols-2">
+				<Card className="gap-4 py-5">
+					<CardHeader className="gap-1 pb-0">
+						<CardTitle className="text-base">Skills</CardTitle>
+						<CardDescription>Technologies and competencies.</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<ProfileSkillsForm
+							id={user.id}
+							options={skills}
+							initialSelected={selectedSkills}
+						/>
+					</CardContent>
+				</Card>
+
+				<Card className="gap-4 py-5">
+					<CardHeader className="gap-1 pb-0">
+						<CardTitle className="text-base">Languages</CardTitle>
+						<CardDescription>Spoken and written languages.</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<ProfileLanguagesForm
+							id={user.id}
+							options={languages}
+							initialSelected={selectedLanguages}
+						/>
+					</CardContent>
+				</Card>
+
+				<Card className="gap-4 py-5 lg:col-span-2">
+					<CardHeader className="gap-1 pb-0">
+						<CardTitle className="text-base">Certificates</CardTitle>
+						<CardDescription>
+							Licenses and formal certifications.
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<ProfileCertificatesForm
+							id={user.id}
+							options={certificates}
+							initialSelected={selectedCertificates}
+						/>
+					</CardContent>
+				</Card>
+			</div>
 		</div>
 	);
 }

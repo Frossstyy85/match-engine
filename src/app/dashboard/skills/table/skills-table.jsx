@@ -1,15 +1,16 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { Pen, Trash2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
-import { deleteSkillBy as deleteSkill } from '@/lib/db/skills'
+import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import EditSkillForm from '@/features/skills/components/edit-skill-form'
+import EditSkillForm from '@/app/dashboard/skills/components/edit-skill-form'
+import { deleteSkillBy as deleteSkill } from '@/lib/db/skills'
 import { ConfirmDeleteDialog } from '@/shared/dialogs/confirm-delete-dialog'
-import { RowActionsMenu } from '@/shared/table/row-actions-menu'
 
-function SkillActions({ skill, categories }) {
+function SkillActionCells({ skill, categories }) {
   const router = useRouter()
   const [editOpen, setEditOpen] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -21,22 +22,29 @@ function SkillActions({ skill, categories }) {
 
   return (
     <>
-      <RowActionsMenu
-        items={[
-          {
-            type: 'action',
-            label: 'Edit skill',
-            onSelect: () => setEditOpen(true)
-          },
-          { type: 'separator' },
-          {
-            type: 'action',
-            label: 'Delete skill',
-            destructive: true,
-            onSelect: () => setConfirmOpen(true)
-          }
-        ]}
-      />
+      <TableCell>
+        <Button
+          type='button'
+          size='sm'
+          className='h-8 rounded-md bg-orange-500 px-3 text-white hover:bg-orange-600 focus-visible:ring-orange-500/50'
+          onClick={() => setEditOpen(true)}
+        >
+          <Pen className='h-3.5 w-3.5' />
+          Edit
+        </Button>
+      </TableCell>
+      <TableCell>
+        <Button
+          type='button'
+          variant='outline'
+          size='icon-sm'
+          className='h-8 w-8 text-destructive hover:text-destructive'
+          onClick={() => setConfirmOpen(true)}
+          aria-label={`Delete ${skill.name}`}
+        >
+          <Trash2 className='h-4 w-4' />
+        </Button>
+      </TableCell>
 
       <EditSkillForm open={editOpen} onOpenChange={setEditOpen} skill={skill} categories={categories} />
 
@@ -58,19 +66,24 @@ export default function SkillsTable({ skills, categories }) {
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead className='w-[110px]'>ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Category</TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead className='w-[130px]'>Edit</TableHead>
+          <TableHead className='w-[90px]'>Delete</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {skills.map((skill) => (
           <TableRow key={skill.id}>
+            <TableCell>
+              <span className='inline-block max-w-[96px] truncate font-mono text-xs' title={String(skill.id)}>
+                {skill.id}
+              </span>
+            </TableCell>
             <TableCell>{skill.name}</TableCell>
             <TableCell>{skill.skillCategory?.name ?? '-'}</TableCell>
-            <TableCell>
-              <SkillActions skill={skill} categories={categories} />
-            </TableCell>
+            <SkillActionCells skill={skill} categories={categories} />
           </TableRow>
         ))}
       </TableBody>

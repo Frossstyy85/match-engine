@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import EditProjectForm from "@/features/projects/components/edit-project-form";
+import EditProjectForm from "@/app/dashboard/projects/components/edit-project-form";
 import {
 	getProjectCertificatesOptions as fetchCertificateOptions,
 	getProjectLanguagesOptions as fetchLanguageOptions,

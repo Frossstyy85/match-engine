@@ -1,4 +1,4 @@
-import UserDetailsPage from '@/features/users/app/user-details-page'
+import UserDetailsPage from '@/app/dashboard/users/[id]/user-details-page'
 
 export default async function Page({ params }) {
   const { id } = await params

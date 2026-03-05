@@ -1,4 +1,4 @@
-import ProjectDetailsPage from '@/features/projects/app/project-details-page'
+import ProjectDetailsPage from '@/app/dashboard/projects/[id]/project-details-page'
 
 export default async function Page({ params }) {
   const { id } = await params

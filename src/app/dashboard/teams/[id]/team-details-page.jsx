@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldGroup, FieldTitle } from '@/components/ui/field'
 import { getTeamById as fetchTeam, getTeamMembers as fetchTeamMembers } from '@/lib/db/teams'
-import { DeleteTeamButton } from '@/features/teams/components/delete-team-button'
+import { DeleteTeamButton } from '@/app/dashboard/teams/components/delete-team-button'
 
 export default function TeamDetailsPage({ teamId }) {
   const teamQuery = useQuery({

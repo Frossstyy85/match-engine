@@ -1,4 +1,4 @@
-import TeamDetailsPage from '@/features/teams/app/team-details-page'
+import TeamDetailsPage from '@/app/dashboard/teams/[id]/team-details-page'
 
 export default async function Page({ params }) {
   const { id } = await params

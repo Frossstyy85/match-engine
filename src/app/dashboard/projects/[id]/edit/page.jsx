@@ -1,4 +1,4 @@
-import EditProjectPage from '@/features/projects/app/edit-project-page'
+import EditProjectPage from '@/app/dashboard/projects/[id]/edit/edit-project-page'
 
 export default async function Page({ params }) {
   const { id } = await params

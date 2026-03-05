@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { getProfiles as fetchProfiles, getTeamById as fetchTeam, getTeamMemberIds as fetchTeamMemberIds } from '@/lib/db/teams'
-import EditTeamForm from '@/features/teams/components/edit-team-form'
+import EditTeamForm from '@/app/dashboard/teams/components/edit-team-form'
 
 export default function EditTeamPage({ teamId }) {
   const teamQuery = useQuery({

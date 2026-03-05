@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldGroup, FieldTitle } from '@/components/ui/field'
 import { getProjectById as fetchProject } from '@/lib/db/projects'
-import RecommendedUsers from '@/features/projects/components/recommended-users'
+import RecommendedUsers from '@/app/dashboard/projects/components/recommended-users'
 
 export default function ProjectStaffingPage({ projectId }) {
   const { data: project, isLoading, error } = useQuery({

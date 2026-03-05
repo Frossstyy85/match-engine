@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import {
@@ -27,9 +27,13 @@ import { createProject } from '@/lib/db/projects'
 
 export default function CreateProjectForm() {
   const router = useRouter()
+  const dialogContentRef = useRef(null)
   const anchorSkills = useComboboxAnchor()
   const anchorLanguages = useComboboxAnchor()
   const anchorCertificates = useComboboxAnchor()
+  const [skillsOpen, setSkillsOpen] = useState(false)
+  const [languagesOpen, setLanguagesOpen] = useState(false)
+  const [certificatesOpen, setCertificatesOpen] = useState(false)
   const [open, setOpen] = useState(false)
   const [startDate, setStartDate] = useState()
   const [endDate, setEndDate] = useState()
@@ -101,12 +105,22 @@ export default function CreateProjectForm() {
 
   return (
     <div className='w-fit'>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog
+        open={open}
+        onOpenChange={(nextOpen) => {
+          setOpen(nextOpen)
+          if (!nextOpen) {
+            setSkillsOpen(false)
+            setLanguagesOpen(false)
+            setCertificatesOpen(false)
+          }
+        }}
+      >
         <DialogTrigger asChild>
           <Button size='sm'>Create new</Button>
         </DialogTrigger>
 
-        <DialogContent>
+        <DialogContent ref={dialogContentRef}>
           <DialogHeader>
             <DialogTitle>Create project</DialogTitle>
           </DialogHeader>
@@ -144,7 +158,12 @@ export default function CreateProjectForm() {
                   autoHighlight
                   items={skillNames}
                   value={selectedSkills}
-                  onValueChange={setSelectedSkills}
+                  onValueChange={(values) => {
+                    setSelectedSkills(values)
+                    setSkillsOpen(true)
+                  }}
+                  open={skillsOpen}
+                  onOpenChange={setSkillsOpen}
                 >
                   <ComboboxChips ref={anchorSkills} className='w-full max-w-md min-w-0'>
                     <ComboboxValue>
@@ -158,7 +177,7 @@ export default function CreateProjectForm() {
                       )}
                     </ComboboxValue>
                   </ComboboxChips>
-                  <ComboboxContent anchor={anchorSkills}>
+                  <ComboboxContent anchor={anchorSkills} container={dialogContentRef}>
                     <ComboboxEmpty>No skills found.</ComboboxEmpty>
                     <ComboboxList>
                       {availableSkills.map((skill) => (
@@ -178,7 +197,12 @@ export default function CreateProjectForm() {
                   autoHighlight
                   items={languageNames}
                   value={selectedLanguages}
-                  onValueChange={setSelectedLanguages}
+                  onValueChange={(values) => {
+                    setSelectedLanguages(values)
+                    setLanguagesOpen(true)
+                  }}
+                  open={languagesOpen}
+                  onOpenChange={setLanguagesOpen}
                 >
                   <ComboboxChips ref={anchorLanguages} className='w-full max-w-md min-w-0'>
                     <ComboboxValue>
@@ -192,7 +216,7 @@ export default function CreateProjectForm() {
                       )}
                     </ComboboxValue>
                   </ComboboxChips>
-                  <ComboboxContent anchor={anchorLanguages}>
+                  <ComboboxContent anchor={anchorLanguages} container={dialogContentRef}>
                     <ComboboxEmpty>No languages found.</ComboboxEmpty>
                     <ComboboxList>
                       {availableLanguages.map((lang) => (
@@ -212,7 +236,12 @@ export default function CreateProjectForm() {
                   autoHighlight
                   items={certificateNames}
                   value={selectedCertificates}
-                  onValueChange={setSelectedCertificates}
+                  onValueChange={(values) => {
+                    setSelectedCertificates(values)
+                    setCertificatesOpen(true)
+                  }}
+                  open={certificatesOpen}
+                  onOpenChange={setCertificatesOpen}
                 >
                   <ComboboxChips ref={anchorCertificates} className='w-full max-w-md min-w-0'>
                     <ComboboxValue>
@@ -226,7 +255,7 @@ export default function CreateProjectForm() {
                       )}
                     </ComboboxValue>
                   </ComboboxChips>
-                  <ComboboxContent anchor={anchorCertificates}>
+                  <ComboboxContent anchor={anchorCertificates} container={dialogContentRef}>
                     <ComboboxEmpty>No certificates found.</ComboboxEmpty>
                     <ComboboxList>
                       {availableCertificates.map((cert) => (
